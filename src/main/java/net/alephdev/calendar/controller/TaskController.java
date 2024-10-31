@@ -6,6 +6,7 @@ import net.alephdev.calendar.annotation.PrivilegeRequired;
 import net.alephdev.calendar.models.Task;
 import net.alephdev.calendar.models.User;
 import net.alephdev.calendar.service.TaskService;
+import net.alephdev.calendar.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +20,12 @@ import java.util.List;
 public class TaskController {
 
     private final TaskService taskService;
+    private final UserService userService;
 
     @Autowired
-    public TaskController(TaskService taskService) {
+    public TaskController(TaskService taskService, UserService userService) {
         this.taskService = taskService;
+        this.userService = userService;
     }
 
     @GetMapping
@@ -55,9 +58,12 @@ public class TaskController {
 
     @PrivilegeRequired
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTask(@PathVariable Integer id) {
-        taskService.deleteTask(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<Void> deleteTask(@PathVariable Integer id, @CurrentUser User user) {
+        if(userService.isPrivileged(user)) {
+            taskService.deleteTask(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
     @PutMapping("/{taskId}/implementer")
@@ -88,8 +94,12 @@ public class TaskController {
 
     @PrivilegeRequired
     @PutMapping("/{taskId}/sprint")
-    public ResponseEntity<Task> assignSprint(@PathVariable Integer taskId, @RequestParam Integer sprintId) {
-        Task task = taskService.assignSprint(taskId, sprintId);
-        return new ResponseEntity<>(task, HttpStatus.OK);
+    public ResponseEntity<Task> assignSprint(@PathVariable Integer taskId, @RequestParam Integer sprintId,
+                                             @CurrentUser User user) {
+        if(userService.isPrivileged(user)) {
+            Task task = taskService.assignSprint(taskId, sprintId);
+            return new ResponseEntity<>(task, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 }

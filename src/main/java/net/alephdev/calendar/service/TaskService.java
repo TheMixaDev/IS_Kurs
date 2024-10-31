@@ -7,6 +7,7 @@ import net.alephdev.calendar.models.Task;
 import net.alephdev.calendar.models.User;
 import net.alephdev.calendar.repository.RoleStatusRepository;
 import net.alephdev.calendar.repository.SprintRepository;
+import net.alephdev.calendar.repository.StatusRepository;
 import net.alephdev.calendar.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,21 +20,27 @@ public class TaskService {
 
     private final TaskRepository taskRepository;
     private final RoleStatusRepository roleStatusRepository;
+    private final StatusRepository statusRepository;
     private final SprintRepository sprintRepository;
     private final UserService userService;
+    private final RoleService roleService;
 
 
     @Autowired
     public TaskService(
             TaskRepository taskRepository,
             RoleStatusRepository roleStatusRepository,
+            StatusRepository statusRepository,
             SprintRepository sprintRepository,
-            UserService userService
+            UserService userService,
+            RoleService roleService
     ) {
         this.taskRepository = taskRepository;
         this.roleStatusRepository = roleStatusRepository;
+        this.statusRepository = statusRepository;
         this.sprintRepository = sprintRepository;
         this.userService = userService;
+        this.roleService = roleService;
     }
 
 
@@ -101,12 +108,9 @@ public class TaskService {
 
         if (user.getRole() != null && user.getRole().getId() == 1) {
             // Admin can set any status
-            task.setStatus(userService.getUserByLogin(user.getLogin()).getRole().getStatuses().stream()
-                    .filter(roleStatus -> roleStatus.getStatus().getId().equals(statusId))
-                    .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException("Status not found")));
+            roleService.getStatuses(user.getRole());
+            task.setStatus(statusRepository.getById(statusId));
         } else if (task.getImplementer() != null && task.getImplementer().getLogin().equals(user.getLogin())) {
-            // Implementer can set a status from their allowed statuses
             List<RoleStatus> allowedStatuses = roleStatusRepository.findAllByRole_Id(user.getRole().getId());
             Optional<RoleStatus> allowedStatus = allowedStatuses.stream()
                     .filter(roleStatus -> roleStatus.getStatus().getId().equals(statusId))

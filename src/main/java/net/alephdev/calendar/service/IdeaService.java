@@ -27,19 +27,20 @@ public class IdeaService {
         return ideaRepository.findAll();
     }
 
-    public Idea createIdea(Idea idea) {
+    public Idea createIdea(Idea idea, User user) {
+        idea.setAuthorLogin(user);
         return ideaRepository.save(idea);
     }
 
-    public Idea updateIdea(Integer id, Idea updatedIdea) {
+    public Idea updateIdea(Integer id, Idea updatedIdea, User user) {
         Idea idea = ideaRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Idea not found"));
 
-        idea.setDescription(updatedIdea.getDescription());
-        idea.setAuthorLogin(updatedIdea.getAuthorLogin());
-        idea.setTask(updatedIdea.getTask());
-
-        return ideaRepository.save(idea);
+        if(idea.getAuthorLogin().getLogin().equals(user.getLogin())) {
+            idea.setDescription(updatedIdea.getDescription());
+            return ideaRepository.save(idea);
+        }
+        throw new IllegalArgumentException("Not permitted to update idea");
     }
 
     public void deleteIdea(Integer id) {
