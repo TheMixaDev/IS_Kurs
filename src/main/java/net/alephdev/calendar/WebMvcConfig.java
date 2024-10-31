@@ -2,6 +2,7 @@ package net.alephdev.calendar;
 
 import net.alephdev.calendar.annotation.implementation.AuthInterceptor;
 import net.alephdev.calendar.annotation.implementation.CurrentUserArgumentResolver;
+import net.alephdev.calendar.annotation.implementation.PrivilegeInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -17,6 +18,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
     private AuthInterceptor authInterceptor;
 
     @Autowired
+    private PrivilegeInterceptor privilegeInterceptor;
+
+    @Autowired
     private CurrentUserArgumentResolver currentUserArgumentResolver;
 
     @Override
@@ -27,6 +31,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authInterceptor);
+        registry.addInterceptor(privilegeInterceptor);
     }
 
     @Override

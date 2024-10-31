@@ -4,4 +4,8 @@ import net.alephdev.calendar.models.RoleStatus;
 import net.alephdev.calendar.models.keys.RoleStatusId;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface RoleStatusRepository extends JpaRepository<RoleStatus, RoleStatusId> {}
+import java.util.List;
+
+public interface RoleStatusRepository extends JpaRepository<RoleStatus, RoleStatusId> {
+    List<RoleStatus> findAllByRole_Id(Integer id);
+}

@@ -3,7 +3,7 @@ package net.alephdev.calendar.controller;
 import lombok.RequiredArgsConstructor;
 import net.alephdev.calendar.dto.JwtRequestDto;
 import net.alephdev.calendar.dto.JwtResponseDto;
-import net.alephdev.calendar.dto.UserDto;
+import net.alephdev.calendar.dto.UserLoginDto;
 import net.alephdev.calendar.jwt.JwtUtils;
 import net.alephdev.calendar.models.User;
 import net.alephdev.calendar.service.UserService;
@@ -44,15 +44,6 @@ public class AuthController {
             }
         } catch (Exception e) {
             return new ResponseEntity<>("Произошла ошибка при аутентификации: " + e.getMessage(), HttpStatus.UNAUTHORIZED);
-        }
-    }
-
-    @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody UserDto userDto) {
-        try {
-            return new ResponseEntity<>(userService.register(userDto), HttpStatus.CREATED);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 }
