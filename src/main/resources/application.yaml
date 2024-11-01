@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: calendar
+  config:
+    import: classpath:db.properties
+  datasource:
+    url: ${db.url}
+    username: ${db.username}
+    password: ${db.password}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        bytecode:
+          provider: bytebuddy
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: true
+
+jwt:
+  expiration: 3600
