@@ -27,16 +27,16 @@ public class IdeaService {
         return ideaRepository.findAll();
     }
 
-    public Idea createIdea(Idea idea, User user) {
-        idea.setAuthorLogin(user);
+    public Idea createIdea(Idea idea) {
+        idea.setAuthorLogin(idea.getAuthorLogin());
         return ideaRepository.save(idea);
     }
 
-    public Idea updateIdea(Integer id, Idea updatedIdea, User user) {
+    public Idea updateIdea(Integer id, Idea updatedIdea) {
         Idea idea = ideaRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Idea not found"));
 
-        if(idea.getAuthorLogin().getLogin().equals(user.getLogin())) {
+        if(idea.getAuthorLogin().getLogin().equals(updatedIdea.getAuthorLogin().getLogin())) {
             idea.setDescription(updatedIdea.getDescription());
             return ideaRepository.save(idea);
         }
