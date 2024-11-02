@@ -2,6 +2,8 @@ package net.alephdev.calendar.controller;
 
 import net.alephdev.calendar.annotation.AuthorizedRequired;
 import net.alephdev.calendar.annotation.PrivilegeRequired;
+import net.alephdev.calendar.dto.funcDto.SprintTeamDto;
+import net.alephdev.calendar.dto.funcDto.UserStoryPointsDto;
 import net.alephdev.calendar.models.Sprint;
 import net.alephdev.calendar.service.SprintService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,5 +49,18 @@ public class SprintController {
     public ResponseEntity<Void> deleteSprint(@PathVariable Integer id) {
         sprintService.deleteSprint(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    // Получение списка спринтов по году и команде с использованием функции пример
+    @GetMapping("/by-year-and-team")
+    public ResponseEntity<List<SprintTeamDto>> getSprintsByYearAndTeam(
+            @RequestParam Integer year,
+            @RequestParam(required = false) String teamName) {
+        return ResponseEntity.ok(sprintService.getSprintsByYearAndTeam(year, teamName));
+    }
+
+    @GetMapping("/{sprintId}/story-points")
+    public ResponseEntity<List<UserStoryPointsDto>> getStoryPointsPerUser(@PathVariable Integer sprintId) {
+        return ResponseEntity.ok(sprintService.getStoryPointsPerUser(sprintId));
     }
 }

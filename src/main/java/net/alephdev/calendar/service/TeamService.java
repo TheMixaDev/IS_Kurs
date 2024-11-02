@@ -1,10 +1,14 @@
 package net.alephdev.calendar.service;
 
 import net.alephdev.calendar.models.Team;
-import net.alephdev.calendar.repository.TeamRepository;
+import net.alephdev.calendar.repository.repoWithFunc.TeamRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import lombok.RequiredArgsConstructor;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -39,5 +43,9 @@ public class TeamService {
 
     public void deleteTeam(Integer id) {
         teamRepository.deleteById(id);
+    }
+
+    public BigDecimal getTeamLoad(Integer teamId, Integer sprintId) {
+        return teamRepository.calculateTeamLoad(teamId, sprintId);
     }
 }

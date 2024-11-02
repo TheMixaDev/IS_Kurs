@@ -47,9 +47,12 @@ public class IdeaController {
     }
 
     @PrivilegeRequired
-    @PutMapping("/{id}/process")
-    public ResponseEntity<Void> processIdea(@PathVariable Integer id, @RequestParam String newStatus) {
-        ideaService.processIdea(id, newStatus);
-        return new ResponseEntity<>(HttpStatus.OK);
+    @PutMapping("/{id}/status")
+    public ResponseEntity<Void> processIdea(
+        @PathVariable Integer id,
+        @RequestParam String status
+    ) {
+        ideaService.processIdea(id, status);
+        return ResponseEntity.ok().build();
     }
 }

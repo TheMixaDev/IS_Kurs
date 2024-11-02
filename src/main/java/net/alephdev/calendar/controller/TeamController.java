@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -45,5 +46,13 @@ public class TeamController {
     public ResponseEntity<Void> deleteTeam(@PathVariable Integer id) {
         teamService.deleteTeam(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/load") // /api/teams/load?teamId=1&sprintId=1
+    public ResponseEntity<BigDecimal> getTeamLoad(
+        @RequestParam Integer teamId,
+        @RequestParam Integer sprintId
+    ) {
+        return ResponseEntity.ok(teamService.getTeamLoad(teamId, sprintId));
     }
 }

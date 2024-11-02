@@ -6,9 +6,10 @@ import net.alephdev.calendar.models.Sprint;
 import net.alephdev.calendar.models.Task;
 import net.alephdev.calendar.models.User;
 import net.alephdev.calendar.repository.RoleStatusRepository;
-import net.alephdev.calendar.repository.SprintRepository;
 import net.alephdev.calendar.repository.StatusRepository;
 import net.alephdev.calendar.repository.TaskRepository;
+import net.alephdev.calendar.repository.repoWithFunc.SprintRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

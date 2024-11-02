@@ -4,7 +4,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import net.alephdev.calendar.models.Idea;
 import net.alephdev.calendar.models.User;
-import net.alephdev.calendar.repository.IdeaRepository;
+import net.alephdev.calendar.repository.repoWithFunc.IdeaRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,9 +50,6 @@ public class IdeaService {
 
     @Transactional
     public void processIdea(Integer ideaId, String newStatus) {
-        entityManager.createNativeQuery("CALL process_idea(:ideaId, :newStatus)")
-                .setParameter("ideaId", ideaId)
-                .setParameter("newStatus", newStatus)
-                .executeUpdate();
+        ideaRepository.processIdea(ideaId, newStatus);
     }
 }

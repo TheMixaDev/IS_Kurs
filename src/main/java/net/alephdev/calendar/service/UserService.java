@@ -7,8 +7,9 @@ import net.alephdev.calendar.models.Role;
 import net.alephdev.calendar.models.Team;
 import net.alephdev.calendar.models.User;
 import net.alephdev.calendar.repository.RoleRepository;
-import net.alephdev.calendar.repository.TeamRepository;
 import net.alephdev.calendar.repository.UserRepository;
+import net.alephdev.calendar.repository.repoWithFunc.TeamRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
