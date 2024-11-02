@@ -63,8 +63,6 @@ public class TaskService {
         task.setStatus(updatedTask.getStatus());
         task.setPriorityEnum(updatedTask.getPriorityEnum());
         task.setCreatedBy(updatedTask.getCreatedBy());
-        task.setTags(updatedTask.getTags());
-        task.setRisks(updatedTask.getRisks());
         return taskRepository.save(task);
     }
 
@@ -109,7 +107,7 @@ public class TaskService {
         if (user.getRole() != null && user.getRole().getId() == 1) {
             // Admin can set any status
             roleService.getStatuses(user.getRole());
-            task.setStatus(statusRepository.getById(statusId));
+            task.setStatus(statusRepository.findById(statusId).get());
         } else if (task.getImplementer() != null && task.getImplementer().getLogin().equals(user.getLogin())) {
             List<RoleStatus> allowedStatuses = roleStatusRepository.findAllByRole_Id(user.getRole().getId());
             Optional<RoleStatus> allowedStatus = allowedStatuses.stream()

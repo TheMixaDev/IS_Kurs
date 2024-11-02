@@ -42,19 +42,4 @@ public class Task {
     @JoinColumn(name = "created_by", foreignKey = @ForeignKey(name = "fk_task_created_by"))
     private User createdBy;
 
-    @ManyToMany
-    @JoinTable(
-            name = "Task_Tag",
-            joinColumns = @JoinColumn(name = "task_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id")
-    )
-    private Set<Tag> tags;
-
-    @ManyToMany
-    @JoinTable(
-            name = "Task_Risk",
-            joinColumns = @JoinColumn(name = "task_id"),
-            inverseJoinColumns = @JoinColumn(name = "risk_id")
-    )
-    private Set<Risk> risks;
 }
