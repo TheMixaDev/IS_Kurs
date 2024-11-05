@@ -2,6 +2,7 @@ package net.alephdev.calendar.controller;
 
 import net.alephdev.calendar.annotation.AuthorizedRequired;
 import net.alephdev.calendar.annotation.PrivilegeRequired;
+import net.alephdev.calendar.dto.SprintDto;
 import net.alephdev.calendar.dto.functional.SprintTeamDto;
 import net.alephdev.calendar.dto.functional.UserStoryPointsDto;
 import net.alephdev.calendar.models.Sprint;
@@ -32,14 +33,14 @@ public class SprintController {
 
     @PrivilegeRequired
     @PostMapping
-    public ResponseEntity<Sprint> createSprint(@RequestBody Sprint sprint) {
+    public ResponseEntity<Sprint> createSprint(@RequestBody SprintDto sprint) {
         Sprint createdSprint = sprintService.createSprint(sprint);
         return new ResponseEntity<>(createdSprint, HttpStatus.CREATED);
     }
 
     @PrivilegeRequired
     @PutMapping("/{id}")
-    public ResponseEntity<Sprint> updateSprint(@PathVariable Integer id, @RequestBody Sprint updatedSprint) {
+    public ResponseEntity<Sprint> updateSprint(@PathVariable Integer id, @RequestBody SprintDto updatedSprint) {
         Sprint sprint = sprintService.updateSprint(id, updatedSprint);
         return new ResponseEntity<>(sprint, HttpStatus.OK);
     }
@@ -51,8 +52,8 @@ public class SprintController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    // Получение списка спринтов по году и команде с использованием функции пример
-    @GetMapping("/by-year-and-team")
+    // Получение списка спринтов по году и команде с использованием функции
+    @GetMapping("/filtered")
     public ResponseEntity<List<SprintTeamDto>> getSprintsByYearAndTeam(
             @RequestParam Integer year,
             @RequestParam(required = false) String teamName) {

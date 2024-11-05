@@ -3,6 +3,7 @@ package net.alephdev.calendar.controller;
 import lombok.RequiredArgsConstructor;
 import net.alephdev.calendar.dto.JwtRequestDto;
 import net.alephdev.calendar.dto.JwtResponseDto;
+import net.alephdev.calendar.dto.MessageDto;
 import net.alephdev.calendar.jwt.JwtUtils;
 import net.alephdev.calendar.models.User;
 import net.alephdev.calendar.service.UserService;
@@ -41,10 +42,10 @@ public class AuthController {
                 String token = jwtUtils.generateToken(user);
                 return ResponseEntity.ok(new JwtResponseDto(token));
             } else {
-                return new ResponseEntity<>("Not valid credentials", HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<>(new MessageDto("Not valid credentials"), HttpStatus.UNAUTHORIZED);
             }
         } catch (Exception e) {
-            return new ResponseEntity<>("An error occurred during authentication: " + e.getMessage(), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(new MessageDto("An error occurred during authentication: " + e.getMessage()), HttpStatus.UNAUTHORIZED);
         }
     }
 }

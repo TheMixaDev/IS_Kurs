@@ -1,5 +1,6 @@
 package net.alephdev.calendar.controller;
 
+import net.alephdev.calendar.annotation.AuthorizedRequired;
 import net.alephdev.calendar.annotation.PrivilegeRequired;
 import net.alephdev.calendar.models.Team;
 import net.alephdev.calendar.service.TeamService;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/teams")
+@AuthorizedRequired
 public class TeamController {
 
     private final TeamService teamService;

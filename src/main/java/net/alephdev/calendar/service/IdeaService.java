@@ -3,7 +3,9 @@ package net.alephdev.calendar.service;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
+import net.alephdev.calendar.dto.IdeaDto;
 import net.alephdev.calendar.models.Idea;
+import net.alephdev.calendar.models.User;
 import net.alephdev.calendar.repository.functional.IdeaRepository;
 
 import org.springframework.stereotype.Service;
@@ -15,24 +17,26 @@ import java.util.List;
 public class IdeaService {
 
     private final IdeaRepository ideaRepository;
-
-    @PersistenceContext
-    private EntityManager entityManager;
+    private final UserService userService;
 
     public List<Idea> getAllIdeas() {
         return ideaRepository.findAll();
     }
 
-    public Idea createIdea(Idea idea) {
-        idea.setAuthorLogin(idea.getAuthorLogin());
-        return ideaRepository.save(idea);
+    public Idea createIdea(IdeaDto idea, User user) {
+        Idea created = new Idea();
+        created.setDescription(idea.getDescription());
+        created.setAuthorLogin(user);
+        created.setStatusEnumId(Idea.Status.PENDING);
+
+        return ideaRepository.save(created);
     }
 
-    public Idea updateIdea(Integer id, Idea updatedIdea) {
+    public Idea updateIdea(Integer id, IdeaDto updatedIdea, User user) {
         Idea idea = ideaRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Idea not found"));
 
-        if(idea.getAuthorLogin().getLogin().equals(updatedIdea.getAuthorLogin().getLogin())) {
+        if(user.getLogin().equals(idea.getAuthorLogin().getLogin()) || userService.isPrivileged(user)) {
             idea.setDescription(updatedIdea.getDescription());
             return ideaRepository.save(idea);
         }

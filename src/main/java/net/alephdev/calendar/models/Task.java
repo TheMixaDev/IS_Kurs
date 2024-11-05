@@ -3,16 +3,9 @@ package net.alephdev.calendar.models;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
-import java.util.Set;
-
+@Data
 @Entity
 @Table(name = "Task")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,11 +28,15 @@ public class Task {
     @JoinColumn(name = "status_id", foreignKey = @ForeignKey(name = "fk_task_status_id"), nullable = false)
     private Status status;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String priorityEnum;
+    private Priority priorityEnum;
 
     @ManyToOne
     @JoinColumn(name = "created_by", foreignKey = @ForeignKey(name = "fk_task_created_by"))
     private User createdBy;
 
+    public enum Priority {
+        LOW, MIDDLE, CRITICAL
+    }
 }

@@ -5,13 +5,9 @@ import lombok.*;
 
 import java.math.BigDecimal;
 
+@Data
 @Entity
 @Table(name = "Risk")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Risk {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

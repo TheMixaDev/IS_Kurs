@@ -32,7 +32,7 @@ public class TeamService {
         team.setName(updatedTeam.getName());
         team.setColor(updatedTeam.getColor());
         team.setDescription(updatedTeam.getDescription());
-        team.setIsActive(updatedTeam.getIsActive()); // Update isActive field
+        team.setIsActive(updatedTeam.getIsActive());
 
         return teamRepository.save(team);
     }

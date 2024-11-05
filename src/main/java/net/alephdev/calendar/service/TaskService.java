@@ -2,10 +2,8 @@ package net.alephdev.calendar.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import net.alephdev.calendar.models.RoleStatus;
-import net.alephdev.calendar.models.Sprint;
-import net.alephdev.calendar.models.Task;
-import net.alephdev.calendar.models.User;
+import net.alephdev.calendar.dto.UpdatedTaskDto;
+import net.alephdev.calendar.models.*;
 import net.alephdev.calendar.repository.RoleStatusRepository;
 import net.alephdev.calendar.repository.StatusRepository;
 import net.alephdev.calendar.repository.TaskRepository;
@@ -36,18 +34,19 @@ public class TaskService {
         return taskRepository.save(task);
     }
 
-    public Task updateTask(Integer id, Task updatedTask) {
+    public Task updateTask(Integer id, UpdatedTaskDto updatedTask) {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Task not found"));
 
         task.setName(updatedTask.getName());
         task.setStoryPoints(updatedTask.getStoryPoints());
-        task.setImplementer(updatedTask.getImplementer());
-        task.setSprint(updatedTask.getSprint());
-        task.setStatus(updatedTask.getStatus());
         task.setPriorityEnum(updatedTask.getPriorityEnum());
-        task.setCreatedBy(updatedTask.getCreatedBy());
         return taskRepository.save(task);
+    }
+
+    public Task getTask(Integer id) {
+        return taskRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Task not found"));
     }
 
 
@@ -93,16 +92,15 @@ public class TaskService {
 
         if (user.getRole() != null && user.getRole().getId() == 1) {
             // Admin can set any status
-            roleService.getStatuses(user.getRole());
             task.setStatus(statusRepository.findById(statusId).get());
-        } else if (task.getImplementer() != null && task.getImplementer().getLogin().equals(user.getLogin())) {
-            List<RoleStatus> allowedStatuses = roleStatusRepository.findAllByRole_Id(user.getRole().getId());
-            Optional<RoleStatus> allowedStatus = allowedStatuses.stream()
-                    .filter(roleStatus -> roleStatus.getStatus().getId().equals(statusId))
+        } else if (task.getImplementer() != null && task.getImplementer().getLogin().equals(user.getLogin()) && user.getRole() != null) {
+            List<Status> allowedStatuses = roleService.getStatuses(user.getRole());
+            Optional<Status> allowedStatus = allowedStatuses.stream()
+                    .filter(roleStatus -> roleStatus.getId().equals(statusId))
                     .findFirst();
 
             if (allowedStatus.isPresent()) {
-                task.setStatus(allowedStatus.get().getStatus());
+                task.setStatus(allowedStatus.get());
             } else {
                 throw new IllegalArgumentException("You are not allowed to set this status");
             }

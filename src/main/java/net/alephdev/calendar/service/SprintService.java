@@ -1,10 +1,13 @@
 package net.alephdev.calendar.service;
 
+import net.alephdev.calendar.dto.SprintDto;
 import net.alephdev.calendar.dto.functional.SprintTeamDto;
 import net.alephdev.calendar.dto.functional.UserStoryPointsDto;
 import net.alephdev.calendar.models.Sprint;
+import net.alephdev.calendar.models.Team;
 import net.alephdev.calendar.repository.functional.SprintRepository;
 
+import net.alephdev.calendar.repository.functional.TeamRepository;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -18,16 +21,28 @@ import java.util.stream.Collectors;
 public class SprintService {
 
     private final SprintRepository sprintRepository;
+    private final TeamRepository teamRepository;
 
     public List<Sprint> getAllSprints() {
         return sprintRepository.findAll();
     }
 
-    public Sprint createSprint(Sprint sprint) {
+    public Sprint createSprint(SprintDto sprintDto) {
+        Sprint sprint = new Sprint();
+        Team team = teamRepository.findById(sprintDto.getTeamId())
+                .orElseThrow(() -> new IllegalArgumentException("Team not found"));
+
+        sprint.setMajorVersion(sprintDto.getMajorVersion());
+        sprint.setStartDate(sprintDto.getStartDate());
+        sprint.setEndDate(sprintDto.getEndDate());
+        sprint.setRegressionStart(sprintDto.getRegressionStart());
+        sprint.setRegressionEnd(sprintDto.getRegressionEnd());
+        sprint.setTeam(team);
+
         return sprintRepository.save(sprint);
     }
 
-    public Sprint updateSprint(Integer id, Sprint updatedSprint) {
+    public Sprint updateSprint(Integer id, SprintDto updatedSprint) {
         Sprint sprint = sprintRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Sprint not found"));
 
@@ -36,7 +51,12 @@ public class SprintService {
         sprint.setEndDate(updatedSprint.getEndDate());
         sprint.setRegressionStart(updatedSprint.getRegressionStart());
         sprint.setRegressionEnd(updatedSprint.getRegressionEnd());
-        sprint.setTeam(updatedSprint.getTeam());
+
+        if(updatedSprint.getTeamId() != null) {
+            Team team = teamRepository.findById(updatedSprint.getTeamId())
+                    .orElseThrow(() -> new IllegalArgumentException("Team not found"));
+            sprint.setTeam(team);
+        }
 
         return sprintRepository.save(sprint);
     }

@@ -1,5 +1,6 @@
 package net.alephdev.calendar.controller;
 
+import net.alephdev.calendar.annotation.AuthorizedRequired;
 import net.alephdev.calendar.annotation.PrivilegeRequired;
 import net.alephdev.calendar.models.Role;
 import net.alephdev.calendar.models.Status;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/roles")
+@AuthorizedRequired
 public class RoleController {
 
     private final RoleService roleService;
@@ -22,7 +24,6 @@ public class RoleController {
         this.roleService = roleService;
     }
 
-    @PrivilegeRequired
     @GetMapping
     public List<Role> getAllRoles() {
         return roleService.getAllRoles();

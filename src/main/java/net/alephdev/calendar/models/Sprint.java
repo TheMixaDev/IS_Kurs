@@ -5,13 +5,9 @@ import lombok.*;
 
 import java.time.LocalDate;
 
+@Data
 @Entity
 @Table(name = "Sprint")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Sprint {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

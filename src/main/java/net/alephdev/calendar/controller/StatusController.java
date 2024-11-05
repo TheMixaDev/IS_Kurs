@@ -1,5 +1,6 @@
 package net.alephdev.calendar.controller;
 
+import net.alephdev.calendar.annotation.AuthorizedRequired;
 import net.alephdev.calendar.annotation.PrivilegeRequired;
 import net.alephdev.calendar.models.Status;
 import net.alephdev.calendar.service.StatusService;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/statuses")
+@AuthorizedRequired
 public class StatusController {
 
     private final StatusService statusService;

@@ -28,7 +28,7 @@ public class UserService {
 
     @Transactional
     public User register(UserDto userDto) {
-        if (!userRepository.findByLogin(userDto.getLogin()).isEmpty()) {
+        if (userRepository.findByLogin(userDto.getLogin()).isPresent()) {
             throw new IllegalArgumentException("User with this login already exists");
         }
 
@@ -56,7 +56,11 @@ public class UserService {
     @Transactional
     public User updateUser(String login, UserDto userDto) {
         User user = getUserByLogin(login);
-        user.setEmail(login);
+        user.setLogin(userDto.getLogin());
+        user.setEmail(userDto.getEmail());
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
 
         return userRepository.save(user);
     }

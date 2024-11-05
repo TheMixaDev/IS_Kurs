@@ -3,10 +3,9 @@ package net.alephdev.calendar.models;
 import jakarta.persistence.*;
 import lombok.*;
 
+@Data
 @Entity
 @Table(name = "Users")
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

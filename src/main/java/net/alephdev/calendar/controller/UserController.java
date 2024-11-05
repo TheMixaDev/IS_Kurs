@@ -16,6 +16,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/users")
+@AuthorizedRequired
 public class UserController {
 
     private final UserService userService;
@@ -56,7 +57,6 @@ public class UserController {
         }
     }
 
-    @AuthorizedRequired
     @PutMapping("/{login}")
     public ResponseEntity<User> updateUser(@PathVariable String login, @Valid @RequestBody UserDto userDto, @CurrentUser User currentUser) {
         if (currentUser.getLogin().equals(login) || userService.isPrivileged(currentUser)) {

@@ -3,13 +3,9 @@ package net.alephdev.calendar.models;
 import jakarta.persistence.*;
 import lombok.*;
 
+@Data
 @Entity
 @Table(name = "Status")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Status {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

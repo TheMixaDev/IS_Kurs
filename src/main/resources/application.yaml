@@ -9,7 +9,7 @@ spring:
     password: ${db.password}
   jpa:
     hibernate:
-      ddl-auto: create-drop #validate
+      ddl-auto: validate
     show-sql: true
     properties:
       hibernate:
@@ -20,3 +20,7 @@ spring:
 
 jwt:
   expiration: 3600
+
+service:
+  calendar:
+    url: https://isdayoff.ru/api/getdata?year=%d&pre=1
