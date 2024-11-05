@@ -5,7 +5,6 @@ import net.alephdev.calendar.models.RoleStatus;
 import net.alephdev.calendar.models.Status;
 import net.alephdev.calendar.repository.RoleRepository;
 import net.alephdev.calendar.repository.RoleStatusRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;

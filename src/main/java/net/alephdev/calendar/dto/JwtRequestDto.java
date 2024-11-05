@@ -1,6 +1,5 @@
 package net.alephdev.calendar.dto;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import jakarta.validation.constraints.NotBlank;

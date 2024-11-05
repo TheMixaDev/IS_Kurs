@@ -8,6 +8,4 @@ import java.util.List;
 
 public interface RoleStatusRepository extends JpaRepository<RoleStatus, RoleStatusId> {
     List<RoleStatus> findAllByRole_Id(Integer id);
-
-    void deleteByRole_Id(Integer id);
 }
