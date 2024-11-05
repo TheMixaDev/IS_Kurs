@@ -2,27 +2,22 @@ package net.alephdev.calendar.service;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import lombok.RequiredArgsConstructor;
 import net.alephdev.calendar.models.Idea;
-import net.alephdev.calendar.models.User;
 import net.alephdev.calendar.repository.repoWithFunc.IdeaRepository;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class IdeaService {
 
     private final IdeaRepository ideaRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
-
-    @Autowired
-    public IdeaService(IdeaRepository ideaRepository) {
-        this.ideaRepository = ideaRepository;
-    }
 
     public List<Idea> getAllIdeas() {
         return ideaRepository.findAll();

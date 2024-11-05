@@ -3,14 +3,12 @@ package net.alephdev.calendar.dto.funcDto;
 import java.math.BigDecimal;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
-@Data
+@Getter
 @AllArgsConstructor
-@NoArgsConstructor
 public class TopRiskDto {
-    private Integer riskId; 
-    private String description;
-    private BigDecimal totalEstimatedLoss;
+    private final Integer riskId; 
+    private final String description;
+    private final BigDecimal totalEstimatedLoss;
 }

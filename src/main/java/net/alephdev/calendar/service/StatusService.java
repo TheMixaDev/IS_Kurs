@@ -2,20 +2,17 @@ package net.alephdev.calendar.service;
 
 import net.alephdev.calendar.models.Status;
 import net.alephdev.calendar.repository.StatusRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class StatusService {
 
     private final StatusRepository statusRepository;
-
-    @Autowired
-    public StatusService(StatusRepository statusRepository) {
-        this.statusRepository = statusRepository;
-    }
 
     public List<Status> getAllStatuses() {
         return statusRepository.findAll();

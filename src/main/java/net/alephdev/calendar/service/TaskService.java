@@ -1,6 +1,7 @@
 package net.alephdev.calendar.service;
 
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import net.alephdev.calendar.models.RoleStatus;
 import net.alephdev.calendar.models.Sprint;
 import net.alephdev.calendar.models.Task;
@@ -10,13 +11,13 @@ import net.alephdev.calendar.repository.StatusRepository;
 import net.alephdev.calendar.repository.TaskRepository;
 import net.alephdev.calendar.repository.repoWithFunc.SprintRepository;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class TaskService {
 
     private final TaskRepository taskRepository;
@@ -25,24 +26,6 @@ public class TaskService {
     private final SprintRepository sprintRepository;
     private final UserService userService;
     private final RoleService roleService;
-
-
-    @Autowired
-    public TaskService(
-            TaskRepository taskRepository,
-            RoleStatusRepository roleStatusRepository,
-            StatusRepository statusRepository,
-            SprintRepository sprintRepository,
-            UserService userService,
-            RoleService roleService
-    ) {
-        this.taskRepository = taskRepository;
-        this.roleStatusRepository = roleStatusRepository;
-        this.statusRepository = statusRepository;
-        this.sprintRepository = sprintRepository;
-        this.userService = userService;
-        this.roleService = roleService;
-    }
 
 
     public List<Task> getAllTasks() {

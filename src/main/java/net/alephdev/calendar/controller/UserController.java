@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
+
 
 @RestController
 @RequestMapping("/api/users")
@@ -25,7 +27,7 @@ public class UserController {
 
     @PrivilegeRequired
     @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<User> registerUser(@Valid @RequestBody UserDto userDto) {
         try {
             return new ResponseEntity<>(userService.register(userDto), HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
@@ -56,7 +58,7 @@ public class UserController {
 
     @AuthorizedRequired
     @PutMapping("/{login}")
-    public ResponseEntity<User> updateUser(@PathVariable String login, @RequestBody UserDto userDto, @CurrentUser User currentUser) {
+    public ResponseEntity<User> updateUser(@PathVariable String login, @Valid @RequestBody UserDto userDto, @CurrentUser User currentUser) {
         if (currentUser.getLogin().equals(login) || userService.isPrivileged(currentUser)) {
             try {
                 return new ResponseEntity<>(userService.updateUser(login, userDto), HttpStatus.OK);

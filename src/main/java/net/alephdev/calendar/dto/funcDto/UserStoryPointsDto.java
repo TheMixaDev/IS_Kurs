@@ -1,13 +1,11 @@
 package net.alephdev.calendar.dto.funcDto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
-@Data
+@Getter
 @AllArgsConstructor
-@NoArgsConstructor
 public class UserStoryPointsDto {
-    private String userLogin;
-    private Long totalStoryPoints;
+    private final String userLogin;
+    private final Long totalStoryPoints;
 }

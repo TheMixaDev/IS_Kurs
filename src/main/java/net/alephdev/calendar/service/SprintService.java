@@ -5,22 +5,19 @@ import net.alephdev.calendar.dto.funcDto.UserStoryPointsDto;
 import net.alephdev.calendar.models.Sprint;
 import net.alephdev.calendar.repository.repoWithFunc.SprintRepository;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import lombok.RequiredArgsConstructor;
 
 import java.sql.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class SprintService {
 
     private final SprintRepository sprintRepository;
-
-    @Autowired
-    public SprintService(SprintRepository sprintRepository) {
-        this.sprintRepository = sprintRepository;
-    }
 
     public List<Sprint> getAllSprints() {
         return sprintRepository.findAll();

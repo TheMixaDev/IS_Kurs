@@ -3,8 +3,6 @@ package net.alephdev.calendar.models;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Set;
-
 @Entity
 @Table(name = "Tag")
 @Getter
