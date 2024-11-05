@@ -1,20 +1,15 @@
 package net.alephdev.calendar.service;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import net.alephdev.calendar.dto.IdeaDto;
 import net.alephdev.calendar.models.Idea;
-import net.alephdev.calendar.models.IdeaRisk;
-import net.alephdev.calendar.models.Risk;
 import net.alephdev.calendar.models.User;
-import net.alephdev.calendar.repository.IdeaRiskRepository;
 import net.alephdev.calendar.repository.functional.IdeaRepository;
 
-import net.alephdev.calendar.repository.functional.RiskRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -22,11 +17,9 @@ public class IdeaService {
 
     private final IdeaRepository ideaRepository;
     private final UserService userService;
-    private final RiskRepository riskRepository;
-    private final IdeaRiskRepository ideaRiskRepository;
 
-    public List<Idea> getAllIdeas() {
-        return ideaRepository.findAll();
+    public Page<Idea> getAllIdeas(int page) {
+        return ideaRepository.findAll(Pageable.ofSize(20).withPage(page));
     }
 
     public Idea createIdea(IdeaDto idea, User user) {

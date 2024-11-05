@@ -10,6 +10,8 @@ import net.alephdev.calendar.repository.ReleaseRepository;
 import net.alephdev.calendar.repository.functional.SprintRepository;
 
 import net.alephdev.calendar.repository.functional.TeamRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -26,8 +28,8 @@ public class SprintService {
     private final TeamRepository teamRepository;
     private final ReleaseRepository releaseRepository;
 
-    public List<Sprint> getAllSprints() {
-        return sprintRepository.findAll();
+    public Page<Sprint> getAllSprints(int page) {
+        return sprintRepository.findAll(Pageable.ofSize(20).withPage(page));
     }
 
     public Sprint createSprint(SprintDto sprintDto) {

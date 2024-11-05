@@ -10,6 +10,8 @@ import net.alephdev.calendar.models.User;
 import net.alephdev.calendar.service.TaskService;
 import net.alephdev.calendar.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.bind.DefaultValue;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,8 +33,8 @@ public class TaskController {
     }
 
     @GetMapping
-    public List<Task> getAllTasks() {
-        return taskService.getAllTasks();
+    public Page<Task> getAllTasks(@RequestParam @DefaultValue("0") int page) {
+        return taskService.getAllTasks(page);
     }
 
     @PostMapping

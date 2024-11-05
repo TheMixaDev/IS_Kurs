@@ -6,6 +6,8 @@ import net.alephdev.calendar.models.Release;
 import net.alephdev.calendar.models.Sprint;
 import net.alephdev.calendar.repository.ReleaseRepository;
 import net.alephdev.calendar.repository.functional.SprintRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,8 +19,8 @@ public class ReleaseService {
     private final ReleaseRepository releaseRepository;
     private final SprintRepository sprintRepository;
 
-    public List<Release> getAllReleases() {
-        return releaseRepository.findAll();
+    public Page<Release> getAllReleases(int page) {
+        return releaseRepository.findAll(Pageable.ofSize(20).withPage(page));
     }
 
     public Release createRelease(ReleaseDto releaseDto) {

@@ -10,6 +10,8 @@ import net.alephdev.calendar.models.User;
 import net.alephdev.calendar.repository.RoleRepository;
 import net.alephdev.calendar.repository.UserRepository;
 import net.alephdev.calendar.repository.functional.TeamRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,10 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final TeamRepository teamRepository;
     private final RoleRepository roleRepository;
+
+    public Page<User> getAllUsers(int page) {
+        return userRepository.findAll(Pageable.ofSize(20).withPage(page));
+    }
 
     public User getUserByLogin(String login) {
         return userRepository.findById(login)

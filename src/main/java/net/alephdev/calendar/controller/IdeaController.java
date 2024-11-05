@@ -8,6 +8,8 @@ import net.alephdev.calendar.models.Idea;
 import net.alephdev.calendar.models.User;
 import net.alephdev.calendar.service.IdeaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.bind.DefaultValue;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,8 +29,8 @@ public class IdeaController {
     }
 
     @GetMapping
-    public List<Idea> getAllIdeas() {
-        return ideaService.getAllIdeas();
+    public Page<Idea> getAllIdeas(@RequestParam @DefaultValue("0") int page) {
+        return ideaService.getAllIdeas(page);
     }
 
     @PostMapping

@@ -4,9 +4,12 @@ import net.alephdev.calendar.annotation.AuthorizedRequired;
 import net.alephdev.calendar.annotation.CurrentUser;
 import net.alephdev.calendar.annotation.PrivilegeRequired;
 import net.alephdev.calendar.dto.UserDto;
+import net.alephdev.calendar.dto.UserPublicDto;
 import net.alephdev.calendar.models.User;
 import net.alephdev.calendar.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.bind.DefaultValue;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +27,11 @@ public class UserController {
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
+    }
+
+    @GetMapping
+    public Page<UserPublicDto> getAllUsers(@RequestParam @DefaultValue("0") int page) {
+        return userService.getAllUsers(page).map(UserPublicDto::new);
     }
 
     @PrivilegeRequired

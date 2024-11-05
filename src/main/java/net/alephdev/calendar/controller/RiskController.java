@@ -13,6 +13,9 @@ import net.alephdev.calendar.models.User;
 import net.alephdev.calendar.service.IdeaService;
 import net.alephdev.calendar.service.RiskService;
 import net.alephdev.calendar.service.TaskService;
+import org.springframework.boot.context.properties.bind.DefaultValue;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,8 +33,8 @@ public class RiskController {
     private final IdeaService ideaService;
 
     @GetMapping
-    public List<Risk> getAllRisks() {
-        return riskService.getAllRisks();
+    public Page<Risk> getAllRisks(@RequestParam @DefaultValue("0") int page) {
+        return riskService.getAllRisks(page);
     }
 
     @PrivilegeRequired

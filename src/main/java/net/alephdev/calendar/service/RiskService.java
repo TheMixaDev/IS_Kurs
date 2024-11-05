@@ -3,6 +3,8 @@ package net.alephdev.calendar.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +22,8 @@ public class RiskService {
     private final TaskService taskService;
     private final UserService userService;
 
-    public List<Risk> getAllRisks() {
-        return riskRepository.findAll();
+    public Page<Risk> getAllRisks(int page) {
+        return riskRepository.findAll(Pageable.ofSize(20).withPage(page));
     }
 
     public Risk createRisk(Risk risk) {
