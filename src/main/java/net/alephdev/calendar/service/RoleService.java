@@ -39,6 +39,9 @@ public class RoleService {
     }
 
     public void deleteRole(Integer id) {
+        if (id <= 1) {
+            throw new IllegalArgumentException("Cannot delete default role");
+        }
         roleRepository.deleteById(id);
     }
 

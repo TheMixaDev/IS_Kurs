@@ -33,6 +33,9 @@ public class StatusService {
     }
 
     public void deleteStatus(Integer id) {
+        if(id <= 1) {
+            throw new IllegalArgumentException("Cannot delete default status");
+        }
         statusRepository.deleteById(id);
     }
 }

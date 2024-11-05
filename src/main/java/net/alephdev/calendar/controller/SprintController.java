@@ -5,6 +5,7 @@ import net.alephdev.calendar.annotation.PrivilegeRequired;
 import net.alephdev.calendar.dto.SprintDto;
 import net.alephdev.calendar.dto.functional.SprintTeamDto;
 import net.alephdev.calendar.dto.functional.UserStoryPointsDto;
+import net.alephdev.calendar.models.Release;
 import net.alephdev.calendar.models.Sprint;
 import net.alephdev.calendar.service.SprintService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,5 +64,10 @@ public class SprintController {
     @GetMapping("/{sprintId}/story-points")
     public ResponseEntity<List<UserStoryPointsDto>> getStoryPointsPerUser(@PathVariable Integer sprintId) {
         return ResponseEntity.ok(sprintService.getStoryPointsPerUser(sprintId));
+    }
+
+    @GetMapping("/{id}/releases")
+    public List<Release> getSprintReleases(@PathVariable Integer id) {
+        return sprintService.getSprintReleases(id);
     }
 }

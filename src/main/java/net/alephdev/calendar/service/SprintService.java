@@ -3,8 +3,10 @@ package net.alephdev.calendar.service;
 import net.alephdev.calendar.dto.SprintDto;
 import net.alephdev.calendar.dto.functional.SprintTeamDto;
 import net.alephdev.calendar.dto.functional.UserStoryPointsDto;
+import net.alephdev.calendar.models.Release;
 import net.alephdev.calendar.models.Sprint;
 import net.alephdev.calendar.models.Team;
+import net.alephdev.calendar.repository.ReleaseRepository;
 import net.alephdev.calendar.repository.functional.SprintRepository;
 
 import net.alephdev.calendar.repository.functional.TeamRepository;
@@ -22,6 +24,7 @@ public class SprintService {
 
     private final SprintRepository sprintRepository;
     private final TeamRepository teamRepository;
+    private final ReleaseRepository releaseRepository;
 
     public List<Sprint> getAllSprints() {
         return sprintRepository.findAll();
@@ -63,6 +66,12 @@ public class SprintService {
 
     public void deleteSprint(Integer id) {
         sprintRepository.deleteById(id);
+    }
+
+    public List<Release> getSprintReleases(Integer sprintId) {
+        Sprint sprint = sprintRepository.findById(sprintId)
+                .orElseThrow(() -> new IllegalArgumentException("Sprint not found with ID: " + sprintId));
+        return releaseRepository.findAllBySprint(sprint);
     }
 
     public List<SprintTeamDto> getSprintsByYearAndTeam(Integer year, String teamName) {

@@ -45,7 +45,11 @@ public class StatusController {
     @PrivilegeRequired
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteStatus(@PathVariable Integer id) {
-        statusService.deleteStatus(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        try {
+            statusService.deleteStatus(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
     }
 }

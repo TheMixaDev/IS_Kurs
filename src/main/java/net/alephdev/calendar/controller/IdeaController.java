@@ -43,13 +43,6 @@ public class IdeaController {
         return new ResponseEntity<>(idea, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    @PrivilegeRequired
-    public ResponseEntity<Void> deleteIdea(@PathVariable Integer id) {
-        ideaService.deleteIdea(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
     @PrivilegeRequired
     @PutMapping("/{id}/status")
     public ResponseEntity<Void> processIdea(
