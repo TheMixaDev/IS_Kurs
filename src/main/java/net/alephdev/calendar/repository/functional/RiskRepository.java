@@ -1,4 +1,4 @@
-package net.alephdev.calendar.repository.repoWithFunc;
+package net.alephdev.calendar.repository.functional;
 
 import net.alephdev.calendar.models.Risk;
 

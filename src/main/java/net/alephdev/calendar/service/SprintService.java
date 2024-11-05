@@ -1,9 +1,9 @@
 package net.alephdev.calendar.service;
 
-import net.alephdev.calendar.dto.funcDto.SprintTeamDto;
-import net.alephdev.calendar.dto.funcDto.UserStoryPointsDto;
+import net.alephdev.calendar.dto.functional.SprintTeamDto;
+import net.alephdev.calendar.dto.functional.UserStoryPointsDto;
 import net.alephdev.calendar.models.Sprint;
-import net.alephdev.calendar.repository.repoWithFunc.SprintRepository;
+import net.alephdev.calendar.repository.functional.SprintRepository;
 
 import org.springframework.stereotype.Service;
 

@@ -9,7 +9,7 @@ import net.alephdev.calendar.models.User;
 import net.alephdev.calendar.repository.RoleStatusRepository;
 import net.alephdev.calendar.repository.StatusRepository;
 import net.alephdev.calendar.repository.TaskRepository;
-import net.alephdev.calendar.repository.repoWithFunc.SprintRepository;
+import net.alephdev.calendar.repository.functional.SprintRepository;
 
 import org.springframework.stereotype.Service;
 
@@ -57,6 +57,9 @@ public class TaskService {
 
     public boolean canCreateTask(User user) {
         if (user.getRole() != null) {
+            if(userService.isPrivileged(user)) {
+                return true;
+            }
             List<RoleStatus> roleStatuses = roleStatusRepository.findAllByRole_Id(user.getRole().getId());
             return roleStatuses.stream().anyMatch(rs -> rs.getStatus().getId() == 1);
         }
@@ -65,8 +68,8 @@ public class TaskService {
 
 
     public boolean canEditTask(User user, Task task) {
-        if (user.getRole() != null && user.getRole().getId() == 1) {
-            return true; // Admin can edit any task
+        if (user.getRole() != null && userService.isPrivileged(user)) {
+            return true;
         }
         return user.getLogin().equals(task.getCreatedBy().getLogin()) ||
                 (task.getImplementer() != null && user.getLogin().equals(task.getImplementer().getLogin()));

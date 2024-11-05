@@ -4,7 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import net.alephdev.calendar.models.Idea;
-import net.alephdev.calendar.repository.repoWithFunc.IdeaRepository;
+import net.alephdev.calendar.repository.functional.IdeaRepository;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

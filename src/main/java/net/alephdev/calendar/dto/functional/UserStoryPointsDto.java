@@ -1,4 +1,4 @@
-package net.alephdev.calendar.dto.funcDto;
+package net.alephdev.calendar.dto.functional;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

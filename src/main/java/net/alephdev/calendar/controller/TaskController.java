@@ -59,11 +59,8 @@ public class TaskController {
     @PrivilegeRequired
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable Integer id, @CurrentUser User user) {
-        if(userService.isPrivileged(user)) {
-            taskService.deleteTask(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        taskService.deleteTask(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping("/{taskId}/implementer")
@@ -71,7 +68,7 @@ public class TaskController {
                                                   @CurrentUser User user) {
         Task existingTask = taskService.getAllTasks().stream().filter(t -> t.getId().equals(taskId)).findFirst().orElse(null);
 
-        if (existingTask != null && (user.getRole() != null && user.getRole().getId() == 1 ||
+        if (existingTask != null && (user.getRole() != null && userService.isPrivileged(user) ||
                 (existingTask.getImplementer() != null && existingTask.getImplementer().getLogin().equals(user.getLogin())) ||
                 existingTask.getCreatedBy().getLogin().equals(user.getLogin()))) {
             Task task = taskService.assignImplementer(taskId, implementerLogin);

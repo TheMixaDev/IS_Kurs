@@ -2,8 +2,8 @@ package net.alephdev.calendar.controller;
 
 import net.alephdev.calendar.annotation.AuthorizedRequired;
 import net.alephdev.calendar.annotation.PrivilegeRequired;
-import net.alephdev.calendar.dto.funcDto.SprintTeamDto;
-import net.alephdev.calendar.dto.funcDto.UserStoryPointsDto;
+import net.alephdev.calendar.dto.functional.SprintTeamDto;
+import net.alephdev.calendar.dto.functional.UserStoryPointsDto;
 import net.alephdev.calendar.models.Sprint;
 import net.alephdev.calendar.service.SprintService;
 import org.springframework.beans.factory.annotation.Autowired;

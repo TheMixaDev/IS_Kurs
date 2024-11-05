@@ -6,8 +6,8 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import lombok.RequiredArgsConstructor;
-import net.alephdev.calendar.dto.funcDto.TopRiskDto;
-import net.alephdev.calendar.repository.repoWithFunc.RiskRepository;
+import net.alephdev.calendar.dto.functional.TopRiskDto;
+import net.alephdev.calendar.repository.functional.RiskRepository;
 
 @Service
 @RequiredArgsConstructor

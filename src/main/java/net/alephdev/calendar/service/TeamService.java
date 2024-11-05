@@ -1,7 +1,7 @@
 package net.alephdev.calendar.service;
 
 import net.alephdev.calendar.models.Team;
-import net.alephdev.calendar.repository.repoWithFunc.TeamRepository;
+import net.alephdev.calendar.repository.functional.TeamRepository;
 
 import org.springframework.stereotype.Service;
 
