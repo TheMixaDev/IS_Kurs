@@ -43,13 +43,6 @@ public class TeamController {
         return new ResponseEntity<>(team, HttpStatus.OK);
     }
 
-    @PrivilegeRequired
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTeam(@PathVariable Integer id) {
-        teamService.deleteTeam(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
     @GetMapping("/load") // /api/teams/load?teamId=1&sprintId=1
     public ResponseEntity<BigDecimal> getTeamLoad(
         @RequestParam Integer teamId,

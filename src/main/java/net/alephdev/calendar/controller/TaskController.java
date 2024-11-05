@@ -4,7 +4,7 @@ import net.alephdev.calendar.annotation.AuthorizedRequired;
 import net.alephdev.calendar.annotation.CurrentUser;
 import net.alephdev.calendar.annotation.PrivilegeRequired;
 import net.alephdev.calendar.dto.MessageDto;
-import net.alephdev.calendar.dto.UpdatedTaskDto;
+import net.alephdev.calendar.dto.TaskDto;
 import net.alephdev.calendar.models.Task;
 import net.alephdev.calendar.models.User;
 import net.alephdev.calendar.service.TaskService;
@@ -36,9 +36,9 @@ public class TaskController {
     }
 
     @PostMapping
-    public ResponseEntity<Task> createTask(@RequestBody Task task, @CurrentUser User user) {
+    public ResponseEntity<Task> createTask(@RequestBody TaskDto task, @CurrentUser User user) {
         if (taskService.canCreateTask(user)) {
-            Task createdTask = taskService.createTask(task);
+            Task createdTask = taskService.createTask(task, user);
             return new ResponseEntity<>(createdTask, HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
@@ -46,7 +46,7 @@ public class TaskController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Task> updateTask(@PathVariable Integer id, @RequestBody UpdatedTaskDto updatedTask, @CurrentUser User user) {
+    public ResponseEntity<Task> updateTask(@PathVariable Integer id, @RequestBody TaskDto updatedTask, @CurrentUser User user) {
         try {
             Task existingTask = taskService.getTask(id);
 

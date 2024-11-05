@@ -37,10 +37,6 @@ public class TeamService {
         return teamRepository.save(team);
     }
 
-    public void deleteTeam(Integer id) {
-        teamRepository.deleteById(id);
-    }
-
     @Transactional
     public BigDecimal getTeamLoad(Integer teamId, Integer sprintId) {
         return teamRepository.calculateTeamLoad(teamId, sprintId);

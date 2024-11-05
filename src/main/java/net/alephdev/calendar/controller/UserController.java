@@ -37,7 +37,7 @@ public class UserController {
     }
 
     @PrivilegeRequired
-    @PostMapping("/{login}/role")
+    @PutMapping("/{login}/role")
     public ResponseEntity<User> updateUserRole(@PathVariable String login, @RequestParam Integer roleId) {
         try {
             return new ResponseEntity<>(userService.updateRole(login, roleId), HttpStatus.OK);
@@ -50,8 +50,7 @@ public class UserController {
     @PutMapping("/{login}/team")
     public ResponseEntity<User> updateUserTeam(@PathVariable String login, @RequestParam(required = false) Integer teamId) {
         try {
-            User updatedUser = userService.updateUserTeam(login, teamId);
-            return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+            return new ResponseEntity<>(userService.updateUserTeam(login, teamId), HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

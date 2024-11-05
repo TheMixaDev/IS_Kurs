@@ -6,7 +6,7 @@ import net.alephdev.calendar.models.Task;
 
 @Getter
 @AllArgsConstructor
-public class UpdatedTaskDto {
+public class TaskDto {
     private String name;
     private Integer storyPoints;
     private Task.Priority priorityEnum;

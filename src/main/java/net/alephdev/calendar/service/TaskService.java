@@ -2,7 +2,7 @@ package net.alephdev.calendar.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import net.alephdev.calendar.dto.UpdatedTaskDto;
+import net.alephdev.calendar.dto.TaskDto;
 import net.alephdev.calendar.models.*;
 import net.alephdev.calendar.repository.RoleStatusRepository;
 import net.alephdev.calendar.repository.StatusRepository;
@@ -30,11 +30,17 @@ public class TaskService {
         return taskRepository.findAll();
     }
 
-    public Task createTask(Task task) {
+    public Task createTask(TaskDto taskDto, User user) {
+        Task task = new Task();
+        task.setName(taskDto.getName());
+        task.setStoryPoints(taskDto.getStoryPoints());
+        task.setPriorityEnum(taskDto.getPriorityEnum());
+        task.setCreatedBy(user);
+
         return taskRepository.save(task);
     }
 
-    public Task updateTask(Integer id, UpdatedTaskDto updatedTask) {
+    public Task updateTask(Integer id, TaskDto updatedTask) {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Task not found"));
 
