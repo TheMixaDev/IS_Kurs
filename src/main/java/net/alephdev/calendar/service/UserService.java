@@ -11,7 +11,9 @@ import net.alephdev.calendar.repository.RoleRepository;
 import net.alephdev.calendar.repository.UserRepository;
 import net.alephdev.calendar.repository.functional.TeamRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +26,11 @@ public class UserService {
     private final RoleRepository roleRepository;
 
     public Page<User> getAllUsers(int page) {
-        return userRepository.findAll(Pageable.ofSize(20).withPage(page));
+        return userRepository.findAll(PageRequest.of(page, 20));
+    }
+
+    public Page<User> getAllUserWithPartialLogin(int page, String login) {
+        return userRepository.findAllByLoginContaining(login, PageRequest.of(page, 20));
     }
 
     public User getUserByLogin(String login) {
