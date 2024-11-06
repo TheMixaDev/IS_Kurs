@@ -79,27 +79,15 @@ public class SprintService {
     }
 
     public List<SprintTeamDto> getSprintsByYearAndTeam(Integer year, String teamName) {
-        List<Object[]> results = sprintRepository.getSprintsByYearAndTeam(year, teamName);
-        
-        return results.stream()
-            .map(row -> new SprintTeamDto(
-                ((Number) row[0]).intValue(),  // sprint_id
-                (String) row[1],               // major_version
-                ((Date) row[2]).toLocalDate(), // start_date
-                ((Date) row[3]).toLocalDate(), // end_date
-                (String) row[4]                // team_name
-            ))
-            .collect(Collectors.toList());
+        return sprintRepository.getSprintsByYearAndTeam(year, teamName)
+                .stream().map(SprintTeamDto::new)
+                .collect(Collectors.toList());
     }
 
     public List<UserStoryPointsDto> getStoryPointsPerUser(Integer sprintId) {
-    return sprintRepository.getStoryPointsPerUser(sprintId)
-        .stream()
-            .map(row -> new UserStoryPointsDto(
-                (String) row[0],                // user_login
-                ((Number) row[1]).longValue()  // total_story_points
-            ))
-            .collect(Collectors.toList());
+        return sprintRepository.getStoryPointsPerUser(sprintId)
+                .stream().map(UserStoryPointsDto::new)
+                .collect(Collectors.toList());
     }
 
     public Sprint getSprint(Integer sprintId) {

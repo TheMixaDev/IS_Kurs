@@ -8,4 +8,8 @@ import lombok.Getter;
 public class UserStoryPointsDto {
     private final String userLogin;
     private final Long totalStoryPoints;
+
+    public UserStoryPointsDto(UserStoryPointsProjection projection) {
+        this(projection.getUserLogin(), projection.getTotalStoryPoints());
+    }
 }

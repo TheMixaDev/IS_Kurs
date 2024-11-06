@@ -1,5 +1,6 @@
 package net.alephdev.calendar.repository.functional;
 
+import net.alephdev.calendar.dto.functional.TopRiskProjection;
 import net.alephdev.calendar.models.Risk;
 
 import java.util.List;
@@ -11,5 +12,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RiskRepository extends JpaRepository<Risk, Integer> {
     @Query(value = "SELECT * FROM get_top_10_task_risks()", nativeQuery = true)
-    List<Object[]> getTop10TaskRisks();
+    List<TopRiskProjection> getTop10TaskRisks();
 }

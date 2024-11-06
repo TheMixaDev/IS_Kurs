@@ -11,4 +11,8 @@ public class TopRiskDto {
     private final Integer riskId; 
     private final String description;
     private final BigDecimal totalEstimatedLoss;
+
+    public TopRiskDto(TopRiskProjection projection) {
+        this(projection.getRiskId(), projection.getDescription(), projection.getTotalEstimatedLoss());
+    }
 }

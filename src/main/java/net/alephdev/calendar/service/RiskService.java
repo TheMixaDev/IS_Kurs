@@ -102,14 +102,8 @@ public class RiskService {
     }
 
     public List<TopRiskDto> getTop10TaskRisks() {
-        List<Object[]> results = riskRepository.getTop10TaskRisks();
-
-        return results.stream()
-                .map(row -> new TopRiskDto(
-                        row[0] instanceof Number ? ((Number) row[0]).intValue() : null,  // risk_id as Integer
-                        (String) row[1],                                                 // description
-                        (BigDecimal) row[2]                                             // total_estimated_loss
-                ))
+        return riskRepository.getTop10TaskRisks()
+                .stream().map(TopRiskDto::new)
                 .collect(Collectors.toList());
     }
 }
