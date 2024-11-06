@@ -38,4 +38,9 @@ public class StatusService {
         }
         statusRepository.deleteById(id);
     }
+
+    public Status getStatus(Integer statusId) {
+        return statusRepository.findById(statusId)
+                .orElseThrow(() -> new IllegalArgumentException("Status not found"));
+    }
 }

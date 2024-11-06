@@ -1,10 +1,12 @@
 package net.alephdev.calendar.service;
 
+import jakarta.transaction.Transactional;
 import net.alephdev.calendar.models.Role;
 import net.alephdev.calendar.models.RoleStatus;
 import net.alephdev.calendar.models.Status;
 import net.alephdev.calendar.repository.RoleRepository;
 import net.alephdev.calendar.repository.RoleStatusRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -14,13 +16,14 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class RoleService {
 
     private final RoleRepository roleRepository;
     private final RoleStatusRepository roleStatusRepository;
 
     public List<Role> getAllRoles() {
-        return roleRepository.findAll();
+        return roleRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
     public Role createRole(Role role) {
@@ -49,9 +52,25 @@ public class RoleService {
     }
 
     public List<Status> getStatuses(Integer id) {
-        List<RoleStatus> roleStatuses = roleStatusRepository.findAllByRole_Id(id);
+        List<RoleStatus> roleStatuses = roleStatusRepository.findAllByRole_Id(id, Sort.by(Sort.Direction.ASC, "status_id"));
         return roleStatuses.stream()
                 .map(RoleStatus::getStatus)
                 .collect(Collectors.toList());
+    }
+
+    public void addRoleStatus(Role role, Status status) {
+        if(roleStatusRepository.existsByRole_IdAndStatus_Id(role.getId(), status.getId())) {
+            return;
+        }
+        roleStatusRepository.save(new RoleStatus(role, status));
+    }
+
+    public void removeRoleStatus(Role role, Status status) {
+        roleStatusRepository.deleteByRole_IdAndStatus_Id(role.getId(), status.getId());
+    }
+
+    public Role getRole(Integer id) {
+        return roleRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Role not found"));
     }
 }

@@ -1,12 +1,16 @@
 package net.alephdev.calendar.models;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import net.alephdev.calendar.models.keys.RoleStatusId;
 
 @Data
 @Entity
 @IdClass(RoleStatusId.class)
+@AllArgsConstructor
+@NoArgsConstructor
 public class RoleStatus {
     @Id
     @ManyToOne
