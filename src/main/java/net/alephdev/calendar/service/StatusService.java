@@ -2,6 +2,7 @@ package net.alephdev.calendar.service;
 
 import net.alephdev.calendar.models.Status;
 import net.alephdev.calendar.repository.StatusRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,7 @@ public class StatusService {
     private final StatusRepository statusRepository;
 
     public List<Status> getAllStatuses() {
-        return statusRepository.findAll();
+        return statusRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
     public Status createStatus(Status status) {
