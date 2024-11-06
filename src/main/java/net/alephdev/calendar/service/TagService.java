@@ -1,5 +1,6 @@
 package net.alephdev.calendar.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import net.alephdev.calendar.models.Tag;
 import net.alephdev.calendar.models.Task;
@@ -7,6 +8,7 @@ import net.alephdev.calendar.models.TaskTag;
 import net.alephdev.calendar.models.User;
 import net.alephdev.calendar.repository.TagRepository;
 import net.alephdev.calendar.repository.TaskTagRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +16,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class TagService {
 
     private final TagRepository tagRepository;
@@ -21,7 +24,7 @@ public class TagService {
     private final TaskService taskService;
 
     public List<Tag> getAllTags() {
-        return tagRepository.findAll();
+        return tagRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
     public Tag createTag(Tag tag) {

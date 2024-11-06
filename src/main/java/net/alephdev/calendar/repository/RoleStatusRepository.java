@@ -12,7 +12,5 @@ public interface RoleStatusRepository extends JpaRepository<RoleStatus, RoleStat
 
     List<RoleStatus> findAllByRole_Id(Integer id, Sort sort);
 
-    boolean existsByRole_IdAndStatus_Id(Integer id, Integer id1);
-
     void deleteByRole_IdAndStatus_Id(Integer id, Integer id1);
 }

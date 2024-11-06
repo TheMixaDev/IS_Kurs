@@ -59,9 +59,6 @@ public class RoleService {
     }
 
     public void addRoleStatus(Role role, Status status) {
-        if(roleStatusRepository.existsByRole_IdAndStatus_Id(role.getId(), status.getId())) {
-            return;
-        }
         roleStatusRepository.save(new RoleStatus(role, status));
     }
 
