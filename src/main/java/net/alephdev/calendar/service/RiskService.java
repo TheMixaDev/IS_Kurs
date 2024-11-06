@@ -1,6 +1,7 @@
 package net.alephdev.calendar.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import jakarta.transaction.Transactional;
@@ -37,7 +38,7 @@ public class RiskService {
 
     public Risk updateRisk(Integer id, Risk updatedRisk) {
         Risk risk = riskRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Risk not found"));
+                .orElseThrow(() -> new NoSuchElementException("Risk not found"));
 
         risk.setDescription(updatedRisk.getDescription());
         risk.setProbability(updatedRisk.getProbability());
@@ -48,7 +49,7 @@ public class RiskService {
 
     public Risk getRisk(Integer id) {
         return riskRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Risk not found"));
+                .orElseThrow(() -> new NoSuchElementException("Risk not found"));
     }
 
     public void deleteRisk(Integer id) {

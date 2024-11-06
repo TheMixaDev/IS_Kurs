@@ -35,7 +35,7 @@ public class UserService {
 
     public User getUserByLogin(String login) {
         return userRepository.findById(login)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with login: " + login));
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
     }
 
     @Transactional
@@ -53,16 +53,6 @@ public class UserService {
                 .build();
 
         return userRepository.save(user);
-    }
-
-    public User authenticate(String login, String password) {
-        User user = getUserByLogin(login);
-
-        if (passwordEncoder.matches(password, user.getPassword())) {
-            return user;
-        } else {
-            throw new IllegalArgumentException("Invalid password");
-        }
     }
 
     @Transactional
@@ -100,7 +90,7 @@ public class UserService {
             user.setRole(role);
             return userRepository.save(user);
         } else {
-            throw new EntityNotFoundException("Role not found with id: " + roleId);
+            throw new EntityNotFoundException("Role not found");
         }
     }
 

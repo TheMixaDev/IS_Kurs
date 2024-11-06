@@ -16,8 +16,10 @@ public class Risk {
     @Column(nullable = false)
     private String description;
 
+    @Column(nullable = false)
     private BigDecimal probability;
 
+    @Column(nullable = false)
     private BigDecimal estimatedLoss;
 
 }

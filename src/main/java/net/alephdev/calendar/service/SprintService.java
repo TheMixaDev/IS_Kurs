@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,7 +38,7 @@ public class SprintService {
     public Sprint createSprint(SprintDto sprintDto) {
         Sprint sprint = new Sprint();
         Team team = teamRepository.findById(sprintDto.getTeamId())
-                .orElseThrow(() -> new IllegalArgumentException("Team not found"));
+                .orElseThrow(() -> new NoSuchElementException("Team not found"));
 
         sprint.setMajorVersion(sprintDto.getMajorVersion());
         sprint.setStartDate(sprintDto.getStartDate());
@@ -51,7 +52,7 @@ public class SprintService {
 
     public Sprint updateSprint(Integer id, SprintDto updatedSprint) {
         Sprint sprint = sprintRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Sprint not found"));
+                .orElseThrow(() -> new NoSuchElementException("Sprint not found"));
 
         sprint.setMajorVersion(updatedSprint.getMajorVersion());
         sprint.setStartDate(updatedSprint.getStartDate());
@@ -61,7 +62,7 @@ public class SprintService {
 
         if(updatedSprint.getTeamId() != null) {
             Team team = teamRepository.findById(updatedSprint.getTeamId())
-                    .orElseThrow(() -> new IllegalArgumentException("Team not found"));
+                    .orElseThrow(() -> new NoSuchElementException("Team not found"));
             sprint.setTeam(team);
         }
 
@@ -74,7 +75,7 @@ public class SprintService {
 
     public List<Release> getSprintReleases(Integer sprintId) {
         Sprint sprint = sprintRepository.findById(sprintId)
-                .orElseThrow(() -> new IllegalArgumentException("Sprint not found with ID: " + sprintId));
+                .orElseThrow(() -> new NoSuchElementException("Sprint not found"));
         return releaseRepository.findAllBySprint(sprint, Sort.by(Sort.Direction.ASC, "releaseDate"));
     }
 
@@ -92,6 +93,6 @@ public class SprintService {
 
     public Sprint getSprint(Integer sprintId) {
         return sprintRepository.findById(sprintId)
-                .orElseThrow(() -> new IllegalArgumentException("Sprint not found with ID: " + sprintId));
+                .orElseThrow(() -> new NoSuchElementException("Sprint not found"));
     }
 }

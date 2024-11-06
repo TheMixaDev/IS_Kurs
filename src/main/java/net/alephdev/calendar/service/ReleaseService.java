@@ -11,6 +11,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
+
 @Service
 @RequiredArgsConstructor
 public class ReleaseService {
@@ -29,13 +31,8 @@ public class ReleaseService {
     public Release createRelease(ReleaseDto releaseDto) {
         Release release = new Release();
         Sprint sprint = sprintRepository.findById(releaseDto.getSprintId())
-                .orElseThrow(() -> new IllegalArgumentException("Sprint not found"));
+                .orElseThrow(() -> new NoSuchElementException("Sprint not found"));
 
-        if(releaseDto.getReleaseDate() == null ||
-                releaseDto.getReleaseDate().isBefore(sprint.getStartDate()) ||
-                releaseDto.getReleaseDate().isAfter(sprint.getEndDate())) {
-            throw new IllegalArgumentException("Release date must be between sprint dates");
-        }
         release.setVersion(releaseDto.getVersion());
         release.setReleaseDate(releaseDto.getReleaseDate());
         release.setDescription(releaseDto.getDescription());
@@ -45,19 +42,14 @@ public class ReleaseService {
 
     public Release updateRelease(Integer id, ReleaseDto updatedRelease) {
         Release release = releaseRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Release not found"));
+                .orElseThrow(() -> new NoSuchElementException("Release not found"));
 
         if (updatedRelease.getSprintId() != null) {
             Sprint sprint = sprintRepository.findById(updatedRelease.getSprintId())
-                    .orElseThrow(() -> new IllegalArgumentException("Sprint not found"));
+                    .orElseThrow(() -> new NoSuchElementException("Sprint not found"));
             release.setSprint(sprint);
         }
 
-        if(updatedRelease.getReleaseDate() == null ||
-                updatedRelease.getReleaseDate().isBefore(release.getSprint().getStartDate()) ||
-                updatedRelease.getReleaseDate().isAfter(release.getSprint().getEndDate())) {
-            throw new IllegalArgumentException("Release date must be between sprint dates");
-        }
         release.setVersion(updatedRelease.getVersion());
         release.setReleaseDate(updatedRelease.getReleaseDate());
         release.setDescription(updatedRelease.getDescription());

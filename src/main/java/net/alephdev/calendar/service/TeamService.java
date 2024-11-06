@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +35,7 @@ public class TeamService {
 
     public Team updateTeam(Integer id, Team updatedTeam) {
         Team team = teamRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Team not found"));
+                .orElseThrow(() -> new NoSuchElementException("Team not found"));
 
         team.setName(updatedTeam.getName());
         team.setColor(updatedTeam.getColor());

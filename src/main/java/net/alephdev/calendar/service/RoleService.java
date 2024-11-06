@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,7 +33,7 @@ public class RoleService {
 
     public Role updateRole(Integer id, Role updatedRole) {
         Role role = roleRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Role not found"));
+                .orElseThrow(() -> new NoSuchElementException("Role not found"));
 
         role.setName(updatedRole.getName());
         role.setResponsibilities(updatedRole.getResponsibilities());
@@ -68,6 +69,6 @@ public class RoleService {
 
     public Role getRole(Integer id) {
         return roleRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Role not found"));
+                .orElseThrow(() -> new NoSuchElementException("Role not found"));
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +26,7 @@ public class StatusService {
 
     public Status updateStatus(Integer id, Status updatedStatus) {
         Status status = statusRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Status not found"));
+                .orElseThrow(() -> new NoSuchElementException("Status not found"));
 
         status.setName(updatedStatus.getName());
         status.setDescription(updatedStatus.getDescription());
@@ -42,6 +43,6 @@ public class StatusService {
 
     public Status getStatus(Integer statusId) {
         return statusRepository.findById(statusId)
-                .orElseThrow(() -> new IllegalArgumentException("Status not found"));
+                .orElseThrow(() -> new NoSuchElementException("Status not found"));
     }
 }

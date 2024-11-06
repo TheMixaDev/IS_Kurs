@@ -13,6 +13,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.NoSuchElementException;
+
 @Service
 @RequiredArgsConstructor
 public class IdeaService {
@@ -39,7 +41,7 @@ public class IdeaService {
 
     public Idea updateIdea(Integer id, IdeaDto updatedIdea, User user) {
         Idea idea = ideaRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Idea not found"));
+                .orElseThrow(() -> new NoSuchElementException("Idea not found"));
 
         if(canEditIdea(idea, user)) {
             idea.setDescription(updatedIdea.getDescription());
@@ -55,11 +57,12 @@ public class IdeaService {
 
     @Transactional
     public void processIdea(Integer ideaId, String newStatus) {
+        getIdea(ideaId);
         ideaRepository.processIdea(ideaId, newStatus);
     }
 
     public Idea getIdea(Integer ideaId) {
         return ideaRepository.findById(ideaId)
-                .orElseThrow(() -> new IllegalArgumentException("Idea not found with ID: " + ideaId));
+                .orElseThrow(() -> new NoSuchElementException("Idea not found"));
     }
 }

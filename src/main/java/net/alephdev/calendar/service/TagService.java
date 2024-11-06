@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,7 +34,7 @@ public class TagService {
 
     public Tag updateTag(Integer id, Tag updatedTag) {
         Tag tag = tagRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Tag not found"));
+                .orElseThrow(() -> new NoSuchElementException("Tag not found"));
 
         tag.setName(updatedTag.getName());
         tag.setDescription(updatedTag.getDescription());
@@ -69,6 +70,6 @@ public class TagService {
 
     public Tag getTag(Integer id) {
         return tagRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Tag not found"));
+                .orElseThrow(() -> new NoSuchElementException("Tag not found"));
     }
 }

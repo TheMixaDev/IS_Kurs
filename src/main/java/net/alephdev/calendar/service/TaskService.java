@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -64,14 +65,14 @@ public class TaskService {
         task.setStoryPoints(taskDto.getStoryPoints());
         task.setPriorityEnum(taskDto.getPriorityEnum());
         task.setCreatedBy(user);
-        task.setStatus(statusRepository.findById(1).orElseThrow(() -> new IllegalArgumentException("Default status not found")));
+        task.setStatus(statusRepository.findById(1).orElseThrow(() -> new NoSuchElementException("Default status not found")));
 
         return taskRepository.save(task);
     }
 
     public Task updateTask(Integer id, TaskDto updatedTask) {
         Task task = taskRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Task not found"));
+                .orElseThrow(() -> new NoSuchElementException("Task not found"));
 
         task.setName(updatedTask.getName());
         task.setStoryPoints(updatedTask.getStoryPoints());
@@ -81,7 +82,7 @@ public class TaskService {
 
     public Task getTask(Integer id) {
         return taskRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Task not found"));
+                .orElseThrow(() -> new NoSuchElementException("Task not found"));
     }
 
 
@@ -112,7 +113,7 @@ public class TaskService {
     @Transactional
     public Task assignImplementer(Integer taskId, String implementerLogin) {
         Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new IllegalArgumentException("Task not found"));
+                .orElseThrow(() -> new NoSuchElementException("Task not found"));
 
         User implementer = userService.getUserByLogin(implementerLogin);
         task.setImplementer(implementer);
@@ -123,7 +124,7 @@ public class TaskService {
     @Transactional
     public Task updateStatus(Integer taskId, Integer statusId, User user) {
         Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new IllegalArgumentException("Task not found"));
+                .orElseThrow(() -> new NoSuchElementException("Task not found"));
 
         if (userService.isPrivileged(user)) {
             // Admin can set any status
@@ -149,10 +150,10 @@ public class TaskService {
     @Transactional
     public Task assignSprint(Integer taskId, Integer sprintId) {
         Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new IllegalArgumentException("Task not found"));
+                .orElseThrow(() -> new NoSuchElementException("Task not found"));
 
         Sprint sprint = sprintRepository.findById(sprintId)
-                .orElseThrow(() -> new IllegalArgumentException("Sprint not found"));
+                .orElseThrow(() -> new NoSuchElementException("Sprint not found"));
 
         task.setSprint(sprint);
         return taskRepository.save(task);
