@@ -2,6 +2,7 @@ package net.alephdev.calendar.controller;
 
 import net.alephdev.calendar.annotation.AuthorizedRequired;
 import net.alephdev.calendar.annotation.PrivilegeRequired;
+import net.alephdev.calendar.dto.ObjectDto;
 import net.alephdev.calendar.models.Team;
 import net.alephdev.calendar.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,12 @@ public class TeamController {
     }
 
     @GetMapping
-    public List<Team> getAllTeams() {
+    public List<Team> getAllTeams(
+            @RequestParam(required = false) boolean onlyActive
+    ) {
+        if(onlyActive) {
+            return teamService.getActiveTeams();
+        }
         return teamService.getAllTeams();
     }
 
@@ -44,10 +50,10 @@ public class TeamController {
     }
 
     @GetMapping("/load") // /api/teams/load?teamId=1&sprintId=1
-    public ResponseEntity<BigDecimal> getTeamLoad(
+    public ResponseEntity<ObjectDto> getTeamLoad(
         @RequestParam Integer teamId,
         @RequestParam Integer sprintId
     ) {
-        return ResponseEntity.ok(teamService.getTeamLoad(teamId, sprintId));
+        return ResponseEntity.ok(new ObjectDto(teamService.getTeamLoad(teamId, sprintId)));
     }
 }

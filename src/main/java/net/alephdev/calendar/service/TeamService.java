@@ -1,8 +1,11 @@
 package net.alephdev.calendar.service;
 
 import net.alephdev.calendar.models.Team;
+import net.alephdev.calendar.models.User;
+import net.alephdev.calendar.repository.UserRepository;
 import net.alephdev.calendar.repository.functional.TeamRepository;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
@@ -18,7 +21,11 @@ public class TeamService {
     private final TeamRepository teamRepository;
 
     public List<Team> getAllTeams() {
-        return teamRepository.findAll();
+        return teamRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
+    }
+
+    public List<Team> getActiveTeams() {
+        return teamRepository.findAllByIsActive(true, Sort.by(Sort.Direction.ASC, "id"));
     }
 
     public Team createTeam(Team team) {
