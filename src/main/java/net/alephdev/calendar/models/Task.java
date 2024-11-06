@@ -37,6 +37,6 @@ public class Task {
     private User createdBy;
 
     public enum Priority {
-        LOW, MIDDLE, CRITICAL
+        LOW, MEDIUM, CRITICAL
     }
 }

@@ -20,6 +20,7 @@ import java.util.function.Function;
 
 @Component
 public class JwtUtils {
+    @Value("${jwt.secret}")
     private String secretKey;
     @Value("${jwt.expiration}")
     private long expirationTime;
@@ -27,8 +28,10 @@ public class JwtUtils {
     @PostConstruct
     public void init() {
         Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
-        this.secretKey = Base64.getEncoder().encodeToString(key.getEncoded());
-        System.out.println("Generated Secret Key: " + this.secretKey);
+        if(this.secretKey == null) {
+            this.secretKey = Base64.getEncoder().encodeToString(key.getEncoded());
+            System.out.println("Generated Secret Key: " + this.secretKey);
+        }
     }
 
     public String generateToken(User user) {

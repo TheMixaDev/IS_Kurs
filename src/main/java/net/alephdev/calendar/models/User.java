@@ -1,5 +1,6 @@
 package net.alephdev.calendar.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,6 +15,7 @@ public class User {
     private String login;
 
     @Column(nullable = false)
+    @JsonIgnore
     private String password;
 
     private String firstName;

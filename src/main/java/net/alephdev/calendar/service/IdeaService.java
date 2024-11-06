@@ -7,7 +7,9 @@ import net.alephdev.calendar.models.User;
 import net.alephdev.calendar.repository.functional.IdeaRepository;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +21,11 @@ public class IdeaService {
     private final UserService userService;
 
     public Page<Idea> getAllIdeas(int page) {
-        return ideaRepository.findAll(Pageable.ofSize(20).withPage(page));
+        return ideaRepository.findAll(PageRequest.of(page, 20, Sort.by(Sort.Direction.ASC, "id")));
+    }
+
+    public Page<Idea> getAllIdeasByStatus(Idea.Status status, int page) {
+        return ideaRepository.findAllByStatusEnumId(status, PageRequest.of(page, 20, Sort.by(Sort.Direction.ASC, "id")));
     }
 
     public Idea createIdea(IdeaDto idea, User user) {

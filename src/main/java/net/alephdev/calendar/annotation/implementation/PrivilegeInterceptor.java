@@ -39,7 +39,7 @@ public class PrivilegeInterceptor implements HandlerInterceptor {
                 return true;
             }
         }
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         return false;
     }
 }

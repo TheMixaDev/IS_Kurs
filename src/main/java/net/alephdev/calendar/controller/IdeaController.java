@@ -27,7 +27,13 @@ public class IdeaController {
     }
 
     @GetMapping
-    public Page<Idea> getAllIdeas(@RequestParam @DefaultValue("0") int page) {
+    public Page<Idea> getAllIdeas(
+            @RequestParam @DefaultValue("0") int page,
+            @RequestParam(required = false) Idea.Status status
+    ) {
+        if(status != null) {
+            return ideaService.getAllIdeasByStatus(status, page);
+        }
         return ideaService.getAllIdeas(page);
     }
 
@@ -39,17 +45,21 @@ public class IdeaController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Idea> updateIdea(@PathVariable Integer id, @RequestBody IdeaDto updatedIdea, @CurrentUser User user) {
-        Idea idea = ideaService.updateIdea(id, updatedIdea, user);
-        return new ResponseEntity<>(idea, HttpStatus.OK);
+        try {
+            Idea idea = ideaService.updateIdea(id, updatedIdea, user);
+            return new ResponseEntity<>(idea, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
     }
 
     @PrivilegeRequired
     @PutMapping("/{id}/status")
     public ResponseEntity<Void> processIdea(
         @PathVariable Integer id,
-        @RequestParam String status
+        @RequestParam Idea.Status status
     ) {
-        ideaService.processIdea(id, status);
+        ideaService.processIdea(id, status.toString());
         return ResponseEntity.ok().build();
     }
 }
