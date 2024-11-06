@@ -86,17 +86,13 @@ public class TaskController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Task> updateTask(@PathVariable Integer id, @RequestBody TaskDto updatedTask, @CurrentUser User user) {
-        try {
-            Task existingTask = taskService.getTask(id);
+        Task existingTask = taskService.getTask(id);
 
-            if (taskService.canEditTask(user, existingTask)) {
-                Task task = taskService.updateTask(id, updatedTask);
-                return new ResponseEntity<>(task, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-            }
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (taskService.canEditTask(user, existingTask)) {
+            Task task = taskService.updateTask(id, updatedTask);
+            return new ResponseEntity<>(task, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
 
@@ -111,31 +107,23 @@ public class TaskController {
     @PutMapping("/{taskId}/implementer")
     public ResponseEntity<Task> assignImplementer(@PathVariable Integer taskId, @RequestParam String implementerLogin,
                                                   @CurrentUser User user) {
-        try {
-            Task existingTask = taskService.getTask(taskId);
+        Task existingTask = taskService.getTask(taskId);
 
-            if ((user.getRole() != null && userService.isPrivileged(user)) ||
-                    (existingTask.getImplementer() != null && existingTask.getImplementer().getLogin().equals(user.getLogin())) ||
-                    existingTask.getCreatedBy().getLogin().equals(user.getLogin())) {
-                Task task = taskService.assignImplementer(taskId, implementerLogin);
-                return new ResponseEntity<>(task, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-            }
-        } catch (IllegalArgumentException | EntityNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if ((user.getRole() != null && userService.isPrivileged(user)) ||
+                (existingTask.getImplementer() != null && existingTask.getImplementer().getLogin().equals(user.getLogin())) ||
+                existingTask.getCreatedBy().getLogin().equals(user.getLogin())) {
+            Task task = taskService.assignImplementer(taskId, implementerLogin);
+            return new ResponseEntity<>(task, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
 
     @PutMapping("/{taskId}/status")
     public ResponseEntity<?> updateStatus(@PathVariable Integer taskId, @RequestParam Integer statusId,
                                              @CurrentUser User user) {
-        try {
-            Task task = taskService.updateStatus(taskId, statusId, user);
-            return new ResponseEntity<>(task, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(new MessageDto(e.getMessage()), HttpStatus.FORBIDDEN);
-        }
+        Task task = taskService.updateStatus(taskId, statusId, user);
+        return new ResponseEntity<>(task, HttpStatus.OK);
     }
 
     @PrivilegeRequired

@@ -59,28 +59,20 @@ public class RiskController {
 
     @PostMapping("/task/{taskId}")
     public ResponseEntity<?> addRiskToTask(@PathVariable Integer taskId, @RequestParam Integer riskId, @CurrentUser User user) {
-        try {
-            Task task = taskService.getTask(taskId);
-            Risk risk = riskService.getRisk(riskId);
+        Task task = taskService.getTask(taskId);
+        Risk risk = riskService.getRisk(riskId);
 
-            riskService.addRiskToTask(task, risk, user);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(new MessageDto(e.getMessage()), HttpStatus.BAD_REQUEST);
-        }
+        riskService.addRiskToTask(task, risk, user);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/task/{taskId}")
     public ResponseEntity<?> removeRiskFromTask(@PathVariable Integer taskId, @RequestParam Integer riskId, @CurrentUser User user) {
-        try {
-            Task task = taskService.getTask(taskId);
-            Risk risk = riskService.getRisk(riskId);
+        Task task = taskService.getTask(taskId);
+        Risk risk = riskService.getRisk(riskId);
 
-            riskService.removeRiskFromTask(task, risk, user);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(new MessageDto(e.getMessage()), HttpStatus.BAD_REQUEST);
-        }
+        riskService.removeRiskFromTask(task, risk, user);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
@@ -94,28 +86,20 @@ public class RiskController {
 
     @PostMapping("/idea/{ideaId}")
     public ResponseEntity<?> addRiskToIdea(@PathVariable Integer ideaId, @RequestParam Integer riskId, @CurrentUser User user) {
-        try {
-            Idea idea = ideaService.getIdea(ideaId);
-            Risk risk = riskService.getRisk(riskId);
+        Idea idea = ideaService.getIdea(ideaId);
+        Risk risk = riskService.getRisk(riskId);
 
-            riskService.addRiskToIdea(idea, risk, user);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(new MessageDto(e.getMessage()), HttpStatus.BAD_REQUEST);
-        }
+        riskService.addRiskToIdea(idea, risk, user);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/idea/{ideaId}")
     public ResponseEntity<?> removeRiskFromIdea(@PathVariable Integer ideaId, @RequestParam Integer riskId, @CurrentUser User user) {
-        try {
-            Idea idea = ideaService.getIdea(ideaId);
-            Risk risk = riskService.getRisk(riskId);
+        Idea idea = ideaService.getIdea(ideaId);
+        Risk risk = riskService.getRisk(riskId);
 
-            riskService.removeRiskFromIdea(idea, risk, user);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(new MessageDto(e.getMessage()), HttpStatus.BAD_REQUEST);
-        }
+        riskService.removeRiskFromIdea(idea, risk, user);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/idea/{ideaId}")

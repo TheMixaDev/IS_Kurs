@@ -54,29 +54,21 @@ public class TagController {
 
     @PostMapping("/task/{taskId}")
     public ResponseEntity<?> addTagToTask(@PathVariable Integer taskId, @RequestParam Integer tagId, @CurrentUser User user) {
-        try {
-            Task task = taskService.getTask(taskId);
-            Tag tag = tagService.getTag(tagId);
+        Task task = taskService.getTask(taskId);
+        Tag tag = tagService.getTag(tagId);
 
-            tagService.addTagToTask(task, tag, user);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(new MessageDto(e.getMessage()), HttpStatus.BAD_REQUEST);
-        }
+        tagService.addTagToTask(task, tag, user);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
     @DeleteMapping("/task/{taskId}")
     public ResponseEntity<?> removeTagFromTask(@PathVariable Integer taskId, @RequestParam Integer tagId, @CurrentUser User user) {
-        try {
-            Task task = taskService.getTask(taskId);
-            Tag tag = tagService.getTag(tagId);
+        Task task = taskService.getTask(taskId);
+        Tag tag = tagService.getTag(tagId);
 
-            tagService.removeTagFromTask(task, tag, user);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(new MessageDto(e.getMessage()), HttpStatus.BAD_REQUEST);
-        }
+        tagService.removeTagFromTask(task, tag, user);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/task/{taskId}")

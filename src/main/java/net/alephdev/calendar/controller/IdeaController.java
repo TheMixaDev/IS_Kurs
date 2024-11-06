@@ -45,12 +45,8 @@ public class IdeaController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Idea> updateIdea(@PathVariable Integer id, @RequestBody IdeaDto updatedIdea, @CurrentUser User user) {
-        try {
-            Idea idea = ideaService.updateIdea(id, updatedIdea, user);
-            return new ResponseEntity<>(idea, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+        Idea idea = ideaService.updateIdea(id, updatedIdea, user);
+        return new ResponseEntity<>(idea, HttpStatus.OK);
     }
 
     @PrivilegeRequired

@@ -35,24 +35,15 @@ public class ReleaseController {
     @PrivilegeRequired
     @PostMapping
     public ResponseEntity<?> createRelease(@RequestBody ReleaseDto releaseDto) {
-        try {
-            Release createdRelease = releaseService.createRelease(releaseDto);
-            return new ResponseEntity<>(createdRelease, HttpStatus.CREATED);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(new MessageDto(e.getMessage()),HttpStatus.BAD_REQUEST);
-        }
+        Release createdRelease = releaseService.createRelease(releaseDto);
+        return new ResponseEntity<>(createdRelease, HttpStatus.CREATED);
     }
 
     @PrivilegeRequired
     @PutMapping("/{id}")
     public ResponseEntity<?> updateRelease(@PathVariable Integer id, @RequestBody ReleaseDto updatedRelease) {
-        try {
-            Release release = releaseService.updateRelease(id, updatedRelease);
-            return new ResponseEntity<>(release, HttpStatus.OK);
-        }
-        catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(new MessageDto(e.getMessage()),HttpStatus.BAD_REQUEST);
-        }
+        Release release = releaseService.updateRelease(id, updatedRelease);
+        return new ResponseEntity<>(release, HttpStatus.OK);
     }
 
     @PrivilegeRequired

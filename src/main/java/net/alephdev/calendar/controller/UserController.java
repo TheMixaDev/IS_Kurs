@@ -42,41 +42,25 @@ public class UserController {
     @PrivilegeRequired
     @PostMapping("/register")
     public ResponseEntity<User> registerUser(@Valid @RequestBody UserDto userDto) {
-        try {
-            return new ResponseEntity<>(userService.register(userDto), HttpStatus.CREATED);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        return new ResponseEntity<>(userService.register(userDto), HttpStatus.CREATED);
     }
 
     @PrivilegeRequired
     @PutMapping("/{login}/role")
     public ResponseEntity<User> updateUserRole(@PathVariable String login, @RequestParam Integer roleId) {
-        try {
-            return new ResponseEntity<>(userService.updateRole(login, roleId), HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(userService.updateRole(login, roleId), HttpStatus.OK);
     }
 
     @PrivilegeRequired
     @PutMapping("/{login}/team")
     public ResponseEntity<User> updateUserTeam(@PathVariable String login, @RequestParam(required = false) Integer teamId) {
-        try {
-            return new ResponseEntity<>(userService.updateUserTeam(login, teamId), HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(userService.updateUserTeam(login, teamId), HttpStatus.OK);
     }
 
     @PutMapping("/{login}")
     public ResponseEntity<User> updateUser(@PathVariable String login, @Valid @RequestBody UserDto userDto, @CurrentUser User currentUser) {
         if (currentUser.getLogin().equals(login) || userService.isPrivileged(currentUser)) {
-            try {
-                return new ResponseEntity<>(userService.updateUser(login, userDto), HttpStatus.OK);
-            } catch (IllegalArgumentException e) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
+            return new ResponseEntity<>(userService.updateUser(login, userDto), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }

@@ -49,12 +49,8 @@ public class RoleController {
     @PrivilegeRequired
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRole(@PathVariable Integer id) {
-        try {
-            roleService.deleteRole(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+        roleService.deleteRole(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/{id}/statuses")
@@ -65,22 +61,14 @@ public class RoleController {
     @PrivilegeRequired
     @PostMapping("/{id}/statuses")
     public ResponseEntity<Void> addRoleStatus(@PathVariable Integer id, @RequestParam Integer statusId) {
-        try {
-            roleService.addRoleStatus(roleService.getRole(id), statusService.getStatus(statusId));
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+        roleService.addRoleStatus(roleService.getRole(id), statusService.getStatus(statusId));
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PrivilegeRequired
     @DeleteMapping("/{id}/statuses")
     public ResponseEntity<Void> deleteRoleStatus(@PathVariable Integer id, @RequestParam Integer statusId) {
-        try {
-            roleService.removeRoleStatus(roleService.getRole(id), statusService.getStatus(statusId));
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+        roleService.removeRoleStatus(roleService.getRole(id), statusService.getStatus(statusId));
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
