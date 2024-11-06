@@ -41,11 +41,16 @@ public class IdeaService {
         Idea idea = ideaRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Idea not found"));
 
-        if(user.getLogin().equals(idea.getAuthorLogin().getLogin()) || userService.isPrivileged(user)) {
+        if(canEditIdea(idea, user)) {
             idea.setDescription(updatedIdea.getDescription());
             return ideaRepository.save(idea);
         }
         throw new IllegalArgumentException("Not permitted to update idea");
+    }
+
+
+    public boolean canEditIdea(Idea idea, User user) {
+        return idea.getAuthorLogin().getLogin().equals(user.getLogin()) || userService.isPrivileged(user);
     }
 
     @Transactional

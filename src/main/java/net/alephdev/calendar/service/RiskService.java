@@ -3,8 +3,11 @@ package net.alephdev.calendar.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import lombok.RequiredArgsConstructor;
@@ -15,15 +18,17 @@ import net.alephdev.calendar.repository.functional.RiskRepository;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class RiskService {
     private final RiskRepository riskRepository;
     private final TaskRiskRepository taskRiskRepository;
     private final IdeaRiskRepository ideaRiskRepository;
     private final TaskService taskService;
     private final UserService userService;
+    private final IdeaService ideaService;
 
     public Page<Risk> getAllRisks(int page) {
-        return riskRepository.findAll(Pageable.ofSize(20).withPage(page));
+        return riskRepository.findAll(PageRequest.of(page, 20, Sort.by(Sort.Direction.ASC, "id")));
     }
 
     public Risk createRisk(Risk risk) {
@@ -75,7 +80,7 @@ public class RiskService {
 
     // Добавление риска к идее
     public void addRiskToIdea(Idea idea, Risk risk, User user) {
-        if(idea.getAuthorLogin().getLogin().equals(user.getLogin()) || userService.isPrivileged(user)) {
+        if(!ideaService.canEditIdea(idea, user)) {
             throw new IllegalArgumentException("You are not allowed to add risks to this idea");
         }
         IdeaRisk ideaRisk = new IdeaRisk();
@@ -85,7 +90,7 @@ public class RiskService {
     }
 
     public void removeRiskFromIdea(Idea idea, Risk risk, User user) {
-        if(idea.getAuthorLogin().getLogin().equals(user.getLogin()) || userService.isPrivileged(user)) {
+        if(!ideaService.canEditIdea(idea, user)) {
             throw new IllegalArgumentException("You are not allowed to remove risks from this idea");
         }
         ideaRiskRepository.deleteByIdeaAndRisk(idea, risk);
