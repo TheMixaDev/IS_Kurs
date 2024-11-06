@@ -1,10 +1,8 @@
 package net.alephdev.calendar.controller;
 
-import jakarta.persistence.EntityNotFoundException;
 import net.alephdev.calendar.annotation.AuthorizedRequired;
 import net.alephdev.calendar.annotation.CurrentUser;
 import net.alephdev.calendar.annotation.PrivilegeRequired;
-import net.alephdev.calendar.dto.MessageDto;
 import net.alephdev.calendar.dto.TaskDto;
 import net.alephdev.calendar.models.Sprint;
 import net.alephdev.calendar.models.Status;

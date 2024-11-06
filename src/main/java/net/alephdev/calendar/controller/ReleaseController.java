@@ -3,7 +3,6 @@ package net.alephdev.calendar.controller;
 import lombok.RequiredArgsConstructor;
 import net.alephdev.calendar.annotation.AuthorizedRequired;
 import net.alephdev.calendar.annotation.PrivilegeRequired;
-import net.alephdev.calendar.dto.MessageDto;
 import net.alephdev.calendar.dto.ReleaseDto;
 import net.alephdev.calendar.models.Release;
 import net.alephdev.calendar.service.ReleaseService;
@@ -11,7 +10,6 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

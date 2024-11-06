@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import net.alephdev.calendar.annotation.AuthorizedRequired;
 import net.alephdev.calendar.annotation.CurrentUser;
 import net.alephdev.calendar.annotation.PrivilegeRequired;
-import net.alephdev.calendar.dto.MessageDto;
 import net.alephdev.calendar.dto.functional.TopRiskDto;
 import net.alephdev.calendar.models.Idea;
 import net.alephdev.calendar.models.Risk;

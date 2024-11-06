@@ -7,10 +7,8 @@ import java.util.stream.Collectors;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import java.math.BigDecimal;
 import lombok.RequiredArgsConstructor;
 import net.alephdev.calendar.dto.functional.TopRiskDto;
 import net.alephdev.calendar.models.*;
@@ -25,7 +23,6 @@ public class RiskService {
     private final TaskRiskRepository taskRiskRepository;
     private final IdeaRiskRepository ideaRiskRepository;
     private final TaskService taskService;
-    private final UserService userService;
     private final IdeaService ideaService;
 
     public Page<Risk> getAllRisks(int page) {
