@@ -11,7 +11,9 @@ import net.alephdev.calendar.repository.functional.SprintRepository;
 
 import net.alephdev.calendar.repository.functional.TeamRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -29,7 +31,7 @@ public class SprintService {
     private final ReleaseRepository releaseRepository;
 
     public Page<Sprint> getAllSprints(int page) {
-        return sprintRepository.findAll(Pageable.ofSize(20).withPage(page));
+        return sprintRepository.findAll(PageRequest.of(page, 20, Sort.by(Sort.Direction.ASC, "endDate")));
     }
 
     public Sprint createSprint(SprintDto sprintDto) {
@@ -73,7 +75,7 @@ public class SprintService {
     public List<Release> getSprintReleases(Integer sprintId) {
         Sprint sprint = sprintRepository.findById(sprintId)
                 .orElseThrow(() -> new IllegalArgumentException("Sprint not found with ID: " + sprintId));
-        return releaseRepository.findAllBySprint(sprint);
+        return releaseRepository.findAllBySprint(sprint, Sort.by(Sort.Direction.ASC, "releaseDate"));
     }
 
     public List<SprintTeamDto> getSprintsByYearAndTeam(Integer year, String teamName) {
