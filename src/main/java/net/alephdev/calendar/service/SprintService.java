@@ -99,4 +99,9 @@ public class SprintService {
             ))
             .collect(Collectors.toList());
     }
+
+    public Sprint getSprint(Integer sprintId) {
+        return sprintRepository.findById(sprintId)
+                .orElseThrow(() -> new IllegalArgumentException("Sprint not found with ID: " + sprintId));
+    }
 }

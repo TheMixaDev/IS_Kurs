@@ -10,7 +10,9 @@ import net.alephdev.calendar.repository.TaskRepository;
 import net.alephdev.calendar.repository.functional.SprintRepository;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,7 +31,31 @@ public class TaskService {
 
 
     public Page<Task> getAllTasks(int page) {
-        return taskRepository.findAll(Pageable.ofSize(20).withPage(page));
+        return taskRepository.findAll(PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "id")));
+    }
+
+    public Page<Task> getAllTaskByStatus(Integer statusId, int page) {
+        return taskRepository.findAllByStatusId(statusId, PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "id")));
+    }
+
+    public Page<Task> getAllTasksBySprint(Integer sprintId, int page) {
+        return taskRepository.findAllBySprintId(sprintId, PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "id")));
+    }
+
+    public Page<Task> getAllTasksByImplementer(User implementer, int page) {
+        return taskRepository.findAllByImplementer(implementer, PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "id")));
+    }
+
+    public Page<Task> getAllTasksBySprintAndStatus(Integer sprintId, Integer statusId, int page) {
+        return taskRepository.findAllBySprintIdAndStatusId(sprintId, statusId, PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "id")));
+    }
+
+    public Page<Task> getAllTasksByImplementerAndStatus(User implementer, Integer statusId, int page) {
+        return taskRepository.findAllByImplementerAndStatusId(implementer, statusId, PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "id")));
+    }
+
+    public Page<Task> getAllTasksByImplementerAndSprint(User implementer, Integer sprintId, int page) {
+        return taskRepository.findAllByImplementerAndSprintId(implementer, sprintId, PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "id")));
     }
 
     public Task createTask(TaskDto taskDto, User user) {
@@ -38,6 +64,7 @@ public class TaskService {
         task.setStoryPoints(taskDto.getStoryPoints());
         task.setPriorityEnum(taskDto.getPriorityEnum());
         task.setCreatedBy(user);
+        task.setStatus(statusRepository.findById(1).orElseThrow(() -> new IllegalArgumentException("Default status not found")));
 
         return taskRepository.save(task);
     }
@@ -75,7 +102,7 @@ public class TaskService {
 
 
     public boolean canEditTask(User user, Task task) {
-        if (user.getRole() != null && userService.isPrivileged(user)) {
+        if (userService.isPrivileged(user)) {
             return true;
         }
         return user.getLogin().equals(task.getCreatedBy().getLogin()) ||
@@ -98,7 +125,7 @@ public class TaskService {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new IllegalArgumentException("Task not found"));
 
-        if (user.getRole() != null && user.getRole().getId() == 1) {
+        if (userService.isPrivileged(user)) {
             // Admin can set any status
             task.setStatus(statusRepository.findById(statusId).get());
         } else if (task.getImplementer() != null && task.getImplementer().getLogin().equals(user.getLogin()) && user.getRole() != null) {
