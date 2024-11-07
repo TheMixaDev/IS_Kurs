@@ -1,0 +1,1941 @@
+{
+	"info": {
+		"_postman_id": "c5765e4c-1ae8-48d5-be01-31d8c873ed0b",
+		"name": "Kursach",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25334867"
+	},
+	"item": [
+		{
+			"name": "Idea",
+			"item": [
+				{
+					"name": "All ideas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/ideas?page=0&status=APPROVED",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"ideas"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "status",
+									"value": "APPROVED"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create idea",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\": \"idea_description\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/ideas",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"ideas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update idea",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\": \"updated_idea_description\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/ideas/:id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"ideas",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Set idea status",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/ideas/:id/status?status=APPROVED",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"ideas",
+								":id",
+								"status"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "APPROVED"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "6"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Role",
+			"item": [
+				{
+					"name": "Get roles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/roles",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create role",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"role_name\",\r\n    \"responsibilities\": \"role_responsibilities\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/roles",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update role",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"updated_role_name\",\r\n    \"responsibilities\": \"updated_role_responsibilities\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/roles/:id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"roles",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "7"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete role",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/roles/:id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"roles",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "7"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get role's statuses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/roles/:id/statuses",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"roles",
+								":id",
+								"statuses"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add role status",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/roles/:id/statuses?statusId=3",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"roles",
+								":id",
+								"statuses"
+							],
+							"query": [
+								{
+									"key": "statusId",
+									"value": "3"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete role status",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/roles/:id/statuses?statusId=1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"roles",
+								":id",
+								"statuses"
+							],
+							"query": [
+								{
+									"key": "statusId",
+									"value": "1"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Sprint",
+			"item": [
+				{
+					"name": "Get sprints",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}} /api/sprints?page=0",
+							"host": [
+								"{{url}} "
+							],
+							"path": [
+								"api",
+								"sprints"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create sprint",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"majorVersion\": \"sprint_version\",\r\n    \"startDate\": \"2024-01-01\",\r\n    \"endDate\": \"2024-01-15\",\r\n    \"regressionStart\": \"2024-01-12\",\r\n    \"regressionEnd\": \"2024-01-14\",\r\n    \"teamId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}} /api/sprints",
+							"host": [
+								"{{url}} "
+							],
+							"path": [
+								"api",
+								"sprints"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update sprint",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"majorVersion\": \"updated_sprint_version\",\r\n    \"startDate\": \"2024-01-02\",\r\n    \"endDate\": \"2024-01-16\",\r\n    \"regressionStart\": \"2024-01-13\",\r\n    \"regressionEnd\": \"2024-01-15\",\r\n    \"teamId\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}} /api/sprints/:id",
+							"host": [
+								"{{url}} "
+							],
+							"path": [
+								"api",
+								"sprints",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete sprint",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}} /api/sprints/:id",
+							"host": [
+								"{{url}} "
+							],
+							"path": [
+								"api",
+								"sprints",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get sprints by year and team",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/sprints/filtered?year=2023&teamName=Main develop",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"sprints",
+								"filtered"
+							],
+							"query": [
+								{
+									"key": "year",
+									"value": "2023"
+								},
+								{
+									"key": "teamName",
+									"value": "Main develop"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get user's storypoints in sprint",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/sprints/:sprintId/story-points",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"sprints",
+								":sprintId",
+								"story-points"
+							],
+							"variable": [
+								{
+									"key": "sprintId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get releases",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/sprints/:id/releases",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"sprints",
+								":id",
+								"releases"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Status",
+			"item": [
+				{
+					"name": "Get statuses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/statuses",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"statuses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create status",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"status_name\",\r\n    \"description\": \"status_description\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/statuses",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"statuses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update status",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"updated_status_name\",\r\n    \"description\": \"updated_status_description\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/statuses/:id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"statuses",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete status",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/statuses/:id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"statuses",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "6"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Task",
+			"item": [
+				{
+					"name": "Get tasks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/tasks?page=0&implementerLogin=averkii.ryabov",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tasks"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "statusId",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "implementerLogin",
+									"value": "averkii.ryabov"
+								},
+								{
+									"key": "sprintId",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create task",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"task_name\",\r\n    \"storyPoints\": 5,\r\n    \"priorityEnum\": \"MEDIUM\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/tasks",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update task",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"updated_task_name\",\r\n    \"storyPoints\": 8,\r\n    \"priorityEnum\": \"LOW\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/tasks/:id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tasks",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "85"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete task",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/tasks/:id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tasks",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "107"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Set implementer",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/tasks/:taskId/implementer?implementerLogin=ernst_ignatukev",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tasks",
+								":taskId",
+								"implementer"
+							],
+							"query": [
+								{
+									"key": "implementerLogin",
+									"value": "ernst_ignatukev"
+								}
+							],
+							"variable": [
+								{
+									"key": "taskId",
+									"value": "85"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Set status",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/tasks/:taskId/status?statusId=5",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tasks",
+								":taskId",
+								"status"
+							],
+							"query": [
+								{
+									"key": "statusId",
+									"value": "5"
+								}
+							],
+							"variable": [
+								{
+									"key": "taskId",
+									"value": "85"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Set sprint",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/tasks/:taskId/sprint?sprintId=1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tasks",
+								":taskId",
+								"sprint"
+							],
+							"query": [
+								{
+									"key": "sprintId",
+									"value": "1"
+								}
+							],
+							"variable": [
+								{
+									"key": "taskId",
+									"value": "107"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Team",
+			"item": [
+				{
+					"name": "Get teams",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/teams",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"teams"
+							],
+							"query": [
+								{
+									"key": "onlyActive",
+									"value": "true",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create team",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"team_name\",\r\n    \"color\": \"#FF0000\",\r\n    \"description\": \"team_description\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/teams",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"teams"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update team",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"updated_team_name\",\r\n    \"color\": \"#00FF00\",\r\n    \"description\": \"updated_team_description\",\r\n    \"isActive\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/teams/:id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"teams",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get team load",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/teams/load?teamId=2&sprintId=2",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"teams",
+								"load"
+							],
+							"query": [
+								{
+									"key": "teamId",
+									"value": "2"
+								},
+								{
+									"key": "sprintId",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Get users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/users?page=0",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"users"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "login",
+									"value": "dem",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"login\": \"user_login\",\r\n    \"email\": \"user_email@example.com\",\r\n    \"password\": \"12345\",\r\n    \"firstName\": \"user_firstName\",\r\n    \"lastName\": \"user_lastName\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/users/register",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Set user role",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/users/:login/role?roleId=3",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"users",
+								":login",
+								"role"
+							],
+							"query": [
+								{
+									"key": "roleId",
+									"value": "3"
+								}
+							],
+							"variable": [
+								{
+									"key": "login",
+									"value": "user_login"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Set user team",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/users/:login/team?teamId=1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"users",
+								":login",
+								"team"
+							],
+							"query": [
+								{
+									"key": "teamId",
+									"value": "1"
+								}
+							],
+							"variable": [
+								{
+									"key": "login",
+									"value": "user_login"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update user",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"login\": \"user_login\",\r\n    \"email\": \"updated_user_email@example.com\",\r\n    \"password\": \"12345\",\r\n    \"firstName\": \"updated_user_firstName\",\r\n    \"lastName\": \"updated_user_lastName\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/users/:login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"users",
+								":login"
+							],
+							"variable": [
+								{
+									"key": "login",
+									"value": "user_login"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Release",
+			"item": [
+				{
+					"name": "Get releases",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/releases?page=0",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"releases"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create release",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"version\": \"1\",\r\n    \"releaseDate\": \"2023-01-21\",\r\n    \"description\": \"test\",\r\n    \"sprintId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/releases",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"releases"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update release",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"version\": \"1\",\r\n    \"releaseDate\": \"2023-01-21\",\r\n    \"description\": \"test\",\r\n    \"sprintId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/releases/:id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"releases",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "12"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete release",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/releases/:id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"releases",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "16"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get releases by sprint",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/releases/sprint/:sprintId?page=0",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"releases",
+								"sprint",
+								":sprintId"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								}
+							],
+							"variable": [
+								{
+									"key": "sprintId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Risk",
+			"item": [
+				{
+					"name": "Get risks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/risks?page=0",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"risks"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get top 10",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/risks/top10",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"risks",
+								"top10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create risk",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\": \"test\",\r\n    \"probability\": 0.5,\r\n    \"estimatedLoss\": 12\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/risks",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"risks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update risk",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\": \"test\",\r\n    \"probability\": 0.3,\r\n    \"estimatedLoss\": 12\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/risks/:id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"risks",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete risk",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/risks/:id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"risks",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "6"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add risk to task",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/risks/task/:taskId?riskId=7",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"risks",
+								"task",
+								":taskId"
+							],
+							"query": [
+								{
+									"key": "riskId",
+									"value": "7"
+								}
+							],
+							"variable": [
+								{
+									"key": "taskId",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get risks for task",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/risks/task/:taskId",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"risks",
+								"task",
+								":taskId"
+							],
+							"variable": [
+								{
+									"key": "taskId",
+									"value": "111"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove risk from task",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/risks/task/:taskId?riskId=7",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"risks",
+								"task",
+								":taskId"
+							],
+							"query": [
+								{
+									"key": "riskId",
+									"value": "7"
+								}
+							],
+							"variable": [
+								{
+									"key": "taskId",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add risk to idea",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/risks/idea/:ideaId?riskId=4",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"risks",
+								"idea",
+								":ideaId"
+							],
+							"query": [
+								{
+									"key": "riskId",
+									"value": "4"
+								}
+							],
+							"variable": [
+								{
+									"key": "ideaId",
+									"value": "6"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove risk from idea",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/risks/idea/:ideaId?riskId=3",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"risks",
+								"idea",
+								":ideaId"
+							],
+							"query": [
+								{
+									"key": "riskId",
+									"value": "3"
+								}
+							],
+							"variable": [
+								{
+									"key": "ideaId",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get risks for idea",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/risks/idea/:ideaId",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"risks",
+								"idea",
+								":ideaId"
+							],
+							"variable": [
+								{
+									"key": "ideaId",
+									"value": "6"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tag",
+			"item": [
+				{
+					"name": "Get tags",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/tags",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tags"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create tag",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"name\",\r\n    \"description\": \"test\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/tags",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tags"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update tag",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"name2\",\r\n    \"description\": \"test2\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/tags/:id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tags",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete tag",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/tags/:id",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tags",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get tags to task",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/tags/task/:taskId",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tags",
+								"task",
+								":taskId"
+							],
+							"variable": [
+								{
+									"key": "taskId",
+									"value": "105"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add tag to task",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/tags/task/:taskId?tagId=2",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tags",
+								"task",
+								":taskId"
+							],
+							"query": [
+								{
+									"key": "tagId",
+									"value": "2"
+								}
+							],
+							"variable": [
+								{
+									"key": "taskId",
+									"value": "105"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove tag from task",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/tags/task/:taskId?tagId=2",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tags",
+								"task",
+								":taskId"
+							],
+							"query": [
+								{
+									"key": "tagId",
+									"value": "2"
+								}
+							],
+							"variable": [
+								{
+									"key": "taskId",
+									"value": "105"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"var token = jsonData.token;",
+							"if(token) {",
+							"    pm.collectionVariables.set(\"token\", token);",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"ernst_ignatukev\",\r\n    \"password\": \"1234567\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/api/auth/login",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Calendar",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/api/calendar?year=2024",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"calendar"
+					],
+					"query": [
+						{
+							"key": "year",
+							"value": "2024"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/api/auth?pass=1234567",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"auth"
+					],
+					"query": [
+						{
+							"key": "pass",
+							"value": "1234567"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

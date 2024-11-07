@@ -17,6 +17,14 @@ spring:
           provider: bytebuddy
         dialect: org.hibernate.dialect.PostgreSQLDialect
     open-in-view: true
+  flyway:
+    locations: 
+      - classpath:db/migration  # основные миграции
+      - classpath:db/testdata   # тестовые данные
+    validate-on-migrate: true
+    clean-on-validation-error: true 
+    clean-disabled: false
+    baseline-on-migrate: true
 
 jwt:
   expiration: 3600
