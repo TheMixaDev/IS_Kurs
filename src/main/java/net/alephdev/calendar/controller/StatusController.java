@@ -45,7 +45,6 @@ public class StatusController {
     @PrivilegeRequired
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteStatus(@PathVariable Integer id) {
-        statusService.deleteStatus(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return statusService.deleteStatus(id);
     }
 }

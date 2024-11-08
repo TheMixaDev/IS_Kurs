@@ -8,6 +8,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import net.alephdev.calendar.dto.functional.TopRiskDto;
@@ -49,8 +50,12 @@ public class RiskService {
                 .orElseThrow(() -> new NoSuchElementException("Risk not found"));
     }
 
-    public void deleteRisk(Integer id) {
-        riskRepository.deleteById(id);
+    public ResponseEntity<Void> deleteRisk(Integer id) {
+        if (riskRepository.findById(id).isPresent()) {
+            riskRepository.deleteById(id);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 
     // Добавление риска к задаче

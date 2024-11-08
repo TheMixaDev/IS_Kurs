@@ -9,6 +9,7 @@ import net.alephdev.calendar.repository.functional.SprintRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
@@ -57,7 +58,11 @@ public class ReleaseService {
         return releaseRepository.save(release);
     }
 
-    public void deleteRelease(Integer id) {
-        releaseRepository.deleteById(id);
+    public ResponseEntity<Void> deleteRelease(Integer id) {
+        if (releaseRepository.findById(id).isPresent()) {
+            releaseRepository.deleteById(id);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 }

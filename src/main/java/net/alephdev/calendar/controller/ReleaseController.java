@@ -47,7 +47,6 @@ public class ReleaseController {
     @PrivilegeRequired
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRelease(@PathVariable Integer id) {
-        releaseService.deleteRelease(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return releaseService.deleteRelease(id);
     }
 }

@@ -51,8 +51,8 @@ public class SprintController {
     @PrivilegeRequired
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSprint(@PathVariable Integer id) {
-        sprintService.deleteSprint(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        
+        return sprintService.deleteSprint(id);
     }
 
     // Получение списка спринтов по году и команде с использованием функции

@@ -46,8 +46,7 @@ public class TagController {
     @PrivilegeRequired
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTag(@PathVariable Integer id) {
-        tagService.deleteTag(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return tagService.deleteTag(id);
     }
 
 

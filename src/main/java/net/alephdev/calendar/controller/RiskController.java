@@ -52,8 +52,7 @@ public class RiskController {
     @PrivilegeRequired
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRisk(@PathVariable Integer id) {
-        riskService.deleteRisk(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return riskService.deleteRisk(id);
     }
 
     @PostMapping("/task/{taskId}")

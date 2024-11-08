@@ -9,6 +9,7 @@ import net.alephdev.calendar.models.User;
 import net.alephdev.calendar.repository.TagRepository;
 import net.alephdev.calendar.repository.TaskTagRepository;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,8 +43,12 @@ public class TagService {
         return tagRepository.save(tag);
     }
 
-    public void deleteTag(Integer id) {
-        tagRepository.deleteById(id);
+    public ResponseEntity<Void> deleteTag(Integer id) {
+        if (tagRepository.findById(id).isPresent()) {
+            tagRepository.deleteById(id);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 
     public void addTagToTask(Task task, Tag tag, User user) {

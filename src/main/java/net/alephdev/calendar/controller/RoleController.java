@@ -49,8 +49,7 @@ public class RoleController {
     @PrivilegeRequired
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRole(@PathVariable Integer id) {
-        roleService.deleteRole(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return roleService.deleteRole(id);
     }
 
     @GetMapping("/{id}/statuses")

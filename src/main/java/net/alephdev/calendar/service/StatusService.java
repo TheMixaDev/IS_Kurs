@@ -3,6 +3,7 @@ package net.alephdev.calendar.service;
 import net.alephdev.calendar.models.Status;
 import net.alephdev.calendar.repository.StatusRepository;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -34,11 +35,16 @@ public class StatusService {
         return statusRepository.save(status);
     }
 
-    public void deleteStatus(Integer id) {
+    public ResponseEntity<Void> deleteStatus(Integer id) {
         if(id <= 1) {
             throw new IllegalArgumentException("Cannot delete default status");
         }
-        statusRepository.deleteById(id);
+        if (statusRepository.findById(id).isPresent()) {
+            statusRepository.deleteById(id);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+        
     }
 
     public Status getStatus(Integer statusId) {

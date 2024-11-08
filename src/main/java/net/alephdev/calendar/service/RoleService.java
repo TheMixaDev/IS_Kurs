@@ -7,6 +7,7 @@ import net.alephdev.calendar.models.Status;
 import net.alephdev.calendar.repository.RoleRepository;
 import net.alephdev.calendar.repository.RoleStatusRepository;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -41,12 +42,17 @@ public class RoleService {
         return roleRepository.save(role);
     }
 
-    public void deleteRole(Integer id) {
+    public ResponseEntity<Void> deleteRole(Integer id) {
         if (id <= 1) {
             throw new IllegalArgumentException("Cannot delete default role");
         }
-        roleRepository.deleteById(id);
+        if (roleRepository.findById(id).isPresent()) {
+            roleRepository.deleteById(id);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
+
 
     public List<Status> getStatuses(Role role) {
         return getStatuses(role.getId());

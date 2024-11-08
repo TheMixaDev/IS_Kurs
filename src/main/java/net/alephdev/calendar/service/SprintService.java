@@ -13,6 +13,7 @@ import net.alephdev.calendar.repository.functional.TeamRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -67,8 +68,12 @@ public class SprintService {
         return sprintRepository.save(sprint);
     }
 
-    public void deleteSprint(Integer id) {
-        sprintRepository.deleteById(id);
+    public ResponseEntity<Void> deleteSprint(Integer id) {
+        if (sprintRepository.findById(id).isPresent()) {
+            sprintRepository.deleteById(id);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 
     public List<Release> getSprintReleases(Integer sprintId) {
