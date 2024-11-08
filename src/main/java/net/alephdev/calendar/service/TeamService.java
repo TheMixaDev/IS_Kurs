@@ -4,6 +4,7 @@ import net.alephdev.calendar.models.Team;
 import net.alephdev.calendar.repository.functional.TeamRepository;
 
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
@@ -46,5 +47,13 @@ public class TeamService {
     @Transactional
     public BigDecimal getTeamLoad(Integer teamId, Integer sprintId) {
         return teamRepository.calculateTeamLoad(teamId, sprintId);
+    }
+
+    public ResponseEntity<Void> deleteTeam(Integer id) {
+        if (teamRepository.findById(id).isPresent()) {
+            teamRepository.deleteById(id);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 }

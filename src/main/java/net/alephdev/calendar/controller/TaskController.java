@@ -98,8 +98,7 @@ public class TaskController {
     @PrivilegeRequired
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable Integer id, @CurrentUser User user) {
-        taskService.deleteTask(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return taskService.deleteTask(id);
     }
 
     @PutMapping("/{taskId}/implementer")

@@ -12,6 +12,7 @@ import net.alephdev.calendar.repository.functional.SprintRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -85,8 +86,12 @@ public class TaskService {
     }
 
 
-    public void deleteTask(Integer id) {
-        taskRepository.deleteById(id);
+    public ResponseEntity<Void> deleteTask(Integer id) {
+        if (taskRepository.findById(id).isPresent()) {
+            taskRepository.deleteById(id);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 
     public boolean canCreateTask(User user) {
