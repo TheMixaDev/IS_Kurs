@@ -1,0 +1,29 @@
+/** @type {import('tailwindcss').Config} */
+import defaultTheme from 'tailwindcss/defaultTheme'
+import colors from 'tailwindcss/colors'
+
+module.exports = {
+  darkMode: 'media',
+  content: [
+    "./src/**/*.{html,ts}",
+    "./node_modules/flowbite/**/*.js"
+  ],
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['Inter var', ...defaultTheme.fontFamily.sans],
+      }
+    },
+    colors: {
+      ...colors,
+      primary: colors.blue,
+      secondary: colors.indigo,
+      warning: colors.yellow,
+      danger: colors.red
+    }
+  },
+  plugins: [
+    require('flowbite/plugin')
+  ]
+}
+
