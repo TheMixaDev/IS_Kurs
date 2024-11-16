@@ -3,8 +3,8 @@ import {Observable} from "rxjs";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {ApiService} from "./api.service";
 import {catchError} from "rxjs/operators";
-import {Role} from "../models/role";
-import {Status} from "../models/status";
+import {Role} from "../../models/role";
+import {Status} from "../../models/status";
 
 @Injectable({
   providedIn: 'root'

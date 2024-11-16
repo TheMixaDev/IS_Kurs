@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
-import {JwtRequestDto} from "../models/dto/jwt-request-dto";
-import {JwtResponseDto} from "../models/dto/jwt-response-dto";
+import {JwtRequestDto} from "../../models/dto/jwt-request-dto";
+import {JwtResponseDto} from "../../models/dto/jwt-response-dto";
 
 @Injectable({
   providedIn: 'root'

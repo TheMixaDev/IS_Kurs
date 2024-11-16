@@ -3,8 +3,8 @@ import {Observable} from "rxjs";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {ApiService} from "./api.service";
 import {catchError} from "rxjs/operators";
-import {Release} from "../models/release";
-import {ReleaseDto} from "../models/dto/release-dto";
+import {Release} from "../../models/release";
+import {ReleaseDto} from "../../models/dto/release-dto";
 
 @Injectable({
   providedIn: 'root'

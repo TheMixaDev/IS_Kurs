@@ -3,7 +3,7 @@ import {Observable} from "rxjs";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {ApiService} from "./api.service";
 import {catchError} from "rxjs/operators";
-import {Tag} from "../models/tag";
+import {Tag} from "../../models/tag";
 
 @Injectable({
   providedIn: 'root'

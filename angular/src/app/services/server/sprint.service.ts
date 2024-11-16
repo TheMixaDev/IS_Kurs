@@ -3,11 +3,11 @@ import {Observable} from "rxjs";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {ApiService} from "./api.service";
 import {catchError} from "rxjs/operators";
-import {Sprint} from "../models/sprint";
-import {SprintDto} from "../models/dto/sprint-dto";
-import {SprintTeamDto} from "../models/dto/sprint-team-dto";
-import {UserStoryPointsDto} from "../models/dto/user-story-points-dto";
-import {Release} from "../models/release";
+import {Sprint} from "../../models/sprint";
+import {SprintDto} from "../../models/dto/sprint-dto";
+import {SprintTeamDto} from "../../models/dto/sprint-team-dto";
+import {UserStoryPointsDto} from "../../models/dto/user-story-points-dto";
+import {Release} from "../../models/release";
 
 @Injectable({
   providedIn: 'root'

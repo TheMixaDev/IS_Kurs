@@ -3,8 +3,8 @@ import {Observable} from "rxjs";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {ApiService} from "./api.service";
 import {catchError} from "rxjs/operators";
-import {User} from "../models/user";
-import {UserDto} from "../models/dto/user-dto";
+import {User} from "../../models/user";
+import {UserDto} from "../../models/dto/user-dto";
 
 @Injectable({
   providedIn: 'root'
