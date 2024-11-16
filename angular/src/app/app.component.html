@@ -1,5 +1,9 @@
 <section class="w-full h-full fixed bg-gray-100 dark:bg-gray-900">
-  <!--router-outlet /-->
-  <app-auth/>
+  <div *ngIf="isLoggedIn$ | async; else loginForm">
+    <router-outlet></router-outlet>
+  </div>
+  <ng-template #loginForm>
+    <app-auth></app-auth>
+  </ng-template>
 </section>
-<app-alert/>
+<app-alert />

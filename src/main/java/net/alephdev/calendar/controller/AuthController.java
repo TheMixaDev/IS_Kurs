@@ -10,6 +10,7 @@ import net.alephdev.calendar.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -42,10 +43,12 @@ public class AuthController {
                 String token = jwtUtils.generateToken(user);
                 return ResponseEntity.ok(new JwtResponseDto(token));
             } else {
-                return new ResponseEntity<>(new MessageDto("Not valid credentials"), HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<>(new MessageDto("Неверный логин или пароль"), HttpStatus.UNAUTHORIZED);
             }
+        } catch (BadCredentialsException e) {
+            return new ResponseEntity<>(new MessageDto("Неверный логин или пароль"), HttpStatus.UNAUTHORIZED);
         } catch (Exception e) {
-            return new ResponseEntity<>(new MessageDto("An error occurred during authentication: " + e.getMessage()), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(new MessageDto(e.getMessage()), HttpStatus.UNAUTHORIZED);
         }
     }
 }
