@@ -1,0 +1,114 @@
+<div class="antialiased bg-gray-50 dark:bg-gray-900 h-full">
+  <nav class="bg-white border-b border-gray-200 px-4 py-2.5 dark:bg-gray-800 dark:border-gray-700 fixed left-0 right-0 top-0 z-50">
+    <div class="flex flex-wrap justify-between items-center">
+      <div class="flex justify-start items-center">
+        <a href="/" class="flex items-center justify-between mr-4">
+          <img
+            src="/assets/logo.svg"
+            class="mr-3 h-8"
+            alt="Logo"
+          />
+          <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Sprint Calendar</span>
+        </a>
+      </div>
+      <div class="flex items-center lg:order-2">
+        <button
+          type="button"
+          class="flex mx-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+          id="user-menu-button"
+          aria-expanded="false"
+          data-dropdown-toggle="dropdown"
+        >
+          <span class="sr-only">Пользователь</span>
+          <img
+            class="w-8 h-8 rounded-full"
+            src="/assets/profile.png"
+            alt="user photo"
+          />
+        </button>
+        <div
+          class="hidden z-50 my-0 w-56 text-base list-none bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600 rounded-xl"
+          id="dropdown"
+        >
+          <div class="py-3 px-4">
+              <span
+                class="block text-sm font-semibold text-gray-900 dark:text-white"
+              >Name</span>
+              <span
+                class="block text-sm text-gray-900 truncate dark:text-white"
+              >Email</span>
+          </div>
+          <ul
+            class="py-1 text-gray-700 dark:text-gray-300"
+            aria-labelledby="dropdown"
+          >
+            <li>
+              <a
+                href="#"
+                class="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white"
+              >Настройки</a>
+            </li>
+            <li>
+              <span
+                class="block py-2 px-4 text-sm text-gray-900 dark:text-white"
+              >Роль: Разработчик</span>
+              <span
+                class="block py-2 px-4 text-sm text-gray-900 dark:text-white"
+              >Команда: API</span>
+            </li>
+          </ul>
+          <ul
+            class="py-1 text-gray-700 dark:text-gray-300"
+            aria-labelledby="dropdown"
+          >
+            <li>
+              <a
+                href="#"
+                class="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-danger-400"
+                (click)="logout()"
+              >Выйти</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <aside
+    class="fixed top-0 left-0 z-40 w-64 h-screen pt-14 transition-transform -translate-x-full bg-white border-r border-gray-200 md:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
+    aria-label="Sidenav"
+    id="drawer-navigation"
+  >
+    <div class="overflow-y-auto py-1 px-3 h-full bg-white dark:bg-gray-800">
+      <ul class="space-y-2">
+        <li side-item [icon]="faCalendar">
+          Спринты
+        </li>
+        <li side-item [icon]="faListCheck">
+          Задачи
+        </li>
+        <li side-item [icon]="faLightbulb">
+          Идеи
+        </li>
+        <li side-item [icon]="faUser">
+          Пользователи
+        </li>
+      </ul>
+      <ul class="pt-1 mt-1 space-y-2 border-t border-gray-200 dark:border-gray-700">
+        <li side-item [icon]="faBolt">
+          Риски
+        </li>
+        <li side-item [icon]="faChartSimple">
+          Статусы
+        </li>
+        <li side-item [icon]="faStar">
+          Роли
+        </li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="p-4 md:ml-64 h-full pt-20 mt-12">
+    <ng-content></ng-content>
+  </main>
+</div>
