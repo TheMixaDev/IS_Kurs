@@ -11,6 +11,8 @@ import {
   faUser
 } from "@fortawesome/free-solid-svg-icons";
 import {AuthService} from "../services/server/auth.service";
+import {UserService} from "../services/server/user.service";
+import {User} from "../models/user";
 
 @Component({
   selector: 'app-menu',
@@ -21,10 +23,15 @@ import {AuthService} from "../services/server/auth.service";
   templateUrl: './menu.component.html',
 })
 export class MenuComponent implements OnInit {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private userService: UserService) {}
 
   ngOnInit(): void {
     initFlowbite();
+    this.userService.getCurrentUser().subscribe((user) => {
+      if (user as User) {
+        console.log(user as User);
+      }
+    });
   }
   logout(): void {
     this.authService.logout();

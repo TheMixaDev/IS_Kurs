@@ -41,7 +41,7 @@ public class AuthController {
                 User user = userService.getUserByLogin(username);
 
                 String token = jwtUtils.generateToken(user);
-                return ResponseEntity.ok(new JwtResponseDto(token));
+                return ResponseEntity.ok(new JwtResponseDto(token, user));
             } else {
                 return new ResponseEntity<>(new MessageDto("Неверный логин или пароль"), HttpStatus.UNAUTHORIZED);
             }

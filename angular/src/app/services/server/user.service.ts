@@ -18,6 +18,10 @@ export class UserService {
     return this.http.get<User[]>(`${this.apiService.apiUrl}/users`, {params, headers: this.apiService.getHeaders()}).pipe(catchError(this.apiService.handleError));
   }
 
+  getCurrentUser(): Observable<User | HttpErrorResponse> {
+    return this.http.get<User>(`${this.apiService.apiUrl}/users/current`, { headers: this.apiService.getHeaders() }).pipe(catchError(this.apiService.handleError));
+  }
+
   registerUser(userDto: UserDto): Observable<User | HttpErrorResponse> {
     return this.http.post<User>(`${this.apiService.apiUrl}/users/register`, userDto, { headers: this.apiService.getHeaders() }).pipe(catchError(this.apiService.handleError));
   }

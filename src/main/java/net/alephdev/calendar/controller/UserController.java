@@ -39,6 +39,11 @@ public class UserController {
         return userService.getAllUsers(page);
     }
 
+    @GetMapping("/current")
+    public User getCurrentUser(@CurrentUser User user) {
+        return user;
+    }
+
     @PrivilegeRequired
     @PostMapping("/register")
     public ResponseEntity<User> registerUser(@Valid @RequestBody UserDto userDto) {
