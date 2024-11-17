@@ -52,6 +52,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             } catch (io.jsonwebtoken.security.SignatureException ex){
                 System.out.println("Invalid JWT signature");
                 response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            } catch (io.jsonwebtoken.MalformedJwtException ex){
+                System.out.println("Invalid JWT signature");
+                response.setStatus(HttpStatus.UNAUTHORIZED.value());
             }
         } else {
             logger.warn("JWT Token does not begin with Bearer String");

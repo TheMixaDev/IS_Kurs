@@ -42,12 +42,12 @@ export class AuthService {
   }
 
 
-  private setToken(token: string) {
+  setToken(token: string) {
     localStorage.setItem('token', token);
     this.tokenSubject.next(token);
   }
 
-  private setUser(user: User) {
+  setUser(user: User) {
     this.userSubject.next(user);
   }
 
