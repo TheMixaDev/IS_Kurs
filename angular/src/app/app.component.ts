@@ -31,25 +31,28 @@ export class AppComponent {
       this.alertComponent.open();
     });
 
-    const token = localStorage.getItem('token');
-    if (token) {
-      this.userService.getCurrentUser().subscribe({
-        next: (user) => {
-          if (!(user instanceof HttpErrorResponse)) {
-            this.authService.setToken(token);
-            this.authService.setUser(user);
-          }
-        },
-        error: (error) => {
-          console.error('Authentication error:', error);
-          this.authService.logout();
-        },
-        complete: () => {
-          console.log('Authentication check completed');
-        }
-      });
-    }
+    this.restoreUserSession();
 
     initFlowbite();
+  }
+
+  private restoreUserSession() {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    this.authService.setToken(token);
+    
+    this.userService.getCurrentUser().subscribe({
+      next: (user) => {
+        if (!(user instanceof HttpErrorResponse)) {
+          this.authService.setUser(user);
+        } else {
+          this.authService.logout();
+        }
+      },
+      error: () => {
+        this.authService.logout();
+      }
+    });
   }
 }

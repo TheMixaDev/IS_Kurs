@@ -30,13 +30,35 @@
           class="hidden z-50 my-0 w-56 text-base list-none bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600 rounded-xl"
           id="dropdown"
         >
-          <div class="py-3 px-4">
+          <!-- <div class="py-3 px-4">
               <span
                 class="block text-sm font-semibold text-gray-900 dark:text-white"
               >Name</span>
               <span
                 class="block text-sm text-gray-900 truncate dark:text-white"
               >Email</span>
+          </div> -->
+          <div class="user-info p-4" *ngIf="currentUser">
+            <div class="flex items-center space-x-4">
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-gray-900 truncate">
+                    {{currentUser.firstName}} {{currentUser.lastName}}
+                </p>
+                <p class="text-xs text-gray-500 break-all font-11">
+                    {{currentUser.email}}
+                </p>
+                <p class="text-xs text-gray-400">
+                    {{currentUser.role?.name}}
+                </p>
+                <p class="text-xs text-gray-400 flex items-center gap-1">
+                    Команда: 
+                    <span class="flex items-center">
+                        <span class="w-2 h-2 rounded-full mr-1" [style.backgroundColor]="currentUser.team?.color"></span>
+                        {{currentUser.team?.name}}
+                    </span>
+                </p>
+              </div>
+            </div>
           </div>
           <ul
             class="py-1 text-gray-700 dark:text-gray-300"
@@ -47,14 +69,6 @@
                 href="#"
                 class="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white"
               >Настройки</a>
-            </li>
-            <li>
-              <span
-                class="block py-2 px-4 text-sm text-gray-900 dark:text-white"
-              >Роль: Разработчик</span>
-              <span
-                class="block py-2 px-4 text-sm text-gray-900 dark:text-white"
-              >Команда: API</span>
             </li>
           </ul>
           <ul

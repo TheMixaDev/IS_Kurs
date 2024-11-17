@@ -13,26 +13,37 @@ import {
 import {AuthService} from "../services/server/auth.service";
 import {UserService} from "../services/server/user.service";
 import {User} from "../models/user";
+import {AsyncPipe, NgIf} from "@angular/common";
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+
+
 
 @Component({
   selector: 'app-menu',
   standalone: true,
   imports: [
-    SideItemBinding
+    SideItemBinding,
+    AsyncPipe,
+    NgIf,
+    FontAwesomeModule
   ],
   templateUrl: './menu.component.html',
 })
 export class MenuComponent implements OnInit {
+  currentUser: User | null = null;
+
   constructor(private authService: AuthService, private userService: UserService) {}
 
   ngOnInit(): void {
     initFlowbite();
-    this.userService.getCurrentUser().subscribe((user) => {
-      if (user as User) {
-        console.log(user as User);
-      }
-    });
+    this.loadUserData();
   }
+
+  private loadUserData(): void {
+    this.currentUser = this.authService.getUser();
+    console.log(this.currentUser);
+  }
+
   logout(): void {
     this.authService.logout();
   }

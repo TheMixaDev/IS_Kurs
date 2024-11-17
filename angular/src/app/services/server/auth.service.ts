@@ -17,15 +17,11 @@ export class AuthService {
   user$: Observable<User | null> = this.userSubject.asObservable();
 
   constructor(private http: HttpClient) {
-    const storedToken = localStorage.getItem('token');
-    if (storedToken) {
-      // Прикрутить сюда отправку запроса на получение текущего пользователя и выставить this.setUser(...)
-      // Если запрос не удался (токен не валиден), то вызываем this.logout()
-      // ВАЖНО!!! Нельзя инжектнуть UserService сюда напрямую, поскольку он зависит от ApiService, который зависит от AuthService (этот класс)
-      // Подумать, как решить проблему цикличной зависимости
-      // Пример кода использования getCurrentUser в menu.component.ts (после того, как будет сделано - убрать)
-      this.tokenSubject.next(storedToken);
-    }
+    const savedToken = localStorage.getItem('token');
+    const savedUser = localStorage.getItem('user');
+    
+    if (savedToken) this.tokenSubject.next(savedToken);
+    if (savedUser) this.userSubject.next(JSON.parse(savedUser));
   }
 
   login(loginRequest: JwtRequestDto): Observable<JwtResponseDto> {
@@ -48,6 +44,7 @@ export class AuthService {
   }
 
   setUser(user: User) {
+    localStorage.setItem('user', JSON.stringify(user));
     this.userSubject.next(user);
   }
 
@@ -61,6 +58,8 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     this.tokenSubject.next(null);
+    this.userSubject.next(null);
   }
 }
