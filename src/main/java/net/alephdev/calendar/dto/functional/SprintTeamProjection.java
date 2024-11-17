@@ -8,4 +8,5 @@ public interface SprintTeamProjection {
     LocalDate getStartDate();
     LocalDate getEndDate();
     String getTeamName();
+    String getTeamColor();
 }

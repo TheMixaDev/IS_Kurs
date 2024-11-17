@@ -13,8 +13,9 @@ public class SprintTeamDto {
     private final LocalDate startDate;
     private final LocalDate endDate;
     private final String teamName;
+    private final String teamColor;
 
     public SprintTeamDto(SprintTeamProjection projection) {
-        this(projection.getSprintId(), projection.getMajorVersion(), projection.getStartDate(), projection.getEndDate(), projection.getTeamName());
+        this(projection.getSprintId(), projection.getMajorVersion(), projection.getStartDate(), projection.getEndDate(), projection.getTeamName(), projection.getTeamColor());
     }
 }

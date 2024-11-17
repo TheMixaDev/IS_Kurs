@@ -4,4 +4,5 @@ export interface SprintTeamDto {
   startDate: string;
   endDate: string;
   teamName: string;
+  teamColor: string;
 }

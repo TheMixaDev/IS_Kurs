@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {Observable} from "rxjs";
+import {Observable, Subject} from "rxjs";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {ApiService} from "./api.service";
 import {catchError} from "rxjs/operators";
@@ -13,7 +13,14 @@ import {Release} from "../../models/release";
   providedIn: 'root'
 })
 export class SprintService {
+  private sprintSubject = new Subject<{}>();
+  sprint$ = this.sprintSubject.asObservable();
+
   constructor(private http: HttpClient, private apiService: ApiService) {}
+
+  initiateUpdate() {
+    this.sprintSubject.next({});
+  }
 
   getAllSprints(page: number = 0): Observable<Sprint[] | HttpErrorResponse> {
     return this.http.get<Sprint[]>(`${this.apiService.apiUrl}/sprints`, { params: { page: page.toString() }, headers: this.apiService.getHeaders() }).pipe(
