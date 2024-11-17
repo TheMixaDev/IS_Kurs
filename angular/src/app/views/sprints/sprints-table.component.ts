@@ -1,4 +1,4 @@
-import {Component, HostBinding, OnInit} from "@angular/core";
+import {ChangeDetectorRef, Component, HostBinding, OnInit} from "@angular/core";
 import {AlertService} from "../../services/alert.service";
 import {faArrowLeft, faArrowRight, faCircle, faPlus} from "@fortawesome/free-solid-svg-icons";
 import {SprintTeamDto} from "../../models/dto/sprint-team-dto";
@@ -9,6 +9,7 @@ import {TableCellComponent} from "../../components/table/table-cell.component";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {DatePipe} from "@angular/common";
 import {UiButtonComponent} from "../../components/ui/ui-button.component";
+import { SprintsComponent } from "./sprints.component";
 
 @Component({
   selector: 'app-sprints-table',
@@ -26,12 +27,14 @@ import {UiButtonComponent} from "../../components/ui/ui-button.component";
 export class SprintsTableComponent implements OnInit {
   sprints : SprintTeamDto[] = [];
   year = new Date().getFullYear();
-  constructor(private sprintService : SprintService, private alertService : AlertService) {
-    this.sprintService.sprint$.subscribe(this.updateSprints.bind(this));
+  constructor(private sprintService : SprintService, private alertService : AlertService, private sprintComponent: SprintsComponent) {
+    this.sprintService.sprint$.subscribe(() => {
+      this.update();
+    });
   }
   updateSprints() {
     this.sprints = [];
-    this.sprintService.getSprintsByYearAndTeam(this.year, "API").subscribe(sprints => {
+    this.sprintService.getSprintsByYearAndTeam(this.year, this.sprintComponent.selectedTeamName).subscribe(sprints => {
       if(sprints as SprintTeamDto[]) {
         this.sprints = sprints as SprintTeamDto[];
       } else {
@@ -44,6 +47,10 @@ export class SprintsTableComponent implements OnInit {
   }
   changeYear(amount : number) {
     this.year += amount;
+    this.updateSprints();
+  }
+
+  update() {
     this.updateSprints();
   }
 

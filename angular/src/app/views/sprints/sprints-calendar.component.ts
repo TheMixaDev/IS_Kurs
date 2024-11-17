@@ -1,4 +1,4 @@
-import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild} from "@angular/core";
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, SimpleChanges, ViewChild} from "@angular/core";
 import {DatePipe} from "@angular/common";
 import {FullCalendarComponent, FullCalendarModule} from '@fullcalendar/angular';
 import {CalendarOptions} from '@fullcalendar/core';
@@ -11,6 +11,7 @@ import {CalendarService} from "../../services/server/calendar.service";
 import {Day} from "../../models/misc/day";
 import {MessageDto} from "../../models/dto/message-dto";
 import {HttpErrorResponse} from "@angular/common/http";
+import { SprintsComponent } from "./sprints.component";
 
 @Component({
   selector: 'app-sprints-calendar',
@@ -40,11 +41,15 @@ export class SprintsCalendarComponent implements AfterViewInit, OnInit {
   constructor(private sprintService : SprintService,
               private alertService: AlertService,
               private calendarService: CalendarService,
-              private cdRef: ChangeDetectorRef) {
-    this.sprintService.sprint$.subscribe(this.updateSprints.bind(this));
+              private cdRef: ChangeDetectorRef,
+              private sprintComponent: SprintsComponent) {
+    this.sprintService.sprint$.subscribe(() => {
+      this.update();
+    });
   }
+
   updateSprints() {
-    this.sprintService.getSprintsByYearAndTeam(this.getYear(), "API").subscribe(sprints => {
+    this.sprintService.getSprintsByYearAndTeam(this.getYear(), this.sprintComponent.selectedTeamName).subscribe(sprints => {
       if(sprints as SprintTeamDto[]) {
         this.sprints = sprints as SprintTeamDto[];
         if(this.calendarComponent?.getApi()) {
