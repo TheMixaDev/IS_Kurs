@@ -8,6 +8,7 @@ import {SprintDto} from "../../models/dto/sprint-dto";
 import {SprintTeamDto} from "../../models/dto/sprint-team-dto";
 import {UserStoryPointsDto} from "../../models/dto/user-story-points-dto";
 import {Release} from "../../models/release";
+import {Page} from "../../models/misc/page";
 
 @Injectable({
   providedIn: 'root'
@@ -22,8 +23,8 @@ export class SprintService {
     this.sprintSubject.next({});
   }
 
-  getAllSprints(page: number = 0): Observable<Sprint[] | HttpErrorResponse> {
-    return this.http.get<Sprint[]>(`${this.apiService.apiUrl}/sprints`, { params: { page: page.toString() }, headers: this.apiService.getHeaders() }).pipe(
+  getAllSprints(page: number = 0): Observable<Page<Sprint> | HttpErrorResponse> {
+    return this.http.get<Page<Sprint>>(`${this.apiService.apiUrl}/sprints`, { params: { page: page.toString() }, headers: this.apiService.getHeaders() }).pipe(
       catchError(this.apiService.handleError)
     );
   }

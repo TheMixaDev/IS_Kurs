@@ -5,6 +5,7 @@ import {ApiService} from "./api.service";
 import {catchError} from "rxjs/operators";
 import {User} from "../../models/user";
 import {UserDto} from "../../models/dto/user-dto";
+import {Page} from "../../models/misc/page";
 
 @Injectable({
   providedIn: 'root'
@@ -12,10 +13,10 @@ import {UserDto} from "../../models/dto/user-dto";
 export class UserService {
   constructor(private http: HttpClient, private apiService: ApiService) {}
 
-  getAllUsers(page: number = 0, login: string): Observable<User[] | HttpErrorResponse> {
+  getAllUsers(page: number = 0, login: string): Observable<Page<User> | HttpErrorResponse> {
     let params = { page: page.toString(), login: login };
 
-    return this.http.get<User[]>(`${this.apiService.apiUrl}/users`, {params, headers: this.apiService.getHeaders()}).pipe(catchError(this.apiService.handleError));
+    return this.http.get<Page<User>>(`${this.apiService.apiUrl}/users`, {params, headers: this.apiService.getHeaders()}).pipe(catchError(this.apiService.handleError));
   }
 
   getCurrentUser(): Observable<User | HttpErrorResponse> {

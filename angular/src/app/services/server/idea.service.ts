@@ -5,6 +5,7 @@ import {ApiService} from "./api.service";
 import {catchError} from "rxjs/operators";
 import {Idea} from "../../models/idea";
 import {IdeaDto} from "../../models/dto/idea-dto";
+import {Page} from "../../models/misc/page";
 
 @Injectable({
   providedIn: 'root'
@@ -12,11 +13,11 @@ import {IdeaDto} from "../../models/dto/idea-dto";
 export class IdeaService {
   constructor(private http: HttpClient, private apiService: ApiService) {}
 
-  getAllIdeas(page: number = 0, status?: string): Observable<Idea[] | HttpErrorResponse> {
+  getAllIdeas(page: number = 0, status?: string): Observable<Page<Idea> | HttpErrorResponse> {
     let params: { page: string, status?: string } = { page: page.toString() };
     if(status) params.status = status;
 
-    return this.http.get<Idea[]>(`${this.apiService.apiUrl}/ideas`, { params: params, headers: this.apiService.getHeaders() }).pipe(
+    return this.http.get<Page<Idea>>(`${this.apiService.apiUrl}/ideas`, { params: params, headers: this.apiService.getHeaders() }).pipe(
       catchError(this.apiService.handleError)
     );
   }

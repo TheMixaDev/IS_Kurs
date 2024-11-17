@@ -5,6 +5,7 @@ import {ApiService} from "./api.service";
 import {catchError} from "rxjs/operators";
 import {Task} from "../../models/task";
 import {TaskDto} from "../../models/dto/task-dto";
+import {Page} from "../../models/misc/page";
 
 @Injectable({
   providedIn: 'root'
@@ -12,13 +13,13 @@ import {TaskDto} from "../../models/dto/task-dto";
 export class TaskService {
   constructor(private http: HttpClient, private apiService: ApiService) {}
 
-  getAllTasks(page: number = 0, statusId?: number, implementerLogin?: string, sprintId?: number): Observable<Task[] | HttpErrorResponse> {
+  getAllTasks(page: number = 0, statusId?: number, implementerLogin?: string, sprintId?: number): Observable<Page<Task> | HttpErrorResponse> {
     let params: { page: string, statusId?: string, implementerLogin?: string, sprintId?: string } = { page: page.toString() };
     if(statusId) params.statusId = statusId.toString();
     if(implementerLogin) params.implementerLogin = implementerLogin;
     if(sprintId) params.sprintId = sprintId.toString();
 
-    return this.http.get<Task[]>(`${this.apiService.apiUrl}/tasks`, { params, headers: this.apiService.getHeaders() }).pipe(catchError(this.apiService.handleError));
+    return this.http.get<Page<Task>>(`${this.apiService.apiUrl}/tasks`, { params, headers: this.apiService.getHeaders() }).pipe(catchError(this.apiService.handleError));
   }
 
 

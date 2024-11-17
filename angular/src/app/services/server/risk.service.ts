@@ -5,6 +5,7 @@ import {ApiService} from "./api.service";
 import {catchError} from "rxjs/operators";
 import {Risk} from "../../models/risk";
 import {TopRiskDto} from "../../models/dto/top-risk-dto";
+import {Page} from "../../models/misc/page";
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +13,8 @@ import {TopRiskDto} from "../../models/dto/top-risk-dto";
 export class RiskService {
   constructor(private http: HttpClient, private apiService: ApiService) {}
 
-  getAllRisks(page: number = 0): Observable<Risk[] | HttpErrorResponse> {
-    return this.http.get<Risk[]>(`${this.apiService.apiUrl}/risks`, { params: { page: page.toString() }, headers: this.apiService.getHeaders() }).pipe(
+  getAllRisks(page: number = 0): Observable<Page<Risk> | HttpErrorResponse> {
+    return this.http.get<Page<Risk>>(`${this.apiService.apiUrl}/risks`, { params: { page: page.toString() }, headers: this.apiService.getHeaders() }).pipe(
       catchError(this.apiService.handleError)
     );
   }

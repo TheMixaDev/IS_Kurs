@@ -5,6 +5,7 @@ import {ApiService} from "./api.service";
 import {catchError} from "rxjs/operators";
 import {Release} from "../../models/release";
 import {ReleaseDto} from "../../models/dto/release-dto";
+import {Page} from "../../models/misc/page";
 
 @Injectable({
   providedIn: 'root'
@@ -12,12 +13,12 @@ import {ReleaseDto} from "../../models/dto/release-dto";
 export class ReleaseService {
   constructor(private http: HttpClient, private apiService: ApiService) {}
 
-  getAllReleases(page: number = 0): Observable<Release[] | HttpErrorResponse> {
-    return this.http.get<Release[]>(`${this.apiService.apiUrl}/releases`, { params: {page: page.toString()}, headers: this.apiService.getHeaders() }).pipe(catchError(this.apiService.handleError));
+  getAllReleases(page: number = 0): Observable<Page<Release> | HttpErrorResponse> {
+    return this.http.get<Page<Release>>(`${this.apiService.apiUrl}/releases`, { params: {page: page.toString()}, headers: this.apiService.getHeaders() }).pipe(catchError(this.apiService.handleError));
   }
 
-  getReleasesBySprint(sprintId: number, page: number = 0): Observable<Release[] | HttpErrorResponse> {
-    return this.http.get<Release[]>(`${this.apiService.apiUrl}/releases/sprint/${sprintId}`, { params: {page: page.toString()}, headers: this.apiService.getHeaders() }).pipe(catchError(this.apiService.handleError));
+  getReleasesBySprint(sprintId: number, page: number = 0): Observable<Page<Release> | HttpErrorResponse> {
+    return this.http.get<Page<Release>>(`${this.apiService.apiUrl}/releases/sprint/${sprintId}`, { params: {page: page.toString()}, headers: this.apiService.getHeaders() }).pipe(catchError(this.apiService.handleError));
   }
 
   createRelease(releaseDto: ReleaseDto): Observable<Release | HttpErrorResponse> {
