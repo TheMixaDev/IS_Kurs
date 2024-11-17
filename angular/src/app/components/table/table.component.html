@@ -1,0 +1,30 @@
+<div class="mx-auto max-w-screen-xl p-3 px-4 lg:px-12 animate-fade animate-once animate-duration-500 animate-ease-out">
+  <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg vld-parent">
+    <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4"
+         *ngIf="creationEnabled || clearEnabled">
+      <div class="w-full md:w-1/2"></div>
+      <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+        <!--app-ui-button *ngIf="clearEnabled" (click)="clearClick.emit()" color="danger" [disabled]="!clearState">
+          <fa-icon [icon]="faTrash"/>
+          Очистить
+        </app-ui-button>
+        <app-ui-button *ngIf="creationEnabled" (click)="creationClick.emit()">
+          <fa-icon [icon]="faPlus"/>
+          Создать
+        </app-ui-button-->
+      </div>
+    </div>
+    <div class="overflow-x-auto tableWrap">
+      <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <tr>
+            <th scope="col" class="bg-gray-50 dark:bg-gray-700 px-4 py-3" *ngFor="let column of columns">{{ column }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-content></ng-content>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

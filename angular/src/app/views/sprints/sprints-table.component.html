@@ -1,0 +1,41 @@
+<app-table-component [creationEnabled]="false">
+  <tr table-row class="bg-gray-50">
+    <td table-cell class="text-end">
+      <ui-button (click)="changeYear(-1)" classExtension="!px-3 !py-1">
+        <fa-icon [icon]="faArrowLeft"/>
+      </ui-button>
+      <ui-button color="transparent" classExtension="text-black !p-1" (click)="changeYear(currentYear-year)">
+        {{ year }}
+      </ui-button>
+      <ui-button (click)="changeYear(1)" classExtension="!px-3 !py-1">
+        <fa-icon [icon]="faArrowRight"/>
+      </ui-button>
+    </td>
+  </tr>
+</app-table-component>
+<app-table-component [columns]="['Номер версии', 'Команда', 'Начало разработки', 'Конец разработки']" [creationEnabled]="false" style="transform: translate(0, -35px); display:block;">
+  @for(sprint of sprints; track sprint.majorVersion) {
+    <tr table-row>
+      <td table-cell>
+        {{ sprint.majorVersion }}
+      </td>
+      <td table-cell>
+        <fa-icon [icon]="faCircle" [style.color]="sprint.teamColor"/>
+        Команда "{{ sprint.teamName }}"
+      </td>
+      <td table-cell>
+        {{ sprint.startDate | date:'dd.MM.yyyy' }}
+      </td>
+      <td table-cell>
+        {{ sprint.endDate | date:'dd.MM.yyyy' }}
+      </td>
+    </tr>
+  }
+  @if(sprints.length == 0) {
+    <tr table-row>
+      <td table-cell colspan="4" class="text-center bg-gray-50">
+        Нет данных
+      </td>
+    </tr>
+  }
+</app-table-component>

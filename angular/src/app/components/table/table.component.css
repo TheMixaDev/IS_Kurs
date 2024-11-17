@@ -1,0 +1,8 @@
+.tableWrap {
+  max-height: 80vh;
+  overflow: auto;
+}
+thead tr th {
+  position: sticky;
+  top: 0;
+}

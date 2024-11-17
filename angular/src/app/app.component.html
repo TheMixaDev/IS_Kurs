@@ -1,7 +1,7 @@
 <section class="w-full h-full fixed bg-gray-100 dark:bg-gray-900">
   <div *ngIf="isLoggedIn$ | async; else loginForm" class="h-full">
     <app-menu>
-      <router-outlet class="overflow-y-auto"/>
+      <router-outlet/>
     </app-menu>
   </div>
   <ng-template #loginForm>

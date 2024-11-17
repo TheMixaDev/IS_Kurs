@@ -13,13 +13,13 @@ import {MessageDto} from "../../models/dto/message-dto";
 import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
-  selector: 'app-calendar',
+  selector: 'app-sprints-calendar',
   standalone: true,
   imports: [DatePipe, FullCalendarModule],
-  templateUrl: './calendar.component.html',
+  templateUrl: './sprints-calendar.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CalendarComponent implements AfterViewInit, OnInit {
+export class SprintsCalendarComponent implements AfterViewInit, OnInit {
   @ViewChild('calendar') calendarComponent!: FullCalendarComponent;
   calendarOptions : CalendarOptions = {
     initialView: 'multiMonthYear',

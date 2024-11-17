@@ -1,0 +1,45 @@
+<div class="mx-auto max-w-screen-xl px-4 lg:px-12 animate-fade animate-once animate-duration-500 animate-ease-out relative z-10">
+  <div class="relative w-full lg:w-[260px] inline-block mx-auto mb-2 lg:mb-0">
+    <ui-dropdown class="w-full lg:w-[250px] block">
+      Выберите команду
+    </ui-dropdown>
+  </div>
+  <header class="hidden lg:inline-block mx-auto" style="width: calc(100% - 520px)">
+    <nav class="px-6 py-0">
+      <div class="text-center">
+        <ul class="inline-flex font-medium flex-row space-x-4">
+          <li>
+            <button header-item [active]="!tableView" (click)="setView(false)">Календарь</button>
+          </li>
+          <li>
+            <button header-item [active]="tableView" (click)="setView(true)">Таблица</button>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+  <div class="relative w-full lg:w-[260px] inline-block mx-auto align-right">
+    <div class="w-full lg:w-[250px] block ml-auto">
+      <button primary>
+        <fa-icon [icon]="faPlus"></fa-icon>
+        Создать спринт
+      </button>
+    </div>
+  </div>
+  <div class="text-center w-full mt-1">
+    <ul class="inline-flex font-medium flex-row space-x-4 lg:hidden">
+      <li>
+        <button header-item [active]="!tableView" (click)="setView(false)">Календарь</button>
+      </li>
+      <li>
+        <button header-item [active]="tableView" (click)="setView(true)">Таблица</button>
+      </li>
+    </ul>
+  </div>
+</div>
+
+@if(!tableView) {
+  <app-sprints-calendar class="z-0" />
+} @else {
+  <app-sprints-table class="z-0" />
+}
