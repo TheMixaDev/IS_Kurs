@@ -13,6 +13,8 @@ import { SprintService } from "../../services/server/sprint.service";
 import { HttpErrorResponse } from "@angular/common/http";
 import { AuthService } from "../../services/server/auth.service";
 import { BehaviorSubject, debounceTime, Subject, takeUntil } from "rxjs";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {CreateSprintModalComponent} from "../../components/modal/create-sprint/create-sprint-modal.component";
 
 @Component({
   selector: 'app-sprints',
@@ -35,7 +37,11 @@ export class SprintsComponent implements OnInit {
   private _selectedTeamName = new BehaviorSubject<string>('');
   private destroy$ = new Subject<void>();
 
-  constructor(private teamService : TeamService, private sprintService: SprintService, private authService: AuthService) {}
+  constructor(private teamService : TeamService,
+              private sprintService: SprintService,
+              private authService: AuthService,
+              private modalService: NgbModal
+  ) {}
 
   setView(view: boolean) {
     this.tableView = view;
@@ -60,7 +66,7 @@ export class SprintsComponent implements OnInit {
     ).subscribe(() => {
       this.sprintService.initiateUpdate();
     });
-    
+
     const user = this.authService.getUser();
     this.teamService.getAllTeams(false).subscribe({
       next: (teams) => {
@@ -85,7 +91,7 @@ export class SprintsComponent implements OnInit {
         this.teamOptions = {};
       }
     });
-    
+
   }
 
   ngOnDestroy() {
@@ -94,4 +100,11 @@ export class SprintsComponent implements OnInit {
   }
 
   protected readonly faPlus = faPlus;
+
+  openCreateModal() {
+    this.modalService.open(CreateSprintModalComponent, {
+      size: 'lg',
+      centered: true
+    });
+  }
 }
