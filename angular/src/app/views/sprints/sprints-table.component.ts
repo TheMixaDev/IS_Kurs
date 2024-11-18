@@ -18,9 +18,11 @@ import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {DatePipe} from "@angular/common";
 import {UiButtonComponent} from "../../components/ui/ui-button.component";
 import { SprintsComponent } from "./sprints.component";
-import {NgbTooltip} from "@ng-bootstrap/ng-bootstrap";
+import {NgbModal, NgbTooltip} from "@ng-bootstrap/ng-bootstrap";
 import {initFlowbite} from "flowbite";
 import {TooltipBinding} from "../../components/bindings/tooltip.binding";
+import {Sprint} from "../../models/sprint";
+import {CreateSprintModalComponent} from "./create-sprint/create-sprint-modal.component";
 
 @Component({
   selector: 'app-sprints-table',
@@ -41,7 +43,9 @@ export class SprintsTableComponent implements OnInit {
   @Input() selectedTeamName : string = '';
   sprints : SprintTeamDto[] = [];
   year = new Date().getFullYear();
-  constructor(private sprintService : SprintService, private alertService : AlertService) {
+  constructor(private sprintService : SprintService,
+              private alertService : AlertService,
+              private modalService: NgbModal) {
     this.sprintService.sprint$.subscribe(() => {
       this.update();
     });
@@ -67,6 +71,18 @@ export class SprintsTableComponent implements OnInit {
 
   update() {
     this.updateSprints();
+  }
+
+  openEditModal(sprint: SprintTeamDto) {
+    this.sprintService.getSprint(sprint.sprintId).subscribe(fetched => {
+      if(fetched as Sprint) {
+        const modalRef = this.modalService.open(CreateSprintModalComponent, {
+          size: 'lg',
+          centered: true
+        });
+        modalRef.componentInstance.sprint = fetched as Sprint;
+      }
+    });
   }
 
   protected readonly currentYear = new Date().getFullYear();

@@ -34,6 +34,12 @@ public class SprintController {
         return sprintService.getAllSprints(page);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Sprint> getSprint(@PathVariable Integer id) {
+        Sprint sprint = sprintService.getSprint(id);
+        return new ResponseEntity<>(sprint, HttpStatus.OK);
+    }
+
     @PrivilegeRequired
     @PostMapping
     public ResponseEntity<Sprint> createSprint(@RequestBody SprintDto sprint) {

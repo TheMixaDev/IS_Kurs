@@ -29,6 +29,12 @@ export class SprintService {
     );
   }
 
+  getSprint(id: number): Observable<Sprint | HttpErrorResponse> {
+    return this.http.get<Sprint>(`${this.apiService.apiUrl}/sprints/${id}`, { headers: this.apiService.getHeaders() }).pipe(
+      catchError(this.apiService.handleError)
+    );
+  }
+
   createSprint(sprintDto: SprintDto): Observable<Sprint | HttpErrorResponse> {
     return this.http.post<Sprint>(`${this.apiService.apiUrl}/sprints`, sprintDto, { headers: this.apiService.getHeaders() }).pipe(
       catchError(this.apiService.handleError)
