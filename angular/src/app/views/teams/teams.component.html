@@ -22,7 +22,7 @@
   </div>
 </div>
 <div class="mx-auto max-w-screen-xl p-3 px-4 lg:px-12">
-  <div class="max-h-[85vh] overflow-y-auto rounded-lg">
+  <div class="rounded-lg">
     @for(team of filteredTeams; track team.id) {
       <div [ngClass]="'w-full grid p-6 bg-white border border-gray-100 rounded-lg hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 grid-cols-[1fr_auto] mb-2 animate-fade animate-once animate-duration-500 animate-ease-out' + (!team.isActive ? ' !bg-gray-300' : '')">
         <div>
