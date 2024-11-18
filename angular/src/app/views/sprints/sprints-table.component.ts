@@ -23,6 +23,7 @@ import {initFlowbite} from "flowbite";
 import {TooltipBinding} from "../../components/bindings/tooltip.binding";
 import {Sprint} from "../../models/sprint";
 import {CreateSprintModalComponent} from "./create-sprint/create-sprint-modal.component";
+import {DeleteModalComponent} from "../../components/modal/delete-modal.component";
 
 @Component({
   selector: 'app-sprints-table',
@@ -81,6 +82,29 @@ export class SprintsTableComponent implements OnInit {
           centered: true
         });
         modalRef.componentInstance.sprint = fetched as Sprint;
+      }
+    });
+  }
+
+  openDeleteModal(sprint: SprintTeamDto) {
+    const modalRef = this.modalService.open(DeleteModalComponent, {
+      size: 'md',
+      centered: true
+    });
+    modalRef.componentInstance.content = `Вы уверены, что хотите удалить спринт "${sprint.majorVersion}"?`;
+    modalRef.componentInstance.warning = `При удалении спринта, все его релизы будут безвозвратно удалены. Назначенные задачи на спринт будут сохранены.`;
+    modalRef.result.then((result) => {
+      if (result === 'delete') {
+        this.sprintService.deleteSprint(sprint.sprintId).subscribe({
+          next: () => {
+            this.alertService.showAlert('success', 'Спринт успешно удален');
+            this.updateSprints();
+          },
+          error: (error) => {
+            this.alertService.showAlert('danger', 'Ошибка при удалении спринта: ' + (error?.error?.message || "Неизвестная ошибка"));
+            console.error('Error deleting sprint:', error);
+          }
+        });
       }
     });
   }

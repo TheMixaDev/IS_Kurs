@@ -48,7 +48,7 @@
         <div id="tooltip-edit" tooltip>
           Изменить
         </div>
-        <ui-button color="danger" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-delete">
+        <ui-button color="danger" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-delete" (click)="openDeleteModal(sprint)">
           <fa-icon [icon]="faTrash"/>
         </ui-button>
         <div id="tooltip-delete" tooltip>
@@ -59,7 +59,7 @@
   }
   @if(sprints.length == 0) {
     <tr table-row>
-      <td table-cell colspan="4" class="text-center bg-gray-50">
+      <td table-cell colspan="5" class="text-center bg-gray-50">
         Нет данных
       </td>
     </tr>
