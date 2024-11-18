@@ -22,6 +22,8 @@ import {HttpErrorResponse} from "@angular/common/http";
 import {StatusParserPipe} from "../../pipe/status-parser.pipe";
 import {User} from "../../models/user";
 import {AuthService} from "../../services/server/auth.service";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {CreateIdeaModalComponent} from "./create-idea/create-idea-modal.component";
 
 @Component({
   selector: 'app-idea',
@@ -47,7 +49,8 @@ export class IdeaComponent implements OnInit {
   user: User | null = null;
 
   constructor(private ideaService: IdeaService,
-              private authService: AuthService) {
+              private authService: AuthService,
+              private modalService: NgbModal) {
     this.ideaService.idea$.subscribe(() => {
       this.updateIdeas();
     })
@@ -68,6 +71,21 @@ export class IdeaComponent implements OnInit {
   changePage(page: number) {
     this.currentPage = page;
     this.updateIdeas();
+  }
+
+  createIdea() {
+    const modalRef = this.modalService.open(CreateIdeaModalComponent, { size: 'lg' });
+    modalRef.result.then(() => {
+      this.ideaService.initiateUpdate();
+    }).catch(() => {});
+  }
+
+  editIdea(idea: Idea) {
+    const modalRef = this.modalService.open(CreateIdeaModalComponent, { size: 'lg' });
+    modalRef.componentInstance.idea = idea;
+    modalRef.result.then(() => {
+      this.ideaService.initiateUpdate();
+    }).catch(() => {});
   }
 
   protected readonly faPlus = faPlus;

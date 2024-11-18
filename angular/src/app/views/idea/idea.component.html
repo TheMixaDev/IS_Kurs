@@ -8,8 +8,8 @@
   </header>
   <div class="relative w-full lg:w-[260px] inline-block mx-auto align-right">
     <div class="w-full lg:w-[250px] block ml-auto">
-      <button primary>
-        <fa-icon [icon]="faPlus"></fa-icon>
+      <button primary (click)="createIdea()">
+        <fa-icon [icon]="faPlus" />
         Создать идею
       </button>
     </div>
@@ -51,7 +51,7 @@
               Просмотреть задачу
             </div>
           } @else if (idea.authorLogin.login == user?.login) {
-            <ui-button color="warning" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-edit">
+            <ui-button color="warning" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-edit" (click)="editIdea(idea)">
               <fa-icon [icon]="faEdit"/>
             </ui-button>
             <div id="tooltip-edit" tooltip>

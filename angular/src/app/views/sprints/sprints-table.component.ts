@@ -80,8 +80,7 @@ export class SprintsTableComponent implements OnInit {
     this.sprintService.getSprint(sprint.sprintId).subscribe(fetched => {
       if(fetched as Sprint) {
         const modalRef = this.modalService.open(CreateSprintModalComponent, {
-          size: 'lg',
-          centered: true
+          size: 'lg'
         });
         modalRef.componentInstance.sprint = fetched as Sprint;
       }
@@ -90,8 +89,7 @@ export class SprintsTableComponent implements OnInit {
 
   openDeleteModal(sprint: SprintTeamDto) {
     const modalRef = this.modalService.open(ConfirmModalComponent, {
-      size: 'md',
-      centered: true
+      size: 'md'
     });
     modalRef.componentInstance.content = `Вы уверены, что хотите удалить спринт "${sprint.majorVersion}"?`;
     modalRef.componentInstance.warning = `При удалении спринта, все его релизы будут безвозвратно удалены. Назначенные задачи на спринт будут сохранены.`;
@@ -116,7 +114,6 @@ export class SprintsTableComponent implements OnInit {
       next: (releases) => {
         const modalRef = this.modalService.open(ReleaseModalComponent, {
           size: 'lg',
-          centered: true,
           backdrop: 'static'
         });
         modalRef.componentInstance.releases = releases as Release[];

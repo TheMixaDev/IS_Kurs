@@ -103,8 +103,7 @@ export class SprintsComponent implements OnInit {
 
   openCreateModal() {
     this.modalService.open(CreateSprintModalComponent, {
-      size: 'lg',
-      centered: true
+      size: 'lg'
     });
   }
 }

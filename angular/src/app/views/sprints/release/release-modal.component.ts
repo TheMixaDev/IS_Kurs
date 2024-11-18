@@ -64,8 +64,7 @@ export class ReleaseModalComponent {
 
   openCreateReleaseModal() {
     const modalRef = this.modalService.open(CreateReleaseModalComponent, {
-      size: 'lg',
-      centered: true
+      size: 'lg'
     });
     modalRef.componentInstance.sprintId = this.sprintId;
     modalRef.result.then(() => {
@@ -75,8 +74,7 @@ export class ReleaseModalComponent {
 
   openEditModal(release: Release) {
     const modalRef = this.modalService.open(CreateReleaseModalComponent, {
-      size: 'lg',
-      centered: true
+      size: 'lg'
     });
     modalRef.componentInstance.sprintId = this.sprintId;
     modalRef.componentInstance.release = release;
@@ -87,8 +85,7 @@ export class ReleaseModalComponent {
 
   deleteRelease(release: Release) {
     const modalRef = this.modalService.open(ConfirmModalComponent, {
-      size: 'md',
-      centered: true
+      size: 'md'
     });
 
     modalRef.componentInstance.content = `Вы уверены, что хотите удалить релиз ${release.version}?`;
