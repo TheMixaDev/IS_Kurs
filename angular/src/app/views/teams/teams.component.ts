@@ -3,18 +3,30 @@ import {TableComponent} from "../../components/table/table.component";
 import {DatePipe, NgClass, NgForOf} from "@angular/common";
 import {UiButtonComponent} from "../../components/ui/ui-button.component";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
-import {faCircle, faPencil, faPlus, faTrash, faWarning} from "@fortawesome/free-solid-svg-icons";
+import {faCircle, faPencil, faPlus, faSearch, faTrash, faWarning} from "@fortawesome/free-solid-svg-icons";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {TeamService} from "../../services/server/team.service";
 import {Team} from "../../models/team";
 import {CreateTeamModalComponent} from "./create-team/create-team-modal.component";
+import {PrimaryButtonBinding} from "../../components/bindings/primary-button.binding";
+import {UiDropdownComponent} from "../../components/ui/ui-dropdown.component";
 
 @Component({
   selector: 'app-teams',
   standalone: true,
-  imports: [TableComponent, DatePipe, UiButtonComponent, FaIconComponent, ReactiveFormsModule, FormsModule, NgForOf, NgClass],
-  templateUrl: './teams.component.html'
+  imports: [TableComponent, DatePipe, UiButtonComponent, FaIconComponent, ReactiveFormsModule, FormsModule, NgForOf, NgClass, PrimaryButtonBinding, UiDropdownComponent],
+  templateUrl: './teams.component.html',
+  styles: `
+    .search-bar {
+      @apply w-full
+    }
+    @media (min-width: 1024px) {
+      .search-bar {
+        width: calc(100% - 260px);
+      }
+    }
+  `
 })
 export class TeamsComponent implements OnInit {
   teams : Team[] = [];
@@ -63,4 +75,5 @@ export class TeamsComponent implements OnInit {
   protected readonly faPlus = faPlus;
   protected readonly faCircle = faCircle;
   protected readonly faWarning = faWarning;
+  protected readonly faSearch = faSearch;
 }
