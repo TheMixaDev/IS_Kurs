@@ -1,22 +1,18 @@
 <div class="mx-auto max-w-screen-xl p-3 px-4 lg:px-12 animate-fade animate-once animate-duration-500 animate-ease-out">
   <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg vld-parent">
-    <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4"
-         *ngIf="creationEnabled || clearEnabled">
+    <div class="flex flex-col md:flex-row items-center justify-between bg-gray-50 space-y-3 md:space-y-0 md:space-x-4 p-4"
+         *ngIf="creationEnabled || headerText">
       <div class="w-full md:w-1/2">
         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{headerText}}</h3>
       </div>
       <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-        <ui-button *ngIf="clearEnabled" (click)="clearClick.emit()" color="danger" [disabled]="!clearState">
-          <fa-icon [icon]="faTrash"/>
-          Очистить
-        </ui-button>
         <ui-button *ngIf="creationEnabled" (click)="creationClick.emit()">
           <fa-icon [icon]="faPlus"/>
           Создать
         </ui-button>
       </div>
     </div>
-    <div class="overflow-x-auto tableWrap">
+    <div class="overflow-x-hidden tableWrap">
       <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
@@ -28,5 +24,32 @@
         </tbody>
       </table>
     </div>
+    <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Table navigation" *ngIf="pageInfo">
+      <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
+        Показано
+        <span class="font-semibold text-gray-900 dark:text-white">{{ pageInfo.size * pageInfo.number + 1 }}-{{ Math.min(pageInfo.size * (pageInfo.number +1), pageInfo.totalElements)}}</span>
+        из
+        <span class="font-semibold text-gray-900 dark:text-white">{{pageInfo.totalElements}}</span>
+      </span>
+      <ul class="inline-flex items-stretch -space-x-px">
+        <li>
+          <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 0" class="pagination-button">
+            <fa-icon [icon]="faArrowLeft"/>
+          </button>
+        </li>
+        <li *ngFor="let page of pages">
+          <button (click)="changePage(page)"
+                  [class.active]="currentPage === page"
+                  class="pagination-button">
+            {{ page + 1}}
+          </button>
+        </li>
+        <li>
+          <button (click)="changePage(currentPage + 1)" [disabled]="currentPage === pageInfo.totalPages - 1"  class="pagination-button">
+            <fa-icon [icon]="faArrowRight"/>
+          </button>
+        </li>
+      </ul>
+    </nav>
   </div>
 </div>

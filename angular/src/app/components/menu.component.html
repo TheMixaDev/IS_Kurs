@@ -93,7 +93,7 @@
         <li side-item [icon]="faListCheck">
           Задачи
         </li>
-        <li side-item [icon]="faLightbulb">
+        <li side-item [icon]="faLightbulb" [routerLink]="['idea']">
           Идеи
         </li>
         <li side-item [icon]="faUser">
@@ -107,11 +107,11 @@
         <li side-item [icon]="faBolt">
           Риски
         </li>
-        <li side-item [icon]="faChartSimple" [routerLink]="['status']">
-          Статусы
-        </li>
         <li side-item [icon]="faStar" [routerLink]="['role']">
           Роли
+        </li>
+        <li side-item [icon]="faChartSimple" [routerLink]="['status']">
+          Статусы
         </li>
       </ul>
     </div>

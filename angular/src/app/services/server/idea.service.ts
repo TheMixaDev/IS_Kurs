@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {Observable} from "rxjs";
+import {Observable, Subject} from "rxjs";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {ApiService} from "./api.service";
 import {catchError} from "rxjs/operators";
@@ -11,7 +11,14 @@ import {Page} from "../../models/misc/page";
   providedIn: 'root'
 })
 export class IdeaService {
+  private ideaSubject = new Subject<{}>();
+  idea$ = this.ideaSubject.asObservable();
+
   constructor(private http: HttpClient, private apiService: ApiService) {}
+
+  initiateUpdate() {
+    this.ideaSubject.next({});
+  }
 
   getAllIdeas(page: number = 0, status?: string): Observable<Page<Idea> | HttpErrorResponse> {
     let params: { page: string, status?: string } = { page: page.toString() };

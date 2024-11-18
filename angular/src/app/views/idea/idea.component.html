@@ -1,0 +1,80 @@
+<div class="mx-auto max-w-screen-xl px-4 lg:px-12 animate-fade animate-once animate-duration-500 animate-ease-out relative z-10">
+  <div class="relative w-full lg:w-[260px] inline-block mx-auto mb-2 lg:mb-0">
+    <ui-dropdown>
+      Выберите статус
+    </ui-dropdown>
+  </div>
+  <header class="hidden lg:inline-block mx-auto" style="width: calc(100% - 520px)">
+  </header>
+  <div class="relative w-full lg:w-[260px] inline-block mx-auto align-right">
+    <div class="w-full lg:w-[250px] block ml-auto">
+      <button primary>
+        <fa-icon [icon]="faPlus"></fa-icon>
+        Создать идею
+      </button>
+    </div>
+  </div>
+</div>
+@if(ideas) {
+  <app-table-component [columns]="['Автор', 'Описание', 'Статус', 'Действия']" [pageInfo]="ideas.page" (pageChange)="changePage($event)">
+    @for(idea of ideas.content; track idea.id) {
+      <tr table-row>
+        <td table-cell class="w-[216px]">
+          {{idea.authorLogin.login}}
+        </td>
+        <td table-cell>
+          {{idea.description}}
+        </td>
+        <td table-cell>
+          {{idea.statusEnumId | statusParser}}
+        </td>
+        <td table-cell class="w-[174px]">
+          @if(idea.statusEnumId == IdeaStatus.PENDING && user?.role?.id == 1) { <!-- TODO норм проверка прав-->
+            <ui-button color="primary" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-approve">
+              <fa-icon [icon]="faCheck"/>
+            </ui-button>
+            <div id="tooltip-approve" tooltip>
+              Принять
+            </div>
+            <ui-button color="danger" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-discard">
+              <fa-icon [icon]="faTimes"/>
+            </ui-button>
+            <div id="tooltip-discard" tooltip>
+              Отклонить
+            </div>
+          }
+          @if(idea.statusEnumId == IdeaStatus.APPROVED) {
+            <ui-button color="primary" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-view">
+              <fa-icon [icon]="faEye"/>
+            </ui-button>
+            <div id="tooltip-view" tooltip>
+              Просмотреть задачу
+            </div>
+          } @else if (idea.authorLogin.login == user?.login) {
+            <ui-button color="warning" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-edit">
+              <fa-icon [icon]="faEdit"/>
+            </ui-button>
+            <div id="tooltip-edit" tooltip>
+              Изменить
+            </div>
+          }
+        </td>
+      </tr>
+    }
+    @if(ideas.content.length == 0) {
+      <tr table-row>
+        <td table-cell colspan="4" class="text-center bg-gray-50">
+          Нет данных
+        </td>
+      </tr>
+    }
+  </app-table-component>
+} @else {
+  <app-table-component [columns]="['Автор', 'Описание', 'Статус', 'Действия']" [creationEnabled]="false">
+    <tr table-row>
+      <td table-cell colspan="4" class="text-center bg-gray-50">
+        Нет данных
+      </td>
+    </tr>
+  </app-table-component>
+}
