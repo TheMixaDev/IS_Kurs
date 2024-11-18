@@ -14,7 +14,7 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { AuthService } from "../../services/server/auth.service";
 import { BehaviorSubject, debounceTime, Subject, takeUntil } from "rxjs";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {CreateSprintModalComponent} from "../../components/modal/create-sprint/create-sprint-modal.component";
+import {CreateSprintModalComponent} from "./create-sprint/create-sprint-modal.component";
 
 @Component({
   selector: 'app-sprints',
