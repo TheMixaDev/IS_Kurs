@@ -16,17 +16,7 @@ import {UiDropdownComponent} from "../../components/ui/ui-dropdown.component";
   selector: 'app-teams',
   standalone: true,
   imports: [TableComponent, DatePipe, UiButtonComponent, FaIconComponent, ReactiveFormsModule, FormsModule, NgForOf, NgClass, PrimaryButtonBinding, UiDropdownComponent],
-  templateUrl: './teams.component.html',
-  styles: `
-    .search-bar {
-      @apply w-full
-    }
-    @media (min-width: 1024px) {
-      .search-bar {
-        width: calc(100% - 260px);
-      }
-    }
-  `
+  templateUrl: './teams.component.html'
 })
 export class TeamsComponent implements OnInit {
   teams : Team[] = [];

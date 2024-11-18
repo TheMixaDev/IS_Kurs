@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {Observable} from "rxjs";
+import {Observable, Subject} from "rxjs";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {ApiService} from "./api.service";
 import {catchError} from "rxjs/operators";
@@ -11,7 +11,14 @@ import {Page} from "../../models/misc/page";
   providedIn: 'root'
 })
 export class UserService {
+  private userSubject = new Subject<{}>();
+  user$ = this.userSubject.asObservable();
+
   constructor(private http: HttpClient, private apiService: ApiService) {}
+
+  initiateUpdate() {
+    this.userSubject.next({});
+  }
 
   getAllUsers(page: number = 0, login: string): Observable<Page<User> | HttpErrorResponse> {
     let params = { page: page.toString(), login: login };
