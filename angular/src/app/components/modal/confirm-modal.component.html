@@ -2,7 +2,7 @@
   <button type="button" class="text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" (click)="closeModal()">
     <fa-icon [icon]="faClose" style="font-size: 24px"></fa-icon>
   </button>
-  <fa-icon [icon]="faExclamationTriangle" class="mb-4 text-gray-400 dark:text-gray-500" style="font-size: 64px"></fa-icon>
+  <fa-icon [icon]="icon" class="mb-4 text-gray-400 dark:text-gray-500" style="font-size: 64px"></fa-icon>
   <p class="mb-4 text-gray-500 dark:text-gray-300">{{ content }}</p>
   <div class="flex items-center p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800" role="alert" *ngIf="warning">
     <fa-icon [icon]="faExclamationTriangle" class="mr-3"></fa-icon>
@@ -11,10 +11,10 @@
     </div>
   </div>
   <div class="flex justify-center items-center space-x-4">
-    <ui-button color="primary" (click)="closeModal()">
+    <ui-button [color]="rejectColor" (click)="closeModal()">
       Отменить
     </ui-button>
-    <ui-button color="danger" (click)="closeModal('delete')">
+    <ui-button [color]="confirmColor" (click)="closeModal('delete')">
       Продолжить
     </ui-button>
   </div>

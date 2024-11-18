@@ -14,9 +14,14 @@ import {NgIf} from "@angular/common";
     FaIconComponent,
     NgIf
   ],
-  templateUrl: 'delete-modal.component.html'
+  templateUrl: 'confirm-modal.component.html'
 })
-export class DeleteModalComponent {
+export class ConfirmModalComponent {
+  @Input() icon = faExclamationTriangle;
+
+  @Input() rejectColor = 'primary';
+  @Input() confirmColor = 'danger';
+
   @Input() content = "";
   @Input() warning : string | null = null;
   constructor(private activeModal: NgbActiveModal) {

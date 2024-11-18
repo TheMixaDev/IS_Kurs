@@ -23,7 +23,7 @@ import {initFlowbite} from "flowbite";
 import {TooltipBinding} from "../../components/bindings/tooltip.binding";
 import {Sprint} from "../../models/sprint";
 import {CreateSprintModalComponent} from "./create-sprint/create-sprint-modal.component";
-import {DeleteModalComponent} from "../../components/modal/delete-modal.component";
+import {ConfirmModalComponent} from "../../components/modal/confirm-modal.component";
 import {ReleaseModalComponent} from "./release/release-modal.component";
 import {Release} from "../../models/release";
 
@@ -89,7 +89,7 @@ export class SprintsTableComponent implements OnInit {
   }
 
   openDeleteModal(sprint: SprintTeamDto) {
-    const modalRef = this.modalService.open(DeleteModalComponent, {
+    const modalRef = this.modalService.open(ConfirmModalComponent, {
       size: 'md',
       centered: true
     });

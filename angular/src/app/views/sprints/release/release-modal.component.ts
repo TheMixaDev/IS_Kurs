@@ -15,7 +15,7 @@ import {AlertService} from "../../../services/alert.service";
 import {CreateReleaseModalComponent} from "./create-release/create-release-modal.component";
 import {HttpErrorResponse} from "@angular/common/http";
 import {SprintService} from "../../../services/server/sprint.service";
-import {DeleteModalComponent} from "../../../components/modal/delete-modal.component";
+import {ConfirmModalComponent} from "../../../components/modal/confirm-modal.component";
 
 
 @Component({
@@ -86,7 +86,7 @@ export class ReleaseModalComponent {
   }
 
   deleteRelease(release: Release) {
-    const modalRef = this.modalService.open(DeleteModalComponent, {
+    const modalRef = this.modalService.open(ConfirmModalComponent, {
       size: 'md',
       centered: true
     });
