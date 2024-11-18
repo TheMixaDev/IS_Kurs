@@ -11,6 +11,8 @@ import { TeamService } from "../../services/server/team.service";
 import { Team } from "../../models/team";
 import { SprintService } from "../../services/server/sprint.service";
 import { HttpErrorResponse } from "@angular/common/http";
+import { AuthService } from "../../services/server/auth.service";
+import { BehaviorSubject, debounceTime, Subject, takeUntil } from "rxjs";
 
 @Component({
   selector: 'app-sprints',
@@ -30,36 +32,51 @@ export class SprintsComponent implements OnInit {
   tableView = false;
   teams: Team[] = [];
   teamOptions: { [key: string]: string } = {};
-  selectedTeamId: string = '';
-  selectedTeamName: string = '';
+  private _selectedTeamName = new BehaviorSubject<string>('');
+  private destroy$ = new Subject<void>();
 
-  constructor(private teamService : TeamService, private sprintService: SprintService) {}
+  constructor(private teamService : TeamService, private sprintService: SprintService, private authService: AuthService) {}
 
   setView(view: boolean) {
     this.tableView = view;
     localStorage.setItem("lastView", String(view));
   }
+
+  get selectedTeamName(): string {
+    return this._selectedTeamName.value;
+  }
+
+  set selectedTeamName(value: string) {
+    this._selectedTeamName.next(value);
+  }
+
   ngOnInit() {
     const lastView = localStorage.getItem("lastView");
     this.tableView = lastView === "true";
-    const savedUser = localStorage.getItem('user');
+
+    this._selectedTeamName.pipe(
+      debounceTime(0),
+      takeUntil(this.destroy$)
+    ).subscribe(() => {
+      this.sprintService.initiateUpdate();
+    });
+    
+    const user = this.authService.getUser();
     this.teamService.getAllTeams(false).subscribe({
       next: (teams) => {
         if (!(teams instanceof HttpErrorResponse)) {
           this.teams = teams;
           this.teamOptions = teams.reduce((acc, team) => {
-            acc[team.id.toString()] = team.name;
+            acc[team.name] = team.name;
             return acc;
           }, {} as { [key: string]: string });
 
-          if (savedUser) {
-            const user = JSON.parse(savedUser);
-            this.selectedTeamId = user?.team?.id?.toString() || '';
-            const selectedTeam = this.teams.find(team => team.id.toString() === this.selectedTeamId);
-            this.selectedTeamName = selectedTeam?.name || '';
-            console.log(this.selectedTeamId);
+          if (user) {
+            this.selectedTeamName = this.teams.find(
+              team => team.id.toString() === user?.team?.id?.toString() || ''
+            )?.name || '';
             this.sprintService.initiateUpdate();
-        }
+          }
         }
       },
       error: (error) => {
@@ -71,11 +88,9 @@ export class SprintsComponent implements OnInit {
     
   }
 
-  onTeamChange(teamId: string) {
-    this.selectedTeamId = teamId;
-    const selectedTeam = this.teams.find(team => team.id.toString() === teamId);
-    this.selectedTeamName = selectedTeam?.name || '';
-    this.sprintService.initiateUpdate();
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   protected readonly faPlus = faPlus;

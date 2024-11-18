@@ -11,7 +11,6 @@ import {CalendarService} from "../../services/server/calendar.service";
 import {Day} from "../../models/misc/day";
 import {MessageDto} from "../../models/dto/message-dto";
 import {HttpErrorResponse} from "@angular/common/http";
-import { SprintsComponent } from "./sprints.component";
 
 @Component({
   selector: 'app-sprints-calendar',
@@ -21,6 +20,7 @@ import { SprintsComponent } from "./sprints.component";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SprintsCalendarComponent implements AfterViewInit, OnInit {
+  @Input() selectedTeamName : string = '';
   @ViewChild('calendar') calendarComponent!: FullCalendarComponent;
   calendarOptions : CalendarOptions = {
     initialView: 'multiMonthYear',
@@ -38,18 +38,18 @@ export class SprintsCalendarComponent implements AfterViewInit, OnInit {
   };
   sprints : SprintTeamDto[] = [];
   dayOffs : Day[] = [];
+  
   constructor(private sprintService : SprintService,
               private alertService: AlertService,
               private calendarService: CalendarService,
-              private cdRef: ChangeDetectorRef,
-              private sprintComponent: SprintsComponent) {
+              private cdRef: ChangeDetectorRef) {
     this.sprintService.sprint$.subscribe(() => {
       this.update();
     });
   }
 
   updateSprints() {
-    this.sprintService.getSprintsByYearAndTeam(this.getYear(), this.sprintComponent.selectedTeamName).subscribe(sprints => {
+    this.sprintService.getSprintsByYearAndTeam(this.getYear(), this.selectedTeamName).subscribe(sprints => {
       if(sprints as SprintTeamDto[]) {
         this.sprints = sprints as SprintTeamDto[];
         if(this.calendarComponent?.getApi()) {

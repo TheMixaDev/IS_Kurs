@@ -11,7 +11,6 @@ import {
   faUser
 } from "@fortawesome/free-solid-svg-icons";
 import {AuthService} from "../services/server/auth.service";
-import {UserService} from "../services/server/user.service";
 import {User} from "../models/user";
 import {AsyncPipe, NgIf} from "@angular/common";
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -32,7 +31,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 export class MenuComponent implements OnInit {
   currentUser: User | null = null;
 
-  constructor(private authService: AuthService, private userService: UserService) {}
+  constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
     initFlowbite();

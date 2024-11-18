@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, HostBinding, OnInit} from "@angular/core";
+import {ChangeDetectorRef, Component, HostBinding, Input, OnInit} from "@angular/core";
 import {AlertService} from "../../services/alert.service";
 import {faArrowLeft, faArrowRight, faCircle, faPlus} from "@fortawesome/free-solid-svg-icons";
 import {SprintTeamDto} from "../../models/dto/sprint-team-dto";
@@ -25,16 +25,17 @@ import { SprintsComponent } from "./sprints.component";
   templateUrl: './sprints-table.component.html'
 })
 export class SprintsTableComponent implements OnInit {
+  @Input() selectedTeamName : string = '';
   sprints : SprintTeamDto[] = [];
   year = new Date().getFullYear();
-  constructor(private sprintService : SprintService, private alertService : AlertService, private sprintComponent: SprintsComponent) {
+  constructor(private sprintService : SprintService, private alertService : AlertService) {
     this.sprintService.sprint$.subscribe(() => {
       this.update();
     });
   }
   updateSprints() {
     this.sprints = [];
-    this.sprintService.getSprintsByYearAndTeam(this.year, this.sprintComponent.selectedTeamName).subscribe(sprints => {
+    this.sprintService.getSprintsByYearAndTeam(this.year, this.selectedTeamName).subscribe(sprints => {
       if(sprints as SprintTeamDto[]) {
         this.sprints = sprints as SprintTeamDto[];
       } else {
