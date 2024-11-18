@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {Observable} from "rxjs";
+import {Observable, Subject} from "rxjs";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {ApiService} from "./api.service";
 import {catchError} from "rxjs/operators";
@@ -11,7 +11,14 @@ import {Page} from "../../models/misc/page";
   providedIn: 'root'
 })
 export class ReleaseService {
+  private releaseSubject = new Subject<{}>();
+  release$ = this.releaseSubject.asObservable();
+
   constructor(private http: HttpClient, private apiService: ApiService) {}
+
+  initiateUpdate() {
+    this.releaseSubject.next({});
+  }
 
   getAllReleases(page: number = 0): Observable<Page<Release> | HttpErrorResponse> {
     return this.http.get<Page<Release>>(`${this.apiService.apiUrl}/releases`, { params: {page: page.toString()}, headers: this.apiService.getHeaders() }).pipe(catchError(this.apiService.handleError));

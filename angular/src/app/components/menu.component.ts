@@ -8,7 +8,7 @@ import {
   faLightbulb,
   faListCheck,
   faStar,
-  faUser
+  faUser, faUsers
 } from "@fortawesome/free-solid-svg-icons";
 import {AuthService} from "../services/server/auth.service";
 import {User} from "../models/user";
@@ -56,4 +56,5 @@ export class MenuComponent implements OnInit {
   protected readonly faChartSimple = faChartSimple;
   protected readonly faStar = faStar;
   protected readonly faBolt = faBolt;
+  protected readonly faUsers = faUsers;
 }

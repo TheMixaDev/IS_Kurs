@@ -24,6 +24,8 @@ import {TooltipBinding} from "../../components/bindings/tooltip.binding";
 import {Sprint} from "../../models/sprint";
 import {CreateSprintModalComponent} from "./create-sprint/create-sprint-modal.component";
 import {DeleteModalComponent} from "../../components/modal/delete-modal.component";
+import {ReleaseModalComponent} from "./release/release-modal.component";
+import {Release} from "../../models/release";
 
 @Component({
   selector: 'app-sprints-table',
@@ -105,6 +107,24 @@ export class SprintsTableComponent implements OnInit {
             console.error('Error deleting sprint:', error);
           }
         });
+      }
+    });
+  }
+
+  openReleaseModal(sprint: SprintTeamDto) {
+    this.sprintService.getSprintReleases(sprint.sprintId).subscribe({
+      next: (releases) => {
+        const modalRef = this.modalService.open(ReleaseModalComponent, {
+          size: 'lg',
+          centered: true,
+          backdrop: 'static'
+        });
+        modalRef.componentInstance.releases = releases as Release[];
+        modalRef.componentInstance.sprintId = sprint.sprintId;
+      },
+      error: (error) => {
+        this.alertService.showAlert('danger', 'Ошибка при загрузке релизов: ' + error.message);
+        console.error('Error loading releases:', error);
       }
     });
   }
