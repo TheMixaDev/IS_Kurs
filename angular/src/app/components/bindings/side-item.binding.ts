@@ -10,8 +10,7 @@ import {IconDefinition} from "@fortawesome/fontawesome-svg-core";
   ],
   template: `
     <a
-      href="#"
-      class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group transition-all duration-200"
+      class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group transition-all duration-200 cursor-pointer"
     >
       <fa-icon [icon]="icon" style="width: 24px; height: 24px; font-size: 24px; text-align: center"/>
       <span class="ml-3"><ng-content></ng-content></span>

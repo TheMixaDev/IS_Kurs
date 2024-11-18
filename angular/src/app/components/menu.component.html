@@ -87,7 +87,7 @@
   >
     <div class="overflow-y-auto py-1 px-3 h-full bg-white dark:bg-gray-800">
       <ul class="space-y-2">
-        <li side-item [icon]="faCalendar">
+        <li side-item [icon]="faCalendar" [routerLink]="['']">
           Спринты
         </li>
         <li side-item [icon]="faListCheck">
@@ -104,10 +104,10 @@
         <li side-item [icon]="faBolt">
           Риски
         </li>
-        <li side-item [icon]="faChartSimple">
+        <li side-item [icon]="faChartSimple" [routerLink]="['status']">
           Статусы
         </li>
-        <li side-item [icon]="faStar">
+        <li side-item [icon]="faStar" [routerLink]="['role']">
           Роли
         </li>
       </ul>

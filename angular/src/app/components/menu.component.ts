@@ -14,6 +14,7 @@ import {AuthService} from "../services/server/auth.service";
 import {User} from "../models/user";
 import {AsyncPipe, NgIf} from "@angular/common";
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import {RouterLink} from "@angular/router";
 
 
 
@@ -24,7 +25,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     SideItemBinding,
     AsyncPipe,
     NgIf,
-    FontAwesomeModule
+    FontAwesomeModule,
+    RouterLink
   ],
   templateUrl: './menu.component.html',
 })
