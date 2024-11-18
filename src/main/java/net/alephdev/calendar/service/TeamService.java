@@ -21,11 +21,11 @@ public class TeamService {
     private final TeamRepository teamRepository;
 
     public List<Team> getAllTeams() {
-        return teamRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
+        return teamRepository.findAll(Sort.by(Sort.Direction.DESC, "isActive", "id"));
     }
 
     public List<Team> getActiveTeams() {
-        return teamRepository.findAllByIsActive(true, Sort.by(Sort.Direction.ASC, "id"));
+        return teamRepository.findAllByIsActive(true, Sort.by(Sort.Direction.DESC, "id"));
     }
 
     public Team createTeam(Team team) {

@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {Observable} from "rxjs";
+import {Observable, Subject} from "rxjs";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {ApiService} from "./api.service";
 import {catchError} from "rxjs/operators";
@@ -10,7 +10,14 @@ import {Team} from "../../models/team";
   providedIn: 'root'
 })
 export class TeamService {
+  private teamSubject = new Subject<{}>();
+  team$ = this.teamSubject.asObservable();
+
   constructor(private http: HttpClient, private apiService: ApiService) {}
+
+  initiateUpdate() {
+    this.teamSubject.next({});
+  }
 
   getAllTeams(onlyActive: boolean): Observable<Team[] | HttpErrorResponse> {
     return this.http.get<Team[]>(`${this.apiService.apiUrl}/teams`, {params: {onlyActive: onlyActive?.toString()}, headers: this.apiService.getHeaders() }).pipe(

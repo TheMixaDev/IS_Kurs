@@ -68,7 +68,7 @@ export class SprintsComponent implements OnInit {
     });
 
     const user = this.authService.getUser();
-    this.teamService.getAllTeams(false).subscribe({
+    this.teamService.getAllTeams(true).subscribe({
       next: (teams) => {
         if (!(teams instanceof HttpErrorResponse)) {
           this.teams = teams;

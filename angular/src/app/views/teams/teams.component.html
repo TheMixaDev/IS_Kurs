@@ -1,0 +1,58 @@
+<div class="mx-auto max-w-screen-xl p-3 px-4 lg:px-12">
+  <div class="mb-2 grid grid-cols-[1fr_auto]">
+    <div>
+      <label class="sr-only">Search</label>
+      <div class="relative">
+        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+          <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        <input type="text"
+               [(ngModel)]="search"
+               class="block w-full p-2 !pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+               placeholder="Поиск">
+      </div>
+    </div>
+    <div class="justify-content-end ml-2">
+      <ui-button (click)="createClick()">
+        <fa-icon [icon]="faPlus"/>
+        Создать команду
+      </ui-button>
+    </div>
+  </div>
+  <div class="max-h-[85vh] overflow-y-auto rounded-lg">
+    @for(team of filteredTeams; track team.id) {
+      <div [ngClass]="'w-full grid p-6 bg-white border border-gray-100 rounded-lg hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 grid-cols-[1fr_auto] mb-2 animate-fade animate-once animate-duration-500 animate-ease-out' + (!team.isActive ? ' !bg-gray-300' : '')">
+        <div>
+          <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+            <fa-icon [icon]="faCircle" [style.color]="team.color"/>
+            Команда "{{ team.name }}"
+          </h5>
+          <p class="font-normal text-gray-700 dark:text-gray-400">
+            <span *ngFor="let line of team.description?.split('\n')">{{ line }} <br></span>
+          </p>
+        </div>
+        <div class="space-y-2 justify-content-end">
+          <ui-button color="warning" classExtension="w-[200px]" class="block" (click)="editTeam(team)">
+            <fa-icon [icon]="faPencil"/>
+            Редактировать
+          </ui-button>
+          @if(!team.isActive) {
+            <div class="text-danger-600 text-center user-select-none">
+              <fa-icon [icon]="faWarning"></fa-icon>
+              Неактивна
+            </div>
+          }
+        </div>
+      </div>
+    }
+    @if(filteredTeams.length < 1) {
+      <div class="w-full grid p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 grid-cols-[1fr_auto]">
+        <div class="text-center">
+          Команды не найдены
+        </div>
+      </div>
+    }
+  </div>
+</div>
