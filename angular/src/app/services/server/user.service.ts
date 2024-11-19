@@ -20,8 +20,9 @@ export class UserService {
     this.userSubject.next({});
   }
 
-  getAllUsers(page: number = 0, login: string): Observable<Page<User> | HttpErrorResponse> {
-    let params = { page: page.toString(), login: login };
+  getAllUsers(page: number = 0, login: string, team: number = 0, onlyActive: boolean | null = true): Observable<Page<User> | HttpErrorResponse> {
+    let params : { page: string, login: string, team: number, onlyActive?: boolean } = { page: page.toString(), login, team};
+    if(onlyActive) params.onlyActive = onlyActive;
 
     return this.http.get<Page<User>>(`${this.apiService.apiUrl}/users`, {params, headers: this.apiService.getHeaders()}).pipe(catchError(this.apiService.handleError));
   }
@@ -48,5 +49,9 @@ export class UserService {
 
   updateUser(login: string, userDto: UserDto): Observable<User | HttpErrorResponse> {
     return this.http.put<User>(`${this.apiService.apiUrl}/users/${login}`, userDto, { headers: this.apiService.getHeaders() }).pipe(catchError(this.apiService.handleError));
+  }
+
+  wipeUser(login: string): Observable<void | HttpErrorResponse> {
+    return this.http.delete<void>(`${this.apiService.apiUrl}/users/${login}`, { headers: this.apiService.getHeaders() }).pipe(catchError(this.apiService.handleError));
   }
 }

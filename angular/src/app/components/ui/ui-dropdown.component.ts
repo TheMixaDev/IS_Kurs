@@ -11,6 +11,8 @@ import {
 } from '@angular/core';
 import {ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR} from "@angular/forms";
 import {NgForOf} from "@angular/common";
+import {FaIconComponent} from "@fortawesome/angular-fontawesome";
+import {faSearch} from "@fortawesome/free-solid-svg-icons";
 
 @Component({
   selector: 'ui-dropdown',
@@ -18,7 +20,8 @@ import {NgForOf} from "@angular/common";
   templateUrl: './ui-dropdown.component.html',
   imports: [
     FormsModule,
-    NgForOf
+    NgForOf,
+    FaIconComponent
   ],
   providers: [
     {
@@ -32,6 +35,8 @@ export class UiDropdownComponent implements ControlValueAccessor, OnInit {
   @Input() modelValue: any;
   @Input() options: any = {};
   @Input() disabled = false;
+  @Input() allowReset = false;
+  @Input() resetValue: any = null;
   @Output() modelValueChange = new EventEmitter<any>();
   @Output() changed = new EventEmitter<void>();
   @ViewChild('container') containerRef!: ElementRef;
@@ -86,5 +91,17 @@ export class UiDropdownComponent implements ControlValueAccessor, OnInit {
       this.onChange(value);
       this.onTouched();
     });
+  }
+
+  get isNotSelected() {
+    return !this.options || this.options.length <= 0 || !this.modelValue || this.modelValue.length === 0 || this.modelValue * 1 === 0 || !this.options[this.modelValue];
+  }
+
+  protected readonly faSearch = faSearch;
+
+  reset() {
+    this.modelValueChange.emit(this.resetValue);
+    this.changed.emit();
+    this.showSelector = false;
   }
 }

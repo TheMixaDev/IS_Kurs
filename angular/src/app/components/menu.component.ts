@@ -15,6 +15,9 @@ import {User} from "../models/user";
 import {AsyncPipe, NgIf} from "@angular/common";
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {RouterLink} from "@angular/router";
+import {UserService} from "../services/server/user.service";
+import {CreateUserModalComponent} from "../views/users/create-user/create-user-modal.component";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 
 
 
@@ -33,16 +36,23 @@ import {RouterLink} from "@angular/router";
 export class MenuComponent implements OnInit {
   currentUser: User | null = null;
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService,
+              private modalService: NgbModal) {}
 
   ngOnInit(): void {
     initFlowbite();
     this.loadUserData();
+    this.authService.user$.subscribe(this.loadUserData.bind(this));
   }
 
   private loadUserData(): void {
     this.currentUser = this.authService.getUser();
     console.log(this.currentUser);
+  }
+
+  openSettings() {
+    const modalRef = this.modalService.open(CreateUserModalComponent, { size: 'lg' });
+    modalRef.componentInstance.user = this.currentUser;
   }
 
   logout(): void {

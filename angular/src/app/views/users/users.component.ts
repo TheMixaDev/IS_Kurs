@@ -16,6 +16,7 @@ import {UserService} from "../../services/server/user.service";
 import {AuthService} from "../../services/server/auth.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {TooltipBinding} from "../../components/bindings/tooltip.binding";
+import {CreateUserModalComponent} from "./create-user/create-user-modal.component";
 
 @Component({
   selector: 'app-users',
@@ -52,7 +53,7 @@ export class UsersComponent implements OnInit {
   }
 
   updateUsers() {
-    this.userService.getAllUsers(this.currentPage, this.search).subscribe(users => {
+    this.userService.getAllUsers(this.currentPage, this.search, 0, false).subscribe(users => {
       if(users instanceof HttpErrorResponse) return;
       this.users = users;
     })
@@ -61,6 +62,15 @@ export class UsersComponent implements OnInit {
   changePage(page: number) {
     this.currentPage = page;
     this.updateUsers();
+  }
+
+  createClick() {
+    this.modalService.open(CreateUserModalComponent, { size: 'lg' });
+  }
+
+  editUser(user: User) {
+    const modalRef = this.modalService.open(CreateUserModalComponent, { size: 'lg' });
+    modalRef.componentInstance.user = user;
   }
 
   protected readonly faSearch = faSearch;

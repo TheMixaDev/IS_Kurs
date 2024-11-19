@@ -31,9 +31,13 @@ public class UserController {
     @GetMapping
     public Page<User> getAllUsers(
             @RequestParam @DefaultValue("0") int page,
-            @RequestParam(required = false) String login
+            @RequestParam(required = false) String login,
+            @RequestParam @DefaultValue("0") int team,
+            @RequestParam(required = false) @DefaultValue("true") boolean onlyActive
     ) {
         if (login != null) {
+            if(team != 0) return userService.getAllUsersWithPartialLoginAndTeam(page, login, team);
+            if(onlyActive) return userService.getAllUsersWithPartialLoginActive(page, login);
             return userService.getAllUserWithPartialLogin(page, login);
         }
         return userService.getAllUsers(page);
@@ -66,6 +70,16 @@ public class UserController {
     public ResponseEntity<User> updateUser(@PathVariable String login, @Valid @RequestBody UserDto userDto, @CurrentUser User currentUser) {
         if (currentUser.getLogin().equals(login) || userService.isPrivileged(currentUser)) {
             return new ResponseEntity<>(userService.updateUser(login, userDto), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+    }
+
+    @DeleteMapping("/{login}")
+    public ResponseEntity<Void> wipeUser(@PathVariable String login, @CurrentUser User currentUser) {
+        if (userService.isPrivileged(currentUser)) {
+            userService.wipeUser(login);
+            return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }

@@ -12,6 +12,7 @@ import net.alephdev.calendar.repository.UserRepository;
 import net.alephdev.calendar.repository.functional.TeamRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +29,15 @@ public class UserService {
     }
 
     public Page<User> getAllUserWithPartialLogin(int page, String login) {
-        return userRepository.findAllByLoginContaining(login, PageRequest.of(page, 20));
+        return userRepository.findAllByLoginContaining(login, PageRequest.of(page, 20, Sort.by(Sort.Direction.ASC, "team", "login")));
+    }
+
+    public Page<User> getAllUsersWithPartialLoginAndTeam(int page, String login, int team) {
+        return userRepository.findAllByLoginContainingAndTeamId(login, team, PageRequest.of(page, 20, Sort.by(Sort.Direction.ASC, "team", "login")));
+    }
+
+    public Page<User> getAllUsersWithPartialLoginActive(int page, String login) {
+        return userRepository.findActiveUsersByLoginContaining(login, PageRequest.of(page, 20, Sort.by(Sort.Direction.ASC, "team", "login")));
     }
 
     public User getUserByLogin(String login) {
@@ -56,11 +65,10 @@ public class UserService {
     @Transactional
     public User updateUser(String login, UserDto userDto) {
         User user = getUserByLogin(login);
-        user.setLogin(userDto.getLogin());
-        user.setEmail(userDto.getEmail());
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        user.setFirstName(userDto.getFirstName());
-        user.setLastName(userDto.getLastName());
+        if(userDto.getEmail() != null && !userDto.getEmail().isEmpty()) user.setEmail(userDto.getEmail());
+        if(userDto.getPassword() != null && !userDto.getPassword().isEmpty()) user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        if(userDto.getFirstName() != null && !userDto.getFirstName().isEmpty()) user.setFirstName(userDto.getFirstName());
+        if(userDto.getLastName() != null && !userDto.getLastName().isEmpty()) user.setLastName(userDto.getLastName());
 
         return userRepository.save(user);
     }
@@ -86,13 +94,22 @@ public class UserService {
         if (roleRepository.findById(roleId).isPresent()) {
             Role role = roleRepository.findById(roleId).get();
             user.setRole(role);
-            return userRepository.save(user);
         } else {
-            throw new EntityNotFoundException("Role not found");
+            user.setRole(null);
         }
+
+        return userRepository.save(user);
     }
 
     public boolean isPrivileged(User user) {
         return user.getRole() != null && user.getRole().getId() == 1;
+    }
+
+    public void wipeUser(String login) {
+        User user = getUserByLogin(login);
+        user.setTeam(null);
+        user.setRole(null);
+        user.setPassword("");
+        userRepository.save(user);
     }
 }

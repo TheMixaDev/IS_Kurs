@@ -20,6 +20,7 @@ import {AuthService} from "../../services/server/auth.service";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {CreateIdeaModalComponent} from "./create-idea/create-idea-modal.component";
 import {AlertService} from "../../services/alert.service";
+import {UserService} from "../../services/server/user.service";
 
 @Component({
   selector: 'app-idea',
@@ -51,11 +52,16 @@ export class IdeaComponent implements OnInit {
     this.ideaService.idea$.subscribe(() => {
       this.updateIdeas();
     })
+    this.authService.user$.subscribe(this.loadUserData.bind(this));
   }
 
   ngOnInit() {
-    this.user = this.authService.getUser();
+    this.loadUserData();
     this.updateIdeas();
+  }
+
+  loadUserData() {
+    this.user = this.authService.getUser();
   }
 
   updateIdeas() {

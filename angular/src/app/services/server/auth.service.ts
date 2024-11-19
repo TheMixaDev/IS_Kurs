@@ -1,5 +1,5 @@
 import {forwardRef, Inject, Injectable} from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import {JwtRequestDto} from "../../models/dto/jwt-request-dto";
@@ -10,7 +10,7 @@ import {User} from "../../models/user";
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:8080/api/auth'; // Auth API URL
+  private apiUrl = 'http://localhost:8080/api';
   private tokenSubject = new BehaviorSubject<string | null>(null);
   private userSubject = new BehaviorSubject<User | null>(null);
   token$: Observable<string | null> = this.tokenSubject.asObservable();
@@ -19,13 +19,20 @@ export class AuthService {
   constructor(private http: HttpClient) {
     const savedToken = localStorage.getItem('token');
     const savedUser = localStorage.getItem('user');
-    
-    if (savedToken) this.tokenSubject.next(savedToken);
+
+    if (savedToken) {
+      this.tokenSubject.next(savedToken);
+      this.validate(savedToken);
+    }
     if (savedUser) this.userSubject.next(JSON.parse(savedUser));
   }
 
+  initiateUpdate() {
+    this.validate(this.getToken() || '');
+  }
+
   login(loginRequest: JwtRequestDto): Observable<JwtResponseDto> {
-    return this.http.post<JwtResponseDto>(`${this.apiUrl}/login`, loginRequest).pipe(
+    return this.http.post<JwtResponseDto>(`${this.apiUrl}/auth/login`, loginRequest).pipe(
       tap((response) => {
         this.setToken(response.token);
         this.setUser(response.user);
@@ -35,6 +42,20 @@ export class AuthService {
         return throwError(() => error);
       })
     );
+  }
+
+  validate(token: string): void {
+    this.http.get<User>(`${this.apiUrl}/users/current`,
+      { headers: new HttpHeaders({
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        })
+      }).pipe(catchError(error => {
+        this.logout();
+        return throwError(() => new Error('Требуется повторная авторизация'));
+    })).subscribe(user => {
+      this.setUser(user);
+    });
   }
 
 
