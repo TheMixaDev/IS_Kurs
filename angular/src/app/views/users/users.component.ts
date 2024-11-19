@@ -59,6 +59,10 @@ export class UsersComponent implements OnInit {
     })
   }
 
+  searchChange() {
+    this.updateUsers();
+  }
+
   changePage(page: number) {
     this.currentPage = page;
     this.updateUsers();

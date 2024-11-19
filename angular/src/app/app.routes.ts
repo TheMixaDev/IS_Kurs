@@ -5,11 +5,16 @@ import {RoleComponent} from "./views/role/role.component";
 import {IdeaComponent} from "./views/idea/idea.component";
 import {TeamsComponent} from "./views/teams/teams.component";
 import {UsersComponent} from "./views/users/users.component";
+import {TasksComponent} from "./views/tasks/tasks.component";
 
 export const routes: Routes = [
   {
     path: '',
     component: SprintsComponent
+  },
+  {
+    path: 'tasks',
+    component: TasksComponent
   },
   {
     path: 'idea',

@@ -1,0 +1,81 @@
+<div class="mx-auto max-w-screen-xl px-4 lg:px-12">
+  <div class="flex flex-wrap items-end space-x-2 mb-4">
+    <ui-dropdown
+      [options]="users"
+      [(modelValue)]="selectedImplementerLogin"
+      [searchOnly]="true"
+      [searchInProgress]="usersLoad"
+      (searchChange)="loadUsers($event)"
+      [allowReset]="true"
+      resetValue=""
+      class="w-1/4"
+    >Выберите исполнителя</ui-dropdown>
+    <ui-dropdown
+      [options]="sprints"
+      [(modelValue)]="selectedSprintId"
+      [searchOnly]="true"
+      [searchInProgress]="sprintsLoad"
+      (searchChange)="loadSprints($event)"
+      [allowReset]="true"
+      resetValue=""
+      class="w-1/4"
+    >Выберите спринт</ui-dropdown>
+    <ui-dropdown
+      [options]="statuses"
+      [(modelValue)]="selectedStatusId"
+      [allowReset]="true"
+      resetValue=""
+      class="w-1/4"
+    >Выберите статус</ui-dropdown>
+    <button primary class="w-[250px]">
+      <fa-icon [icon]="faPlus"></fa-icon>
+      Создать задачу
+    </button>
+  </div>
+</div>
+
+@if(tasks) {
+  <app-table-component [columns]="['ID', 'Название', 'Story Points', 'Приоритет', 'Исполнитель', 'Спринт', 'Статус']" [pageInfo]="tasks.page" (pageChange)="changePage($event)">
+    @for(task of tasks.content; track task.id) {
+      <tr table-row>
+        <td table-cell>{{ task.id }}</td>
+        <td table-cell>{{ task.name }}</td>
+        <td table-cell>{{ task.storyPoints }}</td>
+        <td table-cell>{{ task.priorityEnum | priorityParser }}</td>
+        <td table-cell>
+          @if(task.implementer) {
+            <span (click)="goToUser(task.implementer)" class="text-blue-600 cursor-pointer">
+              {{ task.implementer.login }}
+            </span>
+          }
+        </td>
+        <td table-cell>
+          @if(task.sprint) {
+            <span (click)="goToSprint(task.sprint)" class="text-blue-600 cursor-pointer">
+              @if(task.sprint.team && task.sprint.team.color) {
+                <fa-icon [icon]="faCircle" [style.color]="task.sprint.team.color"/>
+              }
+              {{ task.sprint?.majorVersion }}
+            </span>
+          }
+        </td>
+        <td table-cell>
+          <span (click)="goToStatus(task.status)" class="text-blue-600 cursor-pointer">
+            {{ task.status.name }}
+          </span>
+        </td>
+      </tr>
+    }
+    @if(tasks.content.length === 0) {
+      <tr table-row>
+        <td table-cell colspan="7" class="text-center bg-gray-50">Нет данных</td>
+      </tr>
+    }
+  </app-table-component>
+} @else {
+  <app-table-component [columns]="['Название', 'Story Points', 'Приоритет', 'Исполнитель', 'Спринт', 'Статус', 'Создана']" [creationEnabled]="false">
+    <tr table-row>
+      <td table-cell colspan="7" class="text-center bg-gray-50">Нет данных</td>
+    </tr>
+  </app-table-component>
+}

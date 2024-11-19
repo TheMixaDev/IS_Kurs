@@ -34,6 +34,10 @@ public class SprintService {
         return sprintRepository.findAll(PageRequest.of(page, 20, Sort.by(Sort.Direction.ASC, "endDate")));
     }
 
+    public Page<Sprint> getSprintsByMajorVersion(int page, String majorVersion) {
+        return sprintRepository.findAllByMajorVersionContaining(majorVersion, PageRequest.of(page, 20, Sort.by(Sort.Direction.ASC, "endDate")));
+    }
+
     public Sprint createSprint(SprintDto sprintDto) {
         Sprint sprint = new Sprint();
         Team team = teamRepository.findById(sprintDto.getTeamId())

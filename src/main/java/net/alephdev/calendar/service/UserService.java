@@ -29,11 +29,11 @@ public class UserService {
     }
 
     public Page<User> getAllUserWithPartialLogin(int page, String login) {
-        return userRepository.findAllByLoginContaining(login, PageRequest.of(page, 20, Sort.by(Sort.Direction.ASC, "team", "login")));
+        return userRepository.findAllByLoginContainingOrFirstNameContainingOrLastNameContaining(login, login, login, PageRequest.of(page, 20, Sort.by(Sort.Direction.ASC, "team", "login")));
     }
 
     public Page<User> getAllUsersWithPartialLoginAndTeam(int page, String login, int team) {
-        return userRepository.findAllByLoginContainingAndTeamId(login, team, PageRequest.of(page, 20, Sort.by(Sort.Direction.ASC, "team", "login")));
+        return userRepository.findAllByLoginAndTeam(login, team, PageRequest.of(page, 20, Sort.by(Sort.Direction.ASC, "team", "login")));
     }
 
     public Page<User> getAllUsersWithPartialLoginActive(int page, String login) {
