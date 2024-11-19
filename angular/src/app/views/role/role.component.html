@@ -1,7 +1,7 @@
 <div class="mx-auto max-w-screen-xl px-4 lg:px-12 animate-fade animate-once animate-duration-500 animate-ease-out relative z-10 text-end">
   <div class="relative w-full lg:w-[260px] inline-block mx-auto align-right">
     <div class="w-full lg:w-[250px] block ml-auto">
-      <button primary>
+      <button primary (click)="openCreateModal()">
         <fa-icon [icon]="faPlus"></fa-icon>
         Создать роль
       </button>
@@ -10,32 +10,34 @@
 </div>
 
 <app-table-component [columns]="['Название', 'Описание', 'Действия']" [creationEnabled]="false">
-  <tr table-row>
-    <td table-cell class="w-[216px]">
-      Name
-    </td>
-    <td table-cell>
-      Desc
-    </td>
-    <td table-cell class="w-[174px]">
-      <ui-button color="primary" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-status">
-        <fa-icon [icon]="faStar"/>
-      </ui-button>
-      <div id="tooltip-status" tooltip>
-        Статусы
-      </div>
-      <ui-button color="warning" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-edit">
-        <fa-icon [icon]="faEdit"/>
-      </ui-button>
-      <div id="tooltip-edit" tooltip>
-        Изменить
-      </div>
-      <ui-button color="danger" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-delete">
-        <fa-icon [icon]="faTrash"/>
-      </ui-button>
-      <div id="tooltip-delete" tooltip>
-        Удалить
-      </div>
-    </td>
-  </tr>
+  @for(role of roles; track role.name) {
+    <tr table-row>
+      <td table-cell class="w-[216px]">
+        {{role.name}}
+      </td>
+      <td table-cell>
+        {{role.responsibilities}}
+      </td>
+      <td table-cell class="w-[174px]">
+        <ui-button color="primary" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-status">
+          <fa-icon [icon]="faStar"/>
+        </ui-button>
+        <div id="tooltip-status" tooltip>
+          Статусы
+        </div>
+        <ui-button color="warning" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-edit">
+          <fa-icon [icon]="faEdit" (click)="openEditModal(role)"/>
+        </ui-button>
+        <div id="tooltip-edit" tooltip>
+          Изменить
+        </div>
+        <ui-button color="danger" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-delete">
+          <fa-icon [icon]="faTrash"/>
+        </ui-button>
+        <div id="tooltip-delete" tooltip>
+          Удалить
+        </div>
+      </td>
+    </tr>
+  }
 </app-table-component>

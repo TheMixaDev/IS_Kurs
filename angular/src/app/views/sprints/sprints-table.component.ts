@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, HostBinding, Input, OnInit} from "@angular/core";
+import {Component, Input, OnInit} from "@angular/core";
 import {AlertService} from "../../services/alert.service";
 import {
   faArrowLeft,
@@ -17,7 +17,6 @@ import {TableCellComponent} from "../../components/table/table-cell.component";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {DatePipe} from "@angular/common";
 import {UiButtonComponent} from "../../components/ui/ui-button.component";
-import { SprintsComponent } from "./sprints.component";
 import {NgbModal, NgbTooltip} from "@ng-bootstrap/ng-bootstrap";
 import {initFlowbite} from "flowbite";
 import {TooltipBinding} from "../../components/bindings/tooltip.binding";
@@ -50,7 +49,7 @@ export class SprintsTableComponent implements OnInit {
               private alertService : AlertService,
               private modalService: NgbModal) {
     this.sprintService.sprint$.subscribe(() => {
-      this.update();
+      this.updateSprints();
     });
   }
   updateSprints() {
@@ -69,10 +68,6 @@ export class SprintsTableComponent implements OnInit {
   }
   changeYear(amount : number) {
     this.year += amount;
-    this.updateSprints();
-  }
-
-  update() {
     this.updateSprints();
   }
 

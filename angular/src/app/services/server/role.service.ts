@@ -1,16 +1,24 @@
 import {Injectable} from "@angular/core";
-import {Observable} from "rxjs";
+import {Observable, Subject} from "rxjs";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {ApiService} from "./api.service";
 import {catchError} from "rxjs/operators";
 import {Role} from "../../models/role";
 import {Status} from "../../models/status";
+import { RoleDto } from "../../models/dto/role-dto";
 
 @Injectable({
   providedIn: 'root'
 })
 export class RoleService {
+  private roleSubject = new Subject<{}>();
+  role$ = this.roleSubject.asObservable();
+
   constructor(private http: HttpClient, private apiService: ApiService) {}
+
+  initiateUpdate() {
+    this.roleSubject.next({});
+  }
 
   getAllRoles(): Observable<Role[] | HttpErrorResponse> {
     return this.http.get<Role[]>(`${this.apiService.apiUrl}/roles`, { headers: this.apiService.getHeaders() }).pipe(
@@ -18,13 +26,13 @@ export class RoleService {
     );
   }
 
-  createRole(role: Role): Observable<Role | HttpErrorResponse> {
+  createRole(role: RoleDto): Observable<Role | HttpErrorResponse> {
     return this.http.post<Role>(`${this.apiService.apiUrl}/roles`, role, { headers: this.apiService.getHeaders() }).pipe(
       catchError(this.apiService.handleError)
     );
   }
 
-  updateRole(id: number, updatedRole: Role): Observable<Role | HttpErrorResponse> {
+  updateRole(id: number, updatedRole: RoleDto): Observable<Role | HttpErrorResponse> {
     return this.http.put<Role>(`${this.apiService.apiUrl}/roles/${id}`, updatedRole, { headers: this.apiService.getHeaders() }).pipe(
       catchError(this.apiService.handleError)
     );
