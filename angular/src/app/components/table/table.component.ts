@@ -19,6 +19,7 @@ import {PageInfo} from "../../models/misc/page";
 })
 export class TableComponent {
   @Input() creationEnabled = false;
+  @Input() creationText = 'Создать';
   @Input() columns: string[] = [];
   @Input() headerText: string | null = null;
 
