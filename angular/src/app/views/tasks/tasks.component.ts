@@ -1,9 +1,9 @@
 import {Component, OnInit} from "@angular/core";
 import {
   faCircle,
-  faEdit, faGear,
-  faPlus,
-  faSearch, faTrash
+  faEdit,
+  faPlus, faSearch,
+  faTrash
 } from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {FormsModule} from "@angular/forms";
@@ -19,7 +19,7 @@ import {AuthService} from "../../services/server/auth.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {TooltipBinding} from "../../components/bindings/tooltip.binding";
 import {TaskService} from "../../services/server/task.service";
-import {Task, TaskPriority} from "../../models/task";
+import {Task} from "../../models/task";
 import {StatusService} from "../../services/server/status.service";
 import {SprintService} from "../../services/server/sprint.service";
 import {Status} from "../../models/status";
@@ -27,7 +27,7 @@ import {Sprint} from "../../models/sprint";
 import {UiDropdownComponent} from "../../components/ui/ui-dropdown.component";
 import {DatePipe} from "@angular/common";
 import {PriorityParserPipe} from "../../pipe/priority-parser.pipe";
-import {resolve} from "@angular/compiler-cli";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-tasks',
@@ -95,18 +95,26 @@ export class TasksComponent implements OnInit {
     private statusService: StatusService,
     private sprintService: SprintService,
     private authService: AuthService,
+    private route: ActivatedRoute
   ) {
     this.authService.user$.subscribe(user => this.currentUser = user);
   }
 
   ngOnInit() {
-    this.loadCurrentUser();
-    this.loadStatuses();
-    if(this.currentUser) {
-      this.goToUser(this.currentUser);
-    } else {
-      this.updateTasks();
-    }
+    let subscription = this.route.queryParams.subscribe(params => {
+      const sprintId = params['sprintId'] || null;
+      const sprintVersion = params['sprintVersion'] || null;
+      this.loadCurrentUser();
+      this.loadStatuses();
+      if(sprintId && sprintVersion) {
+        this.goToSprint(sprintId, sprintVersion);
+      } else if(this.currentUser) {
+        this.goToUser(this.currentUser);
+      } else {
+        this.updateTasks();
+      }
+      subscription.unsubscribe();
+    })
   }
 
   loadCurrentUser() {
@@ -188,9 +196,9 @@ export class TasksComponent implements OnInit {
     });
   }
 
-  goToSprint(sprint: Sprint) {
-    this.loadSprints(sprint.majorVersion)?.then(() => {
-      this.selectedSprintId = sprint.id;
+  goToSprint(sprintId: number, sprintVersion: string) {
+    this.loadSprints(sprintVersion)?.then(() => {
+      this.selectedSprintId = sprintId;
     });
   }
 
@@ -202,4 +210,5 @@ export class TasksComponent implements OnInit {
   protected readonly faCircle = faCircle;
   protected readonly faEdit = faEdit;
   protected readonly faTrash = faTrash;
+  protected readonly faSearch = faSearch;
 }

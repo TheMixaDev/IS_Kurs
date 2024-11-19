@@ -10,3 +10,13 @@
     width: calc(100% - 260px);
   }
 }
+
+.task-dropdown {
+  @apply w-full inline-block mb-1
+}
+@media (min-width: 1024px) {
+  .task-dropdown {
+    width: calc(100% / 3 - 8px);
+    @apply mr-2 mb-0
+  }
+}
