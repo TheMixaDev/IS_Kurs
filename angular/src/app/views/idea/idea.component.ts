@@ -21,6 +21,8 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {CreateIdeaModalComponent} from "./create-idea/create-idea-modal.component";
 import {AlertService} from "../../services/alert.service";
 import {UserService} from "../../services/server/user.service";
+import { Status } from "../../models/status";
+import { StatusService } from "../../services/server/status.service";
 
 @Component({
   selector: 'app-idea',
@@ -44,8 +46,12 @@ export class IdeaComponent implements OnInit {
   ideas: Page<Idea> | null = null;
   currentPage: number = 0;
   user: User | null = null;
+  statuses: Status[] = [];
+  selectedStatusId: string = '';
+  statusOptions: { [key: string]: string } = {};
 
   constructor(private ideaService: IdeaService,
+              private statusService: StatusService,
               private authService: AuthService,
               private alertService: AlertService,
               private modalService: NgbModal) {
@@ -53,15 +59,30 @@ export class IdeaComponent implements OnInit {
       this.updateIdeas();
     })
     this.authService.user$.subscribe(this.loadUserData.bind(this));
+    this.statusService.status$.subscribe(() => {
+      this.loadStatuses();
+    });
   }
 
   ngOnInit() {
     this.loadUserData();
+    this.loadStatuses();
     this.updateIdeas();
   }
 
   loadUserData() {
     this.user = this.authService.getUser();
+  }
+
+  loadStatuses() {
+    this.statusService.getAllStatuses().subscribe(statuses => {
+      if(statuses instanceof HttpErrorResponse) return;
+      this.statuses = statuses;
+      this.statusOptions = statuses.reduce((acc, status) => {
+        acc[status.name] = status.name;
+        return acc;
+      }, {} as { [key: string]: string });
+    })
   }
 
   updateIdeas() {
@@ -118,6 +139,11 @@ export class IdeaComponent implements OnInit {
         console.error('Error updating idea status:', error);
       }
     });
+  }
+
+  onStatusChange() {
+    this.currentPage = 0;
+    this.updateIdeas();
   }
 
   protected readonly faPlus = faPlus;
