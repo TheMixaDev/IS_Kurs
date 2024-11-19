@@ -47,9 +47,9 @@ export class RoleComponent implements OnInit {
 
   updateRoles(){
     this.roles = [];
-    this.roleService.getAllRoles().subscribe(sprints => {
-      if(sprints as Role[]) {
-        this.roles = sprints as Role[];
+    this.roleService.getAllRoles().subscribe(roles => {
+      if(roles as Role[]) {
+        this.roles = roles as Role[];
       } else {
         this.alertService.showAlert("danger", "Не удалось получить информацию о ролях");
       }
@@ -86,7 +86,7 @@ export class RoleComponent implements OnInit {
           },
           error: (error) => {
             this.alertService.showAlert('danger', 'Ошибка при удалении роли: ' + (error?.error?.message || "Неизвестная ошибка"));
-            console.error('Error deleting sprint:', error);
+            console.error('Error deleting role:', error);
           }
         });
       }
