@@ -13,6 +13,7 @@ import { AlertService } from "../../services/alert.service";
 import { initFlowbite } from "flowbite";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { CreateRoleModalComponent } from "./create-role/create-role-modal.component";
+import { ConfirmModalComponent } from "../../components/modal/confirm-modal.component";
 
 @Component({
   selector: 'app-status',
@@ -69,6 +70,30 @@ export class RoleComponent implements OnInit {
       modalRef.componentInstance.role = role;
     }
   }
+
+  openDeleteModal(role: Role) {
+    const modalRef = this.modalService.open(ConfirmModalComponent, {
+      size: 'md'
+    });
+    modalRef.componentInstance.content = `Вы уверены, что хотите удалить роль "${role.name}"?`;
+    modalRef.componentInstance.warning = `При удалении роли, она удалится у всех людей.`;
+    modalRef.result.then((result) => {
+      if (result === 'delete') {
+        this.roleService.deleteRole(role.id).subscribe({
+          next: () => {
+            this.alertService.showAlert('success', 'Роль успешно удалена');
+            this.updateRoles();
+          },
+          error: (error) => {
+            this.alertService.showAlert('danger', 'Ошибка при удалении роли: ' + (error?.error?.message || "Неизвестная ошибка"));
+            console.error('Error deleting sprint:', error);
+          }
+        });
+      }
+    });
+  }
+
+  // TODO: Доделать редактирование статусов для роли 
 
   protected readonly faPlus = faPlus;
   protected readonly faStar = faStar;
