@@ -25,6 +25,7 @@ import {CreateSprintModalComponent} from "./create-sprint/create-sprint-modal.co
 import {ConfirmModalComponent} from "../../components/modal/confirm-modal.component";
 import {ReleaseModalComponent} from "./release/release-modal.component";
 import {Release} from "../../models/release";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-sprints-table',
@@ -47,7 +48,8 @@ export class SprintsTableComponent implements OnInit {
   year = new Date().getFullYear();
   constructor(private sprintService : SprintService,
               private alertService : AlertService,
-              private modalService: NgbModal) {
+              private modalService: NgbModal,
+              private router: Router) {
     this.sprintService.sprint$.subscribe(() => {
       this.updateSprints();
     });
@@ -117,6 +119,15 @@ export class SprintsTableComponent implements OnInit {
       error: (error) => {
         this.alertService.showAlert('danger', 'Ошибка при загрузке релизов: ' + error.message);
         console.error('Error loading releases:', error);
+      }
+    });
+  }
+
+  openTasksView(sprint: SprintTeamDto) {
+    this.router.navigate(['tasks'], {
+      queryParams: {
+        sprintId: sprint.sprintId,
+        sprintVersion: sprint.majorVersion
       }
     });
   }

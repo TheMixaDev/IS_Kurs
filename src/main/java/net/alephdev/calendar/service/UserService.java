@@ -29,15 +29,15 @@ public class UserService {
     }
 
     public Page<User> getAllUserWithPartialLogin(int page, String login) {
-        return userRepository.findAllByLoginContaining(login, PageRequest.of(page, 20, Sort.by(Sort.Direction.ASC, "team", "login")));
+        return userRepository.findUsersByLoginContainingIgnoreCase(login, PageRequest.of(page, 20, Sort.by(Sort.Direction.ASC, "team", "login")));
     }
 
     public Page<User> getAllUsersWithPartialLoginAndTeam(int page, String login, int team) {
-        return userRepository.findAllByLoginContainingAndTeamId(login, team, PageRequest.of(page, 20, Sort.by(Sort.Direction.ASC, "team", "login")));
+        return userRepository.findAllByLoginAndTeamIgnoreCase(login, team, PageRequest.of(page, 20, Sort.by(Sort.Direction.ASC, "team", "login")));
     }
 
     public Page<User> getAllUsersWithPartialLoginActive(int page, String login) {
-        return userRepository.findActiveUsersByLoginContaining(login, PageRequest.of(page, 20, Sort.by(Sort.Direction.ASC, "team", "login")));
+        return userRepository.findActiveUsersByLoginContainingIgnoreCase(login, PageRequest.of(page, 20, Sort.by(Sort.Direction.ASC, "team", "login")));
     }
 
     public User getUserByLogin(String login) {
@@ -47,7 +47,7 @@ public class UserService {
 
     @Transactional
     public User register(UserDto userDto) {
-        if (userRepository.findByLogin(userDto.getLogin()).isPresent()) {
+        if (userRepository.findByLoginIgnoreCase(userDto.getLogin()).isPresent()) {
             throw new IllegalArgumentException("User with this login already exists");
         }
 

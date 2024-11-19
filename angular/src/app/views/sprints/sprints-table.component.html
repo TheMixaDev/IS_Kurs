@@ -36,7 +36,7 @@
         <div id="tooltip-release" tooltip>
           Релизы
         </div>
-        <ui-button color="primary" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-tasks">
+        <ui-button color="primary" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-tasks" (click)="openTasksView(sprint)">
           <fa-icon [icon]="faListCheck"/>
         </ui-button>
         <div id="tooltip-tasks" tooltip>

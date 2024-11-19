@@ -6,7 +6,7 @@ import {TableComponent} from "../../components/table/table.component";
 import {TableRowComponent} from "../../components/table/table-row.component";
 import {TooltipBinding} from "../../components/bindings/tooltip.binding";
 import {UiButtonComponent} from "../../components/ui/ui-button.component";
-import {faEdit, faPlus, faStar, faTrash} from "@fortawesome/free-solid-svg-icons";
+import {faChartSimple, faEdit, faPlus, faStar, faTrash} from "@fortawesome/free-solid-svg-icons";
 import { RoleService } from "../../services/server/role.service";
 import { Role } from "../../models/role";
 import { AlertService } from "../../services/alert.service";
@@ -14,6 +14,7 @@ import { initFlowbite } from "flowbite";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { CreateRoleModalComponent } from "./create-role/create-role-modal.component";
 import { ConfirmModalComponent } from "../../components/modal/confirm-modal.component";
+import {RoleStatusesModalComponent} from "./statuses/role-statuses-modal.component";
 
 @Component({
   selector: 'app-status',
@@ -30,7 +31,6 @@ import { ConfirmModalComponent } from "../../components/modal/confirm-modal.comp
   templateUrl: './role.component.html'
 })
 export class RoleComponent implements OnInit {
-  
 
   roles: Role[] = [];
 
@@ -76,7 +76,7 @@ export class RoleComponent implements OnInit {
       size: 'md'
     });
     modalRef.componentInstance.content = `Вы уверены, что хотите удалить роль "${role.name}"?`;
-    modalRef.componentInstance.warning = `При удалении роли, она удалится у всех людей.`;
+    modalRef.componentInstance.warning = `При удалении роли, она удалится у всех пользователей.`;
     modalRef.result.then((result) => {
       if (result === 'delete') {
         this.roleService.deleteRole(role.id).subscribe({
@@ -93,10 +93,16 @@ export class RoleComponent implements OnInit {
     });
   }
 
-  // TODO: Доделать редактирование статусов для роли 
+  openStatusesModal(role: Role) {
+    const modalRef = this.modalService.open(RoleStatusesModalComponent, {
+      size: 'lg',
+      backdrop: 'static'
+    });
+    modalRef.componentInstance.role = role;
+  }
 
   protected readonly faPlus = faPlus;
-  protected readonly faStar = faStar;
   protected readonly faEdit = faEdit;
   protected readonly faTrash = faTrash;
+  protected readonly faChartSimple = faChartSimple;
 }

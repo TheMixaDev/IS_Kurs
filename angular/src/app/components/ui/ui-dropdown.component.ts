@@ -37,7 +37,10 @@ export class UiDropdownComponent implements ControlValueAccessor, OnInit {
   @Input() disabled = false;
   @Input() allowReset = false;
   @Input() resetValue: any = null;
+  @Input() searchOnly = false;
+  @Input() searchInProgress = true;
   @Output() modelValueChange = new EventEmitter<any>();
+  @Output() searchChange = new EventEmitter<string>();
   @Output() changed = new EventEmitter<void>();
   @ViewChild('container') containerRef!: ElementRef;
   @ViewChild('button') buttonRef!: ElementRef;
@@ -46,9 +49,12 @@ export class UiDropdownComponent implements ControlValueAccessor, OnInit {
   search = '';
 
   get optionsFiltered(): string[] {
-    return Object.keys(this.options).filter(key =>
-      this.options[key].toLowerCase().includes(this.search.toLowerCase())
-    );
+    if(!this.searchOnly) {
+      return Object.keys(this.options).filter(key =>
+        this.options[key].toLowerCase().includes(this.search.toLowerCase())
+      );
+    }
+    return Object.keys(this.options);
   }
 
   select(key: string): void {
@@ -102,6 +108,12 @@ export class UiDropdownComponent implements ControlValueAccessor, OnInit {
   reset() {
     this.modelValueChange.emit(this.resetValue);
     this.changed.emit();
+    this.search = this.resetValue;
+    this.searchChange.emit(this.search);
     this.showSelector = false;
+  }
+
+  searchChangeEmit($event: any) {
+    this.searchChange.emit(this.search);
   }
 }
