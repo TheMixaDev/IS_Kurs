@@ -11,13 +11,14 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, String> {
-    Optional<User> findByLogin(String login);
+    Optional<User> findByLoginIgnoreCase(String login);
 
-    @Query("SELECT u FROM User u WHERE (u.login LIKE %:login% OR u.firstName LIKE %:login% OR u.lastName LIKE %:login%) AND u.password IS NOT NULL AND LENGTH(u.password) > 0 AND u.team IS NOT NULL AND u.role IS NOT NULL")
-    Page<User> findActiveUsersByLoginContaining(String login, Pageable pageable);
+    @Query("SELECT u FROM User u WHERE (LOWER(u.login) LIKE LOWER(CONCAT('%', :login, '%')) OR LOWER(u.firstName) LIKE LOWER(CONCAT('%', :login, '%')) OR LOWER(u.lastName) LIKE LOWER(CONCAT('%', :login, '%'))) AND u.password IS NOT NULL AND LENGTH(u.password) > 0 AND u.team IS NOT NULL AND u.role IS NOT NULL")
+    Page<User> findActiveUsersByLoginContainingIgnoreCase(String login, Pageable pageable);
 
-    Page<User> findAllByLoginContainingOrFirstNameContainingOrLastNameContaining(String login, String firstName, String lastName, Pageable pageable);
+    @Query("SELECT u FROM User u WHERE (LOWER(u.login) LIKE LOWER(CONCAT('%', :login, '%')) OR LOWER(u.firstName) LIKE LOWER(CONCAT('%', :login, '%')) OR LOWER(u.lastName) LIKE LOWER(CONCAT('%', :login, '%')))")
+    Page<User> findUsersByLoginContainingIgnoreCase(String login, Pageable pageable);
 
-    @Query("SELECT u FROM User u WHERE (u.login LIKE %:login% OR u.firstName LIKE %:login% OR u.lastName LIKE %:login%) AND u.team.id = :team_id")
-    Page<User> findAllByLoginAndTeam(String login, Integer team_id, Pageable pageable);
+    @Query("SELECT u FROM User u WHERE (LOWER(u.login) LIKE LOWER(CONCAT('%', :login, '%')) OR LOWER(u.firstName) LIKE LOWER(CONCAT('%', :login, '%')) OR LOWER(u.lastName) LIKE LOWER(CONCAT('%', :login, '%'))) AND u.team.id = :team_id")
+    Page<User> findAllByLoginAndTeamIgnoreCase(String login, Integer team_id, Pageable pageable);
 }
