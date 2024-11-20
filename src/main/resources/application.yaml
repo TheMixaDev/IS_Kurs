@@ -19,7 +19,7 @@ spring:
     open-in-view: true
 
 jwt:
-  expiration: 3600
+  expiration: 360000
   secret: ${secret}
 
 service:
