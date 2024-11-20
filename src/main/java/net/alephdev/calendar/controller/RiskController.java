@@ -31,8 +31,8 @@ public class RiskController {
     private final IdeaService ideaService;
 
     @GetMapping
-    public Page<Risk> getAllRisks(@RequestParam @DefaultValue("0") int page) {
-        return riskService.getAllRisks(page);
+    public Page<Risk> getAllRisks(@RequestParam @DefaultValue("0") int page, @RequestParam String description) {
+        return riskService.getAllRisks(page, description);
     }
 
     @PrivilegeRequired

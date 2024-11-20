@@ -26,8 +26,14 @@ public class RiskService {
     private final TaskService taskService;
     private final IdeaService ideaService;
 
-    public Page<Risk> getAllRisks(int page) {
-        return riskRepository.findAll(PageRequest.of(page, 20, Sort.by(Sort.Direction.ASC, "id")));
+    public Page<Risk> getAllRisks(int page, String description) {
+        PageRequest pageRequest = PageRequest.of(page, 6, Sort.by(Sort.Direction.ASC, "id"));
+        
+        if (description != null && !description.trim().isEmpty()) {
+            return riskRepository.findByDescriptionContainingIgnoreCase(description.trim(), pageRequest);
+        }
+        
+        return riskRepository.findAll(pageRequest);
     }
 
     public Risk createRisk(Risk risk) {

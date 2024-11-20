@@ -16,8 +16,8 @@ import { RiskService } from "../../services/server/risk.service";
 import { TopRiskDto } from "../../models/dto/top-risk-dto";
 import { HttpErrorResponse } from "@angular/common/http";
 import { Page } from "../../models/misc/page";
-import { UiDropdownComponent } from "../../components/ui/ui-dropdown.component";
 import { CreateRiskModalComponent } from "./create-risk/create-risk-modal.component";
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-risk',
@@ -29,7 +29,8 @@ import { CreateRiskModalComponent } from "./create-risk/create-risk-modal.compon
     TableComponent,
     TableRowComponent,
     TooltipBinding,
-    UiButtonComponent
+    UiButtonComponent,
+    FormsModule,
   ],
   templateUrl: './risk.component.html'
 })
@@ -38,6 +39,7 @@ export class RiskComponent implements OnInit {
   topTenRisks: TopRiskDto[] = [];
   allRisks: Page<Risk> | null = null;
   currentPage: number = 0;
+
   search = '';
 
   constructor(private riskSerive: RiskService, private alertService: AlertService, private modalService: NgbModal) {
@@ -54,7 +56,7 @@ export class RiskComponent implements OnInit {
   }
 
   loadRisks() {
-    this.riskSerive.getAllRisks(this.currentPage).subscribe(risks => {
+    this.riskSerive.getAllRisks(this.currentPage, this.search).subscribe(risks => {
       if(risks instanceof HttpErrorResponse) return;
       this.allRisks = risks;
     })

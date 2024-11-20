@@ -21,8 +21,9 @@ export class RiskService {
     this.riskSubject.next({});
   }
 
-  getAllRisks(page: number = 0): Observable<Page<Risk> | HttpErrorResponse> {
-    return this.http.get<Page<Risk>>(`${this.apiService.apiUrl}/risks`, { params: { page: page.toString() }, headers: this.apiService.getHeaders() }).pipe(
+  getAllRisks(page: number = 0, description: string): Observable<Page<Risk> | HttpErrorResponse> {
+    let params : { page: string, description: string } = { page: page.toString(), description};
+    return this.http.get<Page<Risk>>(`${this.apiService.apiUrl}/risks`, { params, headers: this.apiService.getHeaders() }).pipe(
       catchError(this.apiService.handleError)
     );
   }
