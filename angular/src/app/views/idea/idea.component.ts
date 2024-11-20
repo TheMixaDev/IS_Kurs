@@ -84,6 +84,10 @@ export class IdeaComponent implements OnInit {
     this.user = this.authService.getUser();
   }
 
+  get isAdmin() : boolean {
+    return this.user && this.user.role && this.user.role.id === 1 || false;
+  }
+
   updateIdeas() {
     this.ideaService.getAllIdeas(this.currentPage, this.selectedStatus).subscribe(ideas => {
       if(ideas instanceof HttpErrorResponse) return;

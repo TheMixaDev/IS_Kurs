@@ -15,6 +15,8 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { CreateRoleModalComponent } from "./create-role/create-role-modal.component";
 import { ConfirmModalComponent } from "../../components/modal/confirm-modal.component";
 import {RoleStatusesModalComponent} from "./statuses/role-statuses-modal.component";
+import {AuthService} from "../../services/server/auth.service";
+import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-role',
@@ -26,18 +28,33 @@ import {RoleStatusesModalComponent} from "./statuses/role-statuses-modal.compone
     TableComponent,
     TableRowComponent,
     TooltipBinding,
-    UiButtonComponent
+    UiButtonComponent,
+    NgIf
   ],
   templateUrl: './role.component.html'
 })
 export class RoleComponent implements OnInit {
 
   roles: Role[] = [];
+  currentUser = this.authService.getUser();
 
-  constructor(private roleService: RoleService, private alertService: AlertService, private modalService: NgbModal) {
+  constructor(private roleService: RoleService,
+              private alertService: AlertService,
+              private authService: AuthService,
+              private modalService: NgbModal
+  ) {
     this.roleService.role$.subscribe(() => {
       this.updateRoles();
     });
+    this.authService.user$.subscribe(this.loadUserData.bind(this));
+  }
+
+  loadUserData() {
+    this.currentUser = this.authService.getUser();
+  }
+
+  get isAdmin() : boolean {
+    return this.currentUser && this.currentUser.role && this.currentUser.role.id === 1 || false;
   }
 
   ngOnInit() {

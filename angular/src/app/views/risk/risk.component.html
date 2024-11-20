@@ -2,7 +2,9 @@
   <div class="flex flex-col lg:flex-row gap-6">
     <!-- Топ 10 рисков -->
     <div class="lg:w-1/3 w-full">
-      <h2 class="text-xl font-semibold mb-4">Топ 10 рисков</h2>
+      <div class="mx-auto max-w-screen-xl px-4 lg:px-12 animate-fade animate-once animate-duration-500 animate-ease-out relative z-10">
+        <h2 class="text-xl font-semibold mb-4">Топ 10 рисков</h2>
+      </div>
       <app-table-component [columns]="['Описание', 'Значение риска']" [creationEnabled]="false">
         @for(topTenRisk of topTenRisks; track topTenRisk.riskId) {
           <tr table-row>
@@ -15,47 +17,47 @@
 
     <!-- Все риски -->
     <div class="lg:w-2/3 w-full">
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-xl font-semibold">Все риски</h2>
-      </div>
-
-      <div class="flex flex-col sm:flex-row gap-4 mb-4">
-        <!-- Search Bar -->
-        <div class="sm:w-2/3 w-full">
-          <div class="relative">
-            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <fa-icon [icon]="faSearch"/>
+      <div class="mx-auto max-w-screen-xl px-4 lg:px-12 animate-fade animate-once animate-duration-500 animate-ease-out relative z-10">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-semibold">Все риски</h2>
+        </div>
+        <div class="relative inline-block mx-auto mb-2 lg:mb-0 search-bar" [class.!w-full]="!isAdmin">
+          <div>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <fa-icon [icon]="faSearch"/>
+              </div>
+              <input type="text"
+                     [(ngModel)]="search"
+                     (blur)="searchChange()"
+                     (keydown.enter)="searchChange()"
+                     class="block w-full p-2 !pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                     placeholder="Поиск">
             </div>
-            <input type="text"
-                   [(ngModel)]="search"
-                   (blur)="searchChange()"
-                   (keydown.enter)="searchChange()"
-                   class="block w-full p-2 !pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                   placeholder="Поиск">
           </div>
         </div>
-
-        <!-- Create Button -->
-        <div class="sm:w-1/3 w-full">
-          <button primary class="w-full py-2" (click)="openCreateModal()">
-            <fa-icon [icon]="faPlus" class="mr-2" />
-            Создать риск
-          </button>
+        <div class="relative w-full lg:w-[260px] inline-block mx-auto align-right" *ngIf="isAdmin">
+          <div class="w-full lg:w-[250px] block ml-auto">
+            <button primary (click)="openCreateModal()">
+              <fa-icon [icon]="faPlus"/>
+              Создать риск
+            </button>
+          </div>
         </div>
       </div>
 
       <!-- Table -->
       @if(allRisks && allRisks.content.length != 0) {
-        <app-table-component 
-          [columns]="['Описание', 'Вероятность', 'Потери', 'Действия']" 
-          [pageInfo]="allRisks.page" 
+        <app-table-component
+          [columns]="tableColumns"
+          [pageInfo]="allRisks.page"
           (pageChange)="changePage($event)">
           @for(risk of allRisks.content; track risk.id) {
             <tr table-row>
               <td table-cell>{{risk.description}}</td>
               <td table-cell>{{risk.probability}}</td>
               <td table-cell>{{risk.estimatedLoss}}</td>
-              <td table-cell class="w-[174px]">
+              <td table-cell class="w-[132px]" *ngIf="isAdmin">
                 <div class="flex gap-2">
                   <ui-button (click)="openEditModal(risk)" color="warning" classExtension="!py-2 !px-3" data-tooltip-target="tooltip-edit">
                     <fa-icon [icon]="faEdit" />

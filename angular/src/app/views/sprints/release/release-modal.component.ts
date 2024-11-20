@@ -16,6 +16,7 @@ import {CreateReleaseModalComponent} from "./create-release/create-release-modal
 import {HttpErrorResponse} from "@angular/common/http";
 import {SprintService} from "../../../services/server/sprint.service";
 import {ConfirmModalComponent} from "../../../components/modal/confirm-modal.component";
+import {AuthService} from "../../../services/server/auth.service";
 
 
 @Component({
@@ -37,15 +38,33 @@ export class ReleaseModalComponent {
   @Input() releases: Release[] = [];
   @Input() sprintId: number | null = null;
   faClose = faClose;
+  currentUser = this.authService.getUser();
 
   constructor(public activeModal: NgbActiveModal,
               private releaseService: ReleaseService,
               private alertService: AlertService,
               private sprintService: SprintService,
-              private modalService: NgbModal) {
+              private modalService: NgbModal,
+              private authService: AuthService
+  ) {
     this.releaseService.release$.subscribe(() => {
       setTimeout(this.updateReleases.bind(this), 0);
     });
+    this.authService.user$.subscribe(this.loadUserData.bind(this));
+  }
+
+  loadUserData() {
+    this.currentUser = this.authService.getUser();
+  }
+
+  get isAdmin() : boolean {
+    return this.currentUser && this.currentUser.role && this.currentUser.role.id === 1 || false;
+  }
+
+  get tableColumns() : string[] {
+    let baseColumns = ['Версия', 'Дата релиза', 'Описание'];
+    if(this.isAdmin) baseColumns.push('Действия');
+    return baseColumns;
   }
 
   protected readonly faEdit = faEdit;

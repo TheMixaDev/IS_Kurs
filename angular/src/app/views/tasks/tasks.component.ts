@@ -25,7 +25,7 @@ import {SprintService} from "../../services/server/sprint.service";
 import {Status} from "../../models/status";
 import {Sprint} from "../../models/sprint";
 import {UiDropdownComponent} from "../../components/ui/ui-dropdown.component";
-import {DatePipe} from "@angular/common";
+import {DatePipe, NgIf} from "@angular/common";
 import {PriorityParserPipe} from "../../pipe/priority-parser.pipe";
 import {ActivatedRoute, Router} from "@angular/router";
 import {PriorityIconPipe} from "../../pipe/priority-icon.pipe";
@@ -47,7 +47,8 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
     UiDropdownComponent,
     DatePipe,
     PriorityParserPipe,
-    PriorityIconPipe
+    PriorityIconPipe,
+    NgIf
   ],
   templateUrl: 'tasks.component.html'
 })

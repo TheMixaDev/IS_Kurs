@@ -3,11 +3,11 @@
     <fa-icon [icon]="faClose" style="font-size: 24px"></fa-icon>
   </button>
 
-  <app-table-component [columns]="['Название', 'Описание', 'Действия']" [creationEnabled]="true" headerText="Статусы" (creationClick)="openAddStatusModal()" creationText="Добавить">
+  <app-table-component [columns]="tableColumns" [creationEnabled]="isAdmin" headerText="Статусы" (creationClick)="openAddStatusModal()" creationText="Добавить">
     <tr *ngFor="let status of statuses; trackBy: trackStatus">
       <td table-cell>{{ status.name }}</td>
       <td table-cell>{{ status.description || 'Нет описания' }}</td>
-      <td table-cell class="w-[132px]">
+      <td table-cell class="w-[0px]" *ngIf="isAdmin">
         <ui-button color="danger" classExtension="!py-2 !px-3 ml-1" (click)="deleteStatus(status)">
           <fa-icon [icon]="faTrash"/>
         </ui-button>

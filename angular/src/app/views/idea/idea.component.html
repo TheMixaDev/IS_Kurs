@@ -32,7 +32,7 @@
         <td table-cell>
           {{idea.statusEnumId | statusParser}}
         </td>
-        <td table-cell class="w-[174px]">
+        <td table-cell class="w-[174px]" [style.width]="isAdmin ? '174px' : '0px'">
           @if(idea.statusEnumId == IdeaStatus.PENDING) {
             @if(user?.role?.id == 1) { <!-- TODO норм проверка прав-->
               <ui-button color="primary" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-approve" (click)="approveIdea($event, idea)">

@@ -17,6 +17,7 @@ import {AuthService} from "../../services/server/auth.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {TooltipBinding} from "../../components/bindings/tooltip.binding";
 import {CreateUserModalComponent} from "./create-user/create-user-modal.component";
+import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-users',
@@ -29,14 +30,15 @@ import {CreateUserModalComponent} from "./create-user/create-user-modal.componen
     TableRowComponent,
     TableCellComponent,
     UiButtonComponent,
-    TooltipBinding
+    TooltipBinding,
+    NgIf
   ],
   templateUrl: './users.component.html'
 })
 export class UsersComponent implements OnInit {
   users: Page<User> | null = null;
   currentPage: number = 0;
-  currentUser: User | null = null;
+  currentUser: User | null = this.authService.getUser();
 
   search = '';
 
@@ -45,10 +47,18 @@ export class UsersComponent implements OnInit {
               private modalService: NgbModal
   ) {
     this.userService.user$.subscribe(this.updateUsers.bind(this));
+    this.authService.user$.subscribe(this.loadUserData.bind(this));
+  }
+
+  loadUserData() {
+    this.currentUser = this.authService.getUser();
+  }
+
+  get isAdmin() : boolean {
+    return this.currentUser && this.currentUser.role && this.currentUser.role.id === 1 || false;
   }
 
   ngOnInit() {
-    this.currentUser = this.authService.getUser();
     this.updateUsers();
   }
 

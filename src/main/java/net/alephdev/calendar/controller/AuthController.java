@@ -6,6 +6,7 @@ import net.alephdev.calendar.dto.JwtResponseDto;
 import net.alephdev.calendar.dto.MessageDto;
 import net.alephdev.calendar.jwt.JwtUtils;
 import net.alephdev.calendar.models.User;
+import net.alephdev.calendar.service.TaskService;
 import net.alephdev.calendar.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,7 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
     private final JwtUtils jwtUtils;
+    private final TaskService taskService;
 
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@Valid @RequestBody JwtRequestDto authenticationRequest) {
@@ -39,6 +41,7 @@ public class AuthController {
             if (authentication.isAuthenticated()) {
                 String username = ((UserDetails) authentication.getPrincipal()).getUsername();
                 User user = userService.getUserByLogin(username);
+                user.setCanCreateTasks(taskService.canCreateTask(user));
 
                 String token = jwtUtils.generateToken(user);
                 return ResponseEntity.ok(new JwtResponseDto(token, user));

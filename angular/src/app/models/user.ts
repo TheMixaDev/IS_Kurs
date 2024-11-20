@@ -8,4 +8,5 @@ export interface User {
   email: string | null;
   team: Team | null;
   role: Role | null;
+  canCreateTasks: boolean | null;
 }

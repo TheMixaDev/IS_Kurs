@@ -10,6 +10,7 @@
             color="danger"
             classExtension="!py-2 !px-3 ml-1 delete-button"
             data-tooltip-target="tooltip-delete"
+            *ngIf="isAdmin"
             (click)="openDeleteTaskModal()">
             <fa-icon [icon]="faTrash"/>
           </ui-button>
@@ -17,14 +18,14 @@
         <dl>
           <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">
             Теги
-            <fa-icon [icon]="faPlus" [style.color]="'green'" class="cursor-pointer" (click)="tagDropdown.triggerSelector()"/>
+            <fa-icon [icon]="faPlus" [style.color]="'green'" class="cursor-pointer" (click)="tagDropdown.triggerSelector()" *ngIf="canEditTask"/>
           </dt>
           <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">
             @if(currentTags.length > 0) {
               @for(tag of currentTags; track tag.id) {
                 <span class="py-1 !px-2 border border-gray-600 rounded-md mr-1">
                   {{ tag.name }}
-                  <fa-icon [icon]="faTimes" [style.color]="'red'" class="cursor-pointer" (click)="deleteTag(tag)"/>
+                  <fa-icon [icon]="faTimes" [style.color]="'red'" class="cursor-pointer" (click)="deleteTag(tag)" *ngIf="canEditTask"/>
                 </span>
               }
             } @else {
@@ -46,7 +47,7 @@
           <div class="w-1/2">
             <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">
               Приоритет
-              <fa-icon [icon]="faPen" [style.color]="'orange'" class="cursor-pointer" (click)="priorityDropdown.triggerSelector()"/>
+              <fa-icon [icon]="faPen" [style.color]="'orange'" class="cursor-pointer" (click)="priorityDropdown.triggerSelector()" *ngIf="canEditTask"/>
             </dt>
             <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">
               <fa-icon [icon]="(task.priorityEnum | priorityIcon).icon" [style.color]="(task.priorityEnum | priorityIcon).color"/>
@@ -64,8 +65,10 @@
           <div class="w-1/2">
             <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">
               Исполнитель
-              <fa-icon [icon]="faPen" [style.color]="'orange'" class="cursor-pointer mr-1" (click)="usersDropdown.triggerSelector()"/>
-              <fa-icon [icon]="faUser" [style.color]="'blue'" class="cursor-pointer" (click)="assignMyself()"/>
+              @if(canEditTask) {
+                <fa-icon [icon]="faPen" [style.color]="'orange'" class="cursor-pointer mr-1" (click)="usersDropdown.triggerSelector()"/>
+                <fa-icon [icon]="faUser" [style.color]="'blue'" class="cursor-pointer" (click)="assignMyself()" *ngIf="task.implementer?.login !== currentUser?.login"/>
+              }
             </dt>
             <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">
               @if(task.implementer) {
@@ -88,7 +91,7 @@
           <div class="w-1/2">
             <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">
               Story Points
-              <fa-icon [icon]="faPen" [style.color]="'orange'" class="cursor-pointer" *ngIf="!editingStoryPoints" (click)="editStoryPoints()"/>
+              <fa-icon [icon]="faPen" [style.color]="'orange'" class="cursor-pointer" *ngIf="!editingStoryPoints && canEditTask" (click)="editStoryPoints()"/>
               <fa-icon [icon]="faCheck" [style.color]="'green'" class="cursor-pointer" *ngIf="editingStoryPoints" (click)="saveStoryPoints()"/>
             </dt>
             <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">
@@ -112,7 +115,7 @@
           <div class="w-1/2">
             <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">
               Спринт
-              <fa-icon [icon]="faPen" [style.color]="'orange'" class="cursor-pointer" (click)="sprintDropdown.triggerSelector()"/>
+              <fa-icon [icon]="faPen" [style.color]="'orange'" class="cursor-pointer" (click)="sprintDropdown.triggerSelector()" *ngIf="isAdmin"/>
             </dt>
             <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">
               @if(task.sprint) {
@@ -136,7 +139,7 @@
           <div class="w-1/2">
             <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">
               Статус
-              <fa-icon [icon]="faPen" [style.color]="'orange'" class="cursor-pointer" (click)="statusDropdown.triggerSelector()"/>
+              <fa-icon [icon]="faPen" [style.color]="'orange'" class="cursor-pointer" (click)="statusDropdown.triggerSelector()" *ngIf="task.implementer?.login === currentUser?.login || isAdmin"/>
             </dt>
             <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">
               {{ task.status.name }}
@@ -152,7 +155,7 @@
         <dl>
           <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">
             Информация
-            <fa-icon [icon]="faPen" [style.color]="'orange'" class="cursor-pointer" *ngIf="!editingName" (click)="editName()"/>
+            <fa-icon [icon]="faPen" [style.color]="'orange'" class="cursor-pointer" *ngIf="!editingName && canEditTask" (click)="editName()"/>
             <fa-icon [icon]="faCheck" [style.color]="'green'" class="cursor-pointer" *ngIf="editingName" (click)="saveName()"/>
           </dt>
           <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">
@@ -169,8 +172,8 @@
         </dl>
       </div>
       <div class="w-[672px] align-self-start">
-        <app-table-component [columns]="['Описание', 'Вероятность', 'Потери', 'Действия']"
-                              [creationEnabled]="currentUser?.role?.id === 1"
+        <app-table-component [columns]="tableColumns"
+                              [creationEnabled]="canEditTask || false"
                               (creationClick)="openAddRiskModal()"
                               headerText="Риски"
                               creationText="Добавить">
@@ -180,7 +183,7 @@
                 <td table-cell>{{risk.description}}</td>
                 <td table-cell>{{risk.probability}}</td>
                 <td table-cell>{{risk.estimatedLoss}}</td>
-                <td table-cell>
+                <td table-cell *ngIf="canEditTask">
                   <ui-button
                     color="danger"
                     classExtension="!py-2 !px-3 ml-1"

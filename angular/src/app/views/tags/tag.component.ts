@@ -4,7 +4,7 @@ import {HeaderItemBinding} from "../../components/bindings/header-item.binding";
 import {PrimaryButtonBinding} from "../../components/bindings/primary-button.binding";
 import {UiDropdownComponent} from "../../components/ui/ui-dropdown.component";
 import {faCircle, faEdit, faGear, faListCheck, faPlus, faStar, faTrash, faSearch} from "@fortawesome/free-solid-svg-icons";
-import {DatePipe} from "@angular/common";
+import {DatePipe, NgIf} from "@angular/common";
 import {TableCellComponent} from "../../components/table/table-cell.component";
 import {TableComponent} from "../../components/table/table.component";
 import {TableRowComponent} from "../../components/table/table-row.component";
@@ -19,6 +19,7 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { FormsModule } from "@angular/forms";
 import { ConfirmModalComponent } from "../../components/modal/confirm-modal.component";
 import { CreateTagModalComponent } from "./create-tag/create-tag-modal.component";
+import {AuthService} from "../../services/server/auth.service";
 
 @Component({
   selector: 'app-tag',
@@ -34,19 +35,39 @@ import { CreateTagModalComponent } from "./create-tag/create-tag-modal.component
     TableRowComponent,
     TooltipBinding,
     UiButtonComponent,
-    FormsModule
+    FormsModule,
+    NgIf
   ],
   templateUrl: './tag.component.html'
 })
 export class TagComponent implements OnInit {
   tags: Tag[] = [];
   search = '';
-  currentPage: number = 0;
+  currentUser = this.authService.getUser();
 
-  constructor(private tagService: TagService, private alertService: AlertService, private modalService: NgbModal) {
+  constructor(private tagService: TagService,
+              private alertService: AlertService,
+              private authService: AuthService,
+              private modalService: NgbModal
+  ) {
     this.tagService.tag$.subscribe(() => {
       this.updateTags();
     });
+    this.authService.user$.subscribe(this.loadUserData.bind(this));
+  }
+
+  loadUserData() {
+    this.currentUser = this.authService.getUser();
+  }
+
+  get isAdmin() : boolean {
+    return this.currentUser && this.currentUser.role && this.currentUser.role.id === 1 || false;
+  }
+
+  get tableColumns() : string[] {
+    let baseColumns = ['Название', 'Описание'];
+    if(this.isAdmin) baseColumns.push('Действия');
+    return baseColumns;
   }
 
   ngOnInit() {
@@ -59,16 +80,6 @@ export class TagComponent implements OnInit {
         if(tags instanceof HttpErrorResponse) return;
         this.tags = tags;
       })
-  }
-
-  searchChange() {
-    this.updateTags();
-    this.currentPage = 0;
-  }
-
-  changePage(page: number) {
-    this.currentPage = page;
-    this.updateTags();
   }
 
   openCreateModal(){
@@ -87,11 +98,11 @@ export class TagComponent implements OnInit {
   }
 
   openDeleteModal(tag: Tag) {
-    const modalRef = this.modalService.open(CreateTagModalComponent, {
+    const modalRef = this.modalService.open(ConfirmModalComponent, {
       size: 'md'
     });
     modalRef.componentInstance.content = `Вы уверены, что хотите удалить тег "${tag.name}"?`;
-    modalRef.componentInstance.warning = `При удалении риска, он удалится у всех задач.`;
+    modalRef.componentInstance.warning = `При удалении тега, он удалится у всех задач.`;
     modalRef.result.then((result) => {
       if (result === 'delete') {
         this.tagService.deleteTag(tag.id).subscribe({

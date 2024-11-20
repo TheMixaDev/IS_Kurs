@@ -1,4 +1,4 @@
-<div class="mx-auto max-w-screen-xl px-4 lg:px-12 animate-fade animate-once animate-duration-500 animate-ease-out relative z-10 text-end">
+<div class="mx-auto max-w-screen-xl px-4 lg:px-12 animate-fade animate-once animate-duration-500 animate-ease-out relative z-10 text-end" *ngIf="isAdmin">
     <div class="relative w-full lg:w-[260px] inline-block mx-auto align-right">
       <div class="w-full lg:w-[250px] block ml-auto">
         <button primary (click)="openCreateModal()">
@@ -9,7 +9,7 @@
     </div>
 </div>
 
-<app-table-component [columns]="['Название', 'Описание', 'Действия']" [creationEnabled]="false">
+<app-table-component [columns]="tableColumns" [creationEnabled]="false">
   @for(status of statuses; track status.name) {
     <tr table-row>
       <td table-cell class="w-[216px]">
@@ -18,19 +18,21 @@
       <td table-cell>
         {{status.description}}
       </td>
-      <td table-cell class="w-[132px]">
+      <td table-cell class="w-[132px]" *ngIf="isAdmin">
         <ui-button color="warning" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-edit" (click)="openEditModal(status)">
           <fa-icon [icon]="faEdit"/>
         </ui-button>
         <div id="tooltip-edit" tooltip>
           Изменить
         </div>
-        <ui-button color="danger" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-delete" (click)="openDeleteModal(status)">
-          <fa-icon [icon]="faTrash"/>
-        </ui-button>
-        <div id="tooltip-delete" tooltip>
-          Удалить
-        </div>
+        @if(status.id !== 1) {
+          <ui-button color="danger" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-delete" (click)="openDeleteModal(status)">
+            <fa-icon [icon]="faTrash"/>
+          </ui-button>
+          <div id="tooltip-delete" tooltip>
+            Удалить
+          </div>
+        }
       </td>
     </tr>
   }

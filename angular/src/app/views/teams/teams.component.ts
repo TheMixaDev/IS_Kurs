@@ -1,6 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {TableComponent} from "../../components/table/table.component";
-import {DatePipe, NgClass, NgForOf} from "@angular/common";
+import {DatePipe, NgClass, NgForOf, NgIf} from "@angular/common";
 import {UiButtonComponent} from "../../components/ui/ui-button.component";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {
@@ -21,24 +21,36 @@ import {CreateTeamModalComponent} from "./create-team/create-team-modal.componen
 import {PrimaryButtonBinding} from "../../components/bindings/primary-button.binding";
 import {UiDropdownComponent} from "../../components/ui/ui-dropdown.component";
 import {TeamLoadModalComponent} from "./team-load/team-load-modal.component";
+import {AuthService} from "../../services/server/auth.service";
 
 @Component({
   selector: 'app-teams',
   standalone: true,
-  imports: [TableComponent, DatePipe, UiButtonComponent, FaIconComponent, ReactiveFormsModule, FormsModule, NgForOf, NgClass, PrimaryButtonBinding, UiDropdownComponent],
+  imports: [TableComponent, DatePipe, UiButtonComponent, FaIconComponent, ReactiveFormsModule, FormsModule, NgForOf, NgClass, PrimaryButtonBinding, UiDropdownComponent, NgIf],
   templateUrl: './teams.component.html'
 })
 export class TeamsComponent implements OnInit {
   teams : Team[] = [];
   search = '';
+  currentUser = this.authService.getUser();
   constructor(private teamService : TeamService,
+              private authService: AuthService,
               private modalService: NgbModal
   ) {
     this.teamService.team$.subscribe(this.updateTeams.bind(this));
+    this.authService.user$.subscribe(this.loadUserData.bind(this));
+  }
+
+  loadUserData() {
+    this.currentUser = this.authService.getUser();
+  }
+
+  get isAdmin() : boolean {
+    return this.currentUser && this.currentUser.role && this.currentUser.role.id === 1 || false;
   }
 
   get filteredTeams() {
-    return this.teams.filter(t => t.name.includes(this.search) || t.description?.includes(this.search));
+    return this.teams.filter(t => t.name.toLowerCase().includes(this.search.toLowerCase()) || t.description?.toLowerCase().includes(this.search.toLowerCase()));
   }
 
   createClick() {
@@ -61,7 +73,7 @@ export class TeamsComponent implements OnInit {
   }
 
   updateTeams() {
-    this.teamService.getAllTeams(false).subscribe(teams => {
+    this.teamService.getAllTeams(!this.isAdmin).subscribe(teams => {
       this.teams = teams as Team[];
     });
   }

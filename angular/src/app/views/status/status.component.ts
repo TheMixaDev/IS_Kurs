@@ -4,7 +4,7 @@ import {HeaderItemBinding} from "../../components/bindings/header-item.binding";
 import {PrimaryButtonBinding} from "../../components/bindings/primary-button.binding";
 import {UiDropdownComponent} from "../../components/ui/ui-dropdown.component";
 import {faCircle, faEdit, faGear, faListCheck, faPlus, faStar, faTrash} from "@fortawesome/free-solid-svg-icons";
-import {DatePipe} from "@angular/common";
+import {DatePipe, NgIf} from "@angular/common";
 import {TableCellComponent} from "../../components/table/table-cell.component";
 import {TableComponent} from "../../components/table/table.component";
 import {TableRowComponent} from "../../components/table/table-row.component";
@@ -17,6 +17,7 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { initFlowbite } from "flowbite";
 import { ConfirmModalComponent } from "../../components/modal/confirm-modal.component";
 import { CreateStatusModalComponent } from "./create-status/create-status-modal.component";
+import {AuthService} from "../../services/server/auth.service";
 
 @Component({
   selector: 'app-status',
@@ -31,17 +32,38 @@ import { CreateStatusModalComponent } from "./create-status/create-status-modal.
     TableComponent,
     TableRowComponent,
     TooltipBinding,
-    UiButtonComponent
+    UiButtonComponent,
+    NgIf
   ],
   templateUrl: './status.component.html'
 })
 export class StatusComponent implements OnInit {
   statuses: Status[] = [];
+  currentUser = this.authService.getUser();
 
-  constructor(private statusService: StatusService, private alertService: AlertService, private modalService: NgbModal) {
+  constructor(private statusService: StatusService,
+              private alertService: AlertService,
+              private authService: AuthService,
+              private modalService: NgbModal
+  ) {
     this.statusService.status$.subscribe(() => {
       this.updateStatuses();
     });
+    this.authService.user$.subscribe(this.loadUserData.bind(this));
+  }
+
+  loadUserData() {
+    this.currentUser = this.authService.getUser();
+  }
+
+  get isAdmin() : boolean {
+    return this.currentUser && this.currentUser.role && this.currentUser.role.id === 1 || false;
+  }
+
+  get tableColumns() : string[] {
+    let baseColumns = ['Название', 'Описание'];
+    if(this.isAdmin) baseColumns.push('Действия');
+    return baseColumns;
   }
 
   ngOnInit() {

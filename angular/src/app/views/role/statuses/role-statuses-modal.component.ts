@@ -17,6 +17,7 @@ import {StatusService} from "../../../services/server/status.service";
 import {ConfirmModalComponent} from "../../../components/modal/confirm-modal.component";
 import {HttpErrorResponse} from "@angular/common/http";
 import {AddStatusModalComponent} from "./add-status/add-status-modal.component";
+import {AuthService} from "../../../services/server/auth.service";
 
 
 @Component({
@@ -42,15 +43,32 @@ export class RoleStatusesModalComponent implements OnInit {
   faClose = faClose;
   faTrash = faTrash;
   availableStatuses: { [key: number]: string } = {};
+  currentUser = this.authService.getUser();
 
   constructor(public activeModal: NgbActiveModal,
               private roleService: RoleService,
               private statusService: StatusService,
               private alertService: AlertService,
+              private authService: AuthService,
               private modalService: NgbModal) {
     this.roleService.role$.subscribe(() => {
       setTimeout(this.updateStatuses.bind(this), 0);
     });
+    this.authService.user$.subscribe(this.loadUserData.bind(this));
+  }
+
+  loadUserData() {
+    this.currentUser = this.authService.getUser();
+  }
+
+  get isAdmin() : boolean {
+    return this.currentUser && this.currentUser.role && this.currentUser.role.id === 1 || false;
+  }
+
+  get tableColumns() : string[] {
+    let baseColumns = ['Название', 'Описание'];
+    if(this.isAdmin) baseColumns.push('Действия');
+    return baseColumns;
   }
 
   trackStatus(index: number, status: Status): number {

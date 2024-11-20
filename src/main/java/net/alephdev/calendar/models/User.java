@@ -24,6 +24,9 @@ public class User {
 
     private String email;
 
+    @Transient
+    private boolean canCreateTasks;
+
     @ManyToOne
     @JoinColumn(name = "team_id", foreignKey = @ForeignKey(name = "fk_users_team_id"))
     private Team team;

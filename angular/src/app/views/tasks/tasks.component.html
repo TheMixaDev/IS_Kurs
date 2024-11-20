@@ -30,7 +30,7 @@
   </div>
   <div class="relative w-full lg:w-[260px] inline-block mx-auto align-right">
     <div class="w-full lg:w-[250px] block ml-auto">
-      <button primary (click)="openCreateModal()">
+      <button primary (click)="openCreateModal()" *ngIf="currentUser?.canCreateTasks">
         <fa-icon [icon]="faPlus" />
         Создать задачу
       </button>

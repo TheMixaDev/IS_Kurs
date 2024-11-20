@@ -26,6 +26,7 @@ import {ConfirmModalComponent} from "../../components/modal/confirm-modal.compon
 import {ReleaseModalComponent} from "./release/release-modal.component";
 import {Release} from "../../models/release";
 import {Router} from "@angular/router";
+import {AuthService} from "../../services/server/auth.service";
 
 @Component({
   selector: 'app-sprints-table',
@@ -46,14 +47,26 @@ export class SprintsTableComponent implements OnInit {
   @Input() selectedTeamName : string = '';
   sprints : SprintTeamDto[] = [];
   year = new Date().getFullYear();
+  currentUser = this.authService.getUser();
   constructor(private sprintService : SprintService,
               private alertService : AlertService,
+              private authService: AuthService,
               private modalService: NgbModal,
               private router: Router) {
     this.sprintService.sprint$.subscribe(() => {
       this.updateSprints();
     });
+    this.authService.user$.subscribe(this.loadUserData.bind(this));
   }
+
+  loadUserData() {
+    this.currentUser = this.authService.getUser();
+  }
+
+  get isAdmin() : boolean {
+    return this.currentUser && this.currentUser.role && this.currentUser.role.id === 1 || false;
+  }
+
   updateSprints() {
     this.sprints = [];
     this.sprintService.getSprintsByYearAndTeam(this.year, this.selectedTeamName).subscribe(sprints => {

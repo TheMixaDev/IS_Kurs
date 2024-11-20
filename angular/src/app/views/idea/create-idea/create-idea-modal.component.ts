@@ -59,7 +59,31 @@ export class CreateIdeaModalComponent implements OnInit {
     private authService: AuthService,
     private riskService: RiskService,
     private modalService: NgbModal
-  ) {}
+  ) {
+    this.authService.user$.subscribe(this.loadUserData.bind(this));
+  }
+
+  loadUserData() {
+    this.currentUser = this.authService.getUser();
+  }
+
+  get canEditIdea() : boolean {
+    return this.currentUser?.login == this.idea?.authorLogin?.login || this.isAdmin;
+  }
+
+  get canEditRisks() : boolean {
+    return (this.canEditIdea && !this.viewMode) || this.isAdmin;
+  }
+
+  get isAdmin() : boolean {
+    return this.currentUser && this.currentUser.role && this.currentUser.role.id === 1 || false;
+  }
+
+  get tableColumns() : string[] {
+    let baseColumns = ['Описание', 'Вероятность', 'Потери'];
+    if(this.canEditRisks) baseColumns.push('Действия');
+    return baseColumns;
+  }
 
   ngOnInit() {
     if (this.idea) {

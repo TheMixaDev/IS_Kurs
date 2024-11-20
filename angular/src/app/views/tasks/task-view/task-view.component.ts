@@ -165,7 +165,7 @@ export class TaskViewComponent implements OnInit {
   set statusWrapper(value: number | null) {
     this._statusWrapper = value;
     if(this.task) {
-      this.task.status = this.statusesNative?.filter(s => s.id == value)[0] as Status;
+      this.task.status = this.statusesNative?.filter(s => s.id == value)[0] as Status || this.task.status;
       this.updateStatus();
     }
   }
@@ -206,6 +206,20 @@ export class TaskViewComponent implements OnInit {
               private modalService: NgbModal
               ) {
     this.authService.user$.subscribe(user => this.currentUser = user);
+  }
+
+  get isAdmin() : boolean {
+    return this.currentUser && this.currentUser.role && this.currentUser.role.id === 1 || false;
+  }
+
+  get tableColumns() : string[] {
+    let baseColumns = ['Описание', 'Вероятность', 'Потери'];
+    if(this.canEditTask) baseColumns.push('Действия');
+    return baseColumns;
+  }
+
+  get canEditTask() : boolean {
+    return this.isAdmin || this.task?.implementer?.login == this.currentUser?.login || this.task?.createdBy?.login == this.currentUser?.login;
   }
 
   ngOnInit() {
@@ -278,7 +292,7 @@ export class TaskViewComponent implements OnInit {
 
   loadStatuses() : Promise<void> {
     return new Promise(resolve => {
-      if(this.currentUser?.role?.id == 1) {
+      if(this.isAdmin) {
         this.statusService.getAllStatuses().subscribe(statuses => {
           this.parseStatuses(statuses, resolve);
         });

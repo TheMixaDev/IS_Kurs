@@ -18,6 +18,8 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { Page } from "../../models/misc/page";
 import { CreateRiskModalComponent } from "./create-risk/create-risk-modal.component";
 import { FormsModule } from '@angular/forms';
+import {AuthService} from "../../services/server/auth.service";
+import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-risk',
@@ -31,6 +33,7 @@ import { FormsModule } from '@angular/forms';
     TooltipBinding,
     UiButtonComponent,
     FormsModule,
+    NgIf,
   ],
   templateUrl: './risk.component.html'
 })
@@ -39,14 +42,34 @@ export class RiskComponent implements OnInit {
   topTenRisks: TopRiskDto[] = [];
   allRisks: Page<Risk> | null = null;
   currentPage: number = 0;
+  currentUser = this.authService.getUser();
 
   search = '';
 
-  constructor(private riskSerive: RiskService, private alertService: AlertService, private modalService: NgbModal) {
-    this.riskSerive.risk$.subscribe(() => {
+  constructor(private riskService: RiskService,
+              private alertService: AlertService,
+              private authService: AuthService,
+              private modalService: NgbModal
+  ) {
+    this.riskService.risk$.subscribe(() => {
       this.loadTopRisks();
       this.loadRisks();
     });
+    this.authService.user$.subscribe(this.loadUserData.bind(this));
+  }
+
+  loadUserData() {
+    this.currentUser = this.authService.getUser();
+  }
+
+  get isAdmin() : boolean {
+    return this.currentUser && this.currentUser.role && this.currentUser.role.id === 1 || false;
+  }
+
+  get tableColumns() : string[] {
+    let baseColumns = ['Описание', 'Вероятность', 'Потери'];
+    if(this.isAdmin) baseColumns.push('Действия');
+    return baseColumns;
   }
 
   ngOnInit() {
@@ -56,7 +79,7 @@ export class RiskComponent implements OnInit {
   }
 
   loadRisks() {
-    this.riskSerive.getAllRisks(this.currentPage, this.search).subscribe(risks => {
+    this.riskService.getAllRisks(this.currentPage, this.search).subscribe(risks => {
       if(risks instanceof HttpErrorResponse) return;
       this.allRisks = risks;
       if(this.currentPage != 0 && this.allRisks.content.length === 0){
@@ -68,7 +91,7 @@ export class RiskComponent implements OnInit {
 
   loadTopRisks() {
     this.topTenRisks = [];
-    this.riskSerive.getTop10Risks().subscribe(risks => {
+    this.riskService.getTop10Risks().subscribe(risks => {
       if(risks as TopRiskDto[]) {
         this.topTenRisks = risks as TopRiskDto[];
       } else {
@@ -91,7 +114,7 @@ export class RiskComponent implements OnInit {
     this.modalService.open(CreateRiskModalComponent, {
       size: 'lg'
     });
-    
+
   }
 
   openEditModal(risk: Risk){
@@ -111,7 +134,7 @@ export class RiskComponent implements OnInit {
     modalRef.componentInstance.warning = `При удалении риска, он удалится у всех задач.`;
     modalRef.result.then((result) => {
       if (result === 'delete') {
-        this.riskSerive.deleteRisk(risk.id).subscribe({
+        this.riskService.deleteRisk(risk.id).subscribe({
           next: () => {
             this.loadTopRisks();
             this.loadRisks();
@@ -126,7 +149,7 @@ export class RiskComponent implements OnInit {
     });
   }
 
-  
+
 
   protected readonly faPlus = faPlus;
   protected readonly faEdit = faEdit;

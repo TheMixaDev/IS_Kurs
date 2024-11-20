@@ -5,6 +5,7 @@ import net.alephdev.calendar.annotation.CurrentUser;
 import net.alephdev.calendar.annotation.PrivilegeRequired;
 import net.alephdev.calendar.dto.UserDto;
 import net.alephdev.calendar.models.User;
+import net.alephdev.calendar.service.TaskService;
 import net.alephdev.calendar.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.bind.DefaultValue;
@@ -22,10 +23,12 @@ import jakarta.validation.Valid;
 public class UserController {
 
     private final UserService userService;
+    private final TaskService taskService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, TaskService taskService) {
         this.userService = userService;
+        this.taskService = taskService;
     }
 
     @GetMapping
@@ -45,6 +48,7 @@ public class UserController {
 
     @GetMapping("/current")
     public User getCurrentUser(@CurrentUser User user) {
+        user.setCanCreateTasks(taskService.canCreateTask(user));
         return user;
     }
 

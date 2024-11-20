@@ -2,14 +2,14 @@
   <button type="button" class="text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" (click)="activeModal.close()">
     <fa-icon [icon]="faClose" style="font-size: 24px"></fa-icon>
   </button>
-  <app-table-component [columns]="['Версия', 'Дата релиза', 'Описание', 'Действия']" [creationEnabled]="true" (creationClick)="openCreateReleaseModal()" headerText="Релизы">
+  <app-table-component [columns]="tableColumns" [creationEnabled]="isAdmin" (creationClick)="openCreateReleaseModal()" headerText="Релизы">
     @if(releases.length > 0) {
       @for(release of releases; track release.id) {
         <tr>
           <td table-cell>{{ release.version }}</td>
           <td table-cell>{{ release.releaseDate | date:'dd.MM.yyyy' }}</td>
           <td table-cell>{{ release.description || 'Нет описания' }}</td>
-          <td table-cell class="w-[132px]">
+          <td table-cell class="w-[132px]" *ngIf="isAdmin">
             <ui-button color="warning" classExtension="!py-2 !px-3 ml-1" (click)="openEditModal(release)">
               <fa-icon [icon]="faEdit"/>
             </ui-button>

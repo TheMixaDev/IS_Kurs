@@ -21,7 +21,7 @@
     </nav>
   </header>
   <div class="relative w-full lg:w-[260px] inline-block mx-auto align-right">
-    <div class="w-full lg:w-[250px] block ml-auto">
+    <div class="w-full lg:w-[250px] block ml-auto" *ngIf="isAdmin">
       <button primary (click)="openCreateModal()">
         <fa-icon [icon]="faPlus"></fa-icon>
         Создать спринт

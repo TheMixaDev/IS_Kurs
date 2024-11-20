@@ -15,6 +15,7 @@ import { AuthService } from "../../services/server/auth.service";
 import { BehaviorSubject, debounceTime, Subject, takeUntil } from "rxjs";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {CreateSprintModalComponent} from "./create-sprint/create-sprint-modal.component";
+import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-sprints',
@@ -26,7 +27,8 @@ import {CreateSprintModalComponent} from "./create-sprint/create-sprint-modal.co
     FullCalendarModule,
     PrimaryButtonBinding,
     FaIconComponent,
-    SprintsTableComponent
+    SprintsTableComponent,
+    NgIf
   ],
   templateUrl: './sprints.component.html'
 })
@@ -34,6 +36,8 @@ export class SprintsComponent implements OnInit {
   tableView = false;
   teams: Team[] = [];
   teamOptions: { [key: string]: string } = {};
+  currentUser = this.authService.getUser();
+
   private _selectedTeamName = new BehaviorSubject<string>('');
   private destroy$ = new Subject<void>();
 
@@ -41,7 +45,17 @@ export class SprintsComponent implements OnInit {
               private sprintService: SprintService,
               private authService: AuthService,
               private modalService: NgbModal
-  ) {}
+  ) {
+    this.authService.user$.subscribe(this.loadUserData.bind(this));
+  }
+
+  loadUserData() {
+    this.currentUser = this.authService.getUser();
+  }
+
+  get isAdmin() : boolean {
+    return this.currentUser && this.currentUser.role && this.currentUser.role.id === 1 || false;
+  }
 
   setView(view: boolean) {
     this.tableView = view;
