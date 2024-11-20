@@ -38,7 +38,7 @@
         </ui-button>
       </div>
       <div>
-        <ui-button *ngIf="isEditing && currentUser?.role?.id === 1" type="button" color="danger" (click)="openDeleteConfirmationModal()" classExtension="w-full" class="w-full">
+        <ui-button *ngIf="isEditing && currentUser?.role?.id === 1 && currentUser?.login !== user?.login" type="button" color="danger" (click)="openDeleteConfirmationModal()" classExtension="w-full" class="w-full">
           <fa-icon [icon]="faBan"></fa-icon>
           Отключить пользователя
         </ui-button>
