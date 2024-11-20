@@ -3,7 +3,6 @@ package net.alephdev.calendar.service;
 import lombok.RequiredArgsConstructor;
 import net.alephdev.calendar.dto.IdeaDto;
 import net.alephdev.calendar.models.Idea;
-import net.alephdev.calendar.models.Idea.Status;
 import net.alephdev.calendar.models.User;
 import net.alephdev.calendar.repository.functional.IdeaRepository;
 
@@ -26,25 +25,8 @@ public class IdeaService {
         return ideaRepository.findAll(PageRequest.of(page, 20, Sort.by(Sort.Direction.ASC, "id")));
     }
 
-    public Page<Idea> getAllIdeasByStatus(Status status, int page) {
+    public Page<Idea> getAllIdeasByStatus(Idea.Status status, int page) {
         return ideaRepository.findAllByStatusEnumId(status, PageRequest.of(page, 20, Sort.by(Sort.Direction.ASC, "id")));
-    }
-
-    public Page<Idea> getAllIdeasByStatus(String status, int page) {
-        return ideaRepository.findAllByStatusContainingIgnoreCase(status, PageRequest.of(page, 20, Sort.by(Sort.Direction.ASC, "id")));
-    }
-
-    public Page<Idea> getAllIdeasFiltered(String status, int page) {
-        if (status == null) {
-            return getAllIdeas(page);
-        }
-
-        try {
-            Status enumStatus = Status.valueOf(status.toUpperCase());
-            return getAllIdeasByStatus(enumStatus, page);
-        } catch (IllegalArgumentException e) {
-            return getAllIdeasByStatus(status, page);
-        }
     }
 
     public Idea createIdea(IdeaDto idea, User user) {

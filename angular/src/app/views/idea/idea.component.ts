@@ -46,7 +46,6 @@ export class IdeaComponent implements OnInit {
   ideas: Page<Idea> | null = null;
   currentPage: number = 0;
   user: User | null = null;
-  filteredStatusMap: { [key: string]: string } = {};
   statusMap: { [key: string]: string } = {
     'APPROVED': 'Принята',
     'PENDING': 'Ожидает',
@@ -60,7 +59,7 @@ export class IdeaComponent implements OnInit {
   set selectedStatus(value) {
     this._selectedStatus = value;
     this.currentPage = 0;
-    this.updateIdeas(this._selectedStatus);
+    this.updateIdeas();
   }
 
   constructor(private ideaService: IdeaService,
@@ -76,33 +75,14 @@ export class IdeaComponent implements OnInit {
   ngOnInit() {
     this.loadUserData();
     this.updateIdeas();
-    this.filteredStatusMap = { ...this.statusMap };
-  }
-
-  filterStatuses(searchText: string) {
-    if (!searchText) {
-      this.filteredStatusMap = { ...this.statusMap };
-      return;
-    }
-
-    const search = searchText.toLowerCase();
-    this.filteredStatusMap = Object.entries(this.statusMap)
-      .filter(([key, value]) => 
-        key.toLowerCase().includes(search) || 
-        value.toLowerCase().includes(search)
-      )
-      .reduce((acc, [key, value]) => {
-        acc[key] = value;
-        return acc;
-      }, {} as { [key: string]: string });
   }
 
   loadUserData() {
     this.user = this.authService.getUser();
   }
 
-  updateIdeas(selStatus?: string | null) {
-    this.ideaService.getAllIdeas(this.currentPage, selStatus ).subscribe(ideas => {
+  updateIdeas() {
+    this.ideaService.getAllIdeas(this.currentPage, this.selectedStatus).subscribe(ideas => {
       if(ideas instanceof HttpErrorResponse) return;
       this.ideas = ideas;
     })
@@ -155,14 +135,6 @@ export class IdeaComponent implements OnInit {
         console.error('Error updating idea status:', error);
       }
     });
-  }
-
-
-  onStatusChange(event: string) {
-    this.currentPage = 0;
-    this.filterStatuses(event);
-    this._selectedStatus = event;
-    this.updateIdeas(event);
   }
 
   protected readonly faPlus = faPlus;
