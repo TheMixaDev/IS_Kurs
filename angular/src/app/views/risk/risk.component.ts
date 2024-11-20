@@ -108,7 +108,7 @@ export class RiskComponent implements OnInit {
       size: 'md'
     });
     modalRef.componentInstance.content = `Вы уверены, что хотите удалить риск "${risk.description}"?`;
-    modalRef.componentInstance.warning = `При удалении риска, он удалится у всех задач и тегов.`;
+    modalRef.componentInstance.warning = `При удалении риска, он удалится у всех задач.`;
     modalRef.result.then((result) => {
       if (result === 'delete') {
         this.riskSerive.deleteRisk(risk.id).subscribe({

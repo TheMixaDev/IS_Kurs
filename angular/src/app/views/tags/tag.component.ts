@@ -17,9 +17,11 @@ import { Tag } from "../../models/tag";
 import { TagService } from "../../services/server/tag.service";
 import { HttpErrorResponse } from "@angular/common/http";
 import { FormsModule } from "@angular/forms";
+import { ConfirmModalComponent } from "../../components/modal/confirm-modal.component";
+import { CreateTagModalComponent } from "./create-tag/create-tag-modal.component";
 
 @Component({
-  selector: 'app-status',
+  selector: 'app-tag',
   standalone: true,
   imports: [
     FaIconComponent,
@@ -70,42 +72,40 @@ export class TagComponent implements OnInit {
   }
 
   openCreateModal(){
-    // this.modalService.open(CreateRiskModalComponent, {
-    //   size: 'lg'
-    // });
-    
+    this.modalService.open(CreateTagModalComponent, {
+      size: 'lg'
+    });
   }
 
   openEditModal(tag: Tag){
-    // if (risk) {
-    //   const modalRef = this.modalService.open(CreateRiskModalComponent, {
-    //     size: 'lg'
-    //   });
-    //   modalRef.componentInstance.risk = risk;
-    // }
+    if (tag) {
+      const modalRef = this.modalService.open(CreateTagModalComponent, {
+        size: 'lg'
+      });
+      modalRef.componentInstance.tag = tag;
+    }
   }
 
   openDeleteModal(tag: Tag) {
-    // const modalRef = this.modalService.open(ConfirmModalComponent, {
-    //   size: 'md'
-    // });
-    // modalRef.componentInstance.content = `Вы уверены, что хотите удалить риск "${risk.description}"?`;
-    // modalRef.componentInstance.warning = `При удалении риска, он удалится у всех задач и тегов.`;
-    // modalRef.result.then((result) => {
-    //   if (result === 'delete') {
-    //     this.riskSerive.deleteRisk(risk.id).subscribe({
-    //       next: () => {
-    //         this.loadTopRisks();
-    //         this.loadRisks();
-    //         this.alertService.showAlert('success', 'Риск успешно удален');
-    //       },
-    //       error: (error) => {
-    //         this.alertService.showAlert('danger', 'Ошибка при удалении риска: ' + (error?.error?.message || "Неизвестная ошибка"));
-    //         console.error('Error deleting risk:', error);
-    //       }
-    //     });
-    //   }
-    // });
+    const modalRef = this.modalService.open(CreateTagModalComponent, {
+      size: 'md'
+    });
+    modalRef.componentInstance.content = `Вы уверены, что хотите удалить тег "${tag.name}"?`;
+    modalRef.componentInstance.warning = `При удалении риска, он удалится у всех задач.`;
+    modalRef.result.then((result) => {
+      if (result === 'delete') {
+        this.tagService.deleteTag(tag.id).subscribe({
+          next: () => {
+            this.updateTags();
+            this.alertService.showAlert('success', 'Тег успешно удален');
+          },
+          error: (error) => {
+            this.alertService.showAlert('danger', 'Ошибка при удалении тега: ' + (error?.error?.message || "Неизвестная ошибка"));
+            console.error('Error deleting tag:', error);
+          }
+        });
+      }
+    });
   }
 
 

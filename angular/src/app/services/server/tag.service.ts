@@ -4,6 +4,7 @@ import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {ApiService} from "./api.service";
 import {catchError} from "rxjs/operators";
 import {Tag} from "../../models/tag";
+import { TagDto } from "../../models/dto/tag-dto";
 
 @Injectable({
   providedIn: 'root'
@@ -22,11 +23,11 @@ export class TagService {
     return this.http.get<Tag[]>(`${this.apiService.apiUrl}/tags`, { headers: this.apiService.getHeaders() }).pipe(catchError(this.apiService.handleError));
   }
 
-  createTag(tag: Tag): Observable<Tag | HttpErrorResponse> {
+  createTag(tag: TagDto): Observable<Tag | HttpErrorResponse> {
     return this.http.post<Tag>(`${this.apiService.apiUrl}/tags`, tag, { headers: this.apiService.getHeaders() }).pipe(catchError(this.apiService.handleError));
   }
 
-  updateTag(id: number, updatedTag: Tag): Observable<Tag | HttpErrorResponse> {
+  updateTag(id: number, updatedTag: TagDto): Observable<Tag | HttpErrorResponse> {
     return this.http.put<Tag>(`${this.apiService.apiUrl}/tags/${id}`, updatedTag, { headers: this.apiService.getHeaders() }).pipe(catchError(this.apiService.handleError));
   }
 
