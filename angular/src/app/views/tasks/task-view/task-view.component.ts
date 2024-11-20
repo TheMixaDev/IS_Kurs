@@ -3,7 +3,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {Task, TaskPriority} from "../../../models/task";
 import {TaskService} from "../../../services/server/task.service";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
-import {faCheck, faCircle, faPen, faTrash, faUser} from "@fortawesome/free-solid-svg-icons";
+import {faCheck, faCircle, faPen, faPlus, faTimes, faTrash, faUser} from "@fortawesome/free-solid-svg-icons";
 import {PriorityIconPipe} from "../../../pipe/priority-icon.pipe";
 import {PriorityParserPipe} from "../../../pipe/priority-parser.pipe";
 import {UiDropdownComponent} from "../../../components/ui/ui-dropdown.component";
@@ -31,6 +31,8 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {TooltipBinding} from "../../../components/bindings/tooltip.binding";
 import {UiButtonComponent} from "../../../components/ui/ui-button.component";
 import {ConfirmModalComponent} from "../../../components/modal/confirm-modal.component";
+import {Tag} from "../../../models/tag";
+import {TagService} from "../../../services/server/tag.service";
 
 @Component({
   selector: 'app-task-view',
@@ -82,10 +84,15 @@ export class TaskViewComponent implements OnInit {
   statuses: { [key: number]: string } = {};
   statusesNative: Status[] | null = null;
 
+  tags: { [key: number]: string } = {};
+  tagsNative: Tag[] | null = null;
+  currentTags: Tag[] = [];
+
   _priorityWrapper: string | null = null;
   _implementerWrapper: string | null = null;
   _sprintWrapper: number | null = null;
   _statusWrapper: number | null = null;
+  _tagWrapper: number | null = null;
 
   get implementerWrapper(): string | null {
     return this._implementerWrapper;
@@ -163,6 +170,17 @@ export class TaskViewComponent implements OnInit {
     }
   }
 
+  get tagWrapper(): number | null {
+    return this._tagWrapper;
+  }
+  set tagWrapper(value: number | null) {
+    this._tagWrapper = value;
+    if(this.task) {
+      let selectedTag = this.tagsNative?.filter(t => t.id == value)[0] as Tag;
+      this.addTag(selectedTag);
+    }
+  }
+
   get priorityWrapper(): string | null {
     return this._priorityWrapper;
   }
@@ -184,6 +202,7 @@ export class TaskViewComponent implements OnInit {
               private statusService: StatusService,
               private roleService: RoleService,
               private riskService: RiskService,
+              private tagService: TagService,
               private modalService: NgbModal
               ) {
     this.authService.user$.subscribe(user => this.currentUser = user);
@@ -199,6 +218,7 @@ export class TaskViewComponent implements OnInit {
             if(!(task instanceof HttpErrorResponse)) {
               this.task = task as Task;
               this.loadRisks();
+              this.loadTags();
               this.updateOriginalTask(task as Task);
               this.implementerWrapper = this.task.implementer?.login || null;
               this.sprintWrapper = this.task.sprint?.id || null;
@@ -280,6 +300,30 @@ export class TaskViewComponent implements OnInit {
     })
   }
 
+  loadTags() {
+    this.tagService.getAllTags().subscribe(tags => {
+      if(tags instanceof HttpErrorResponse) return;
+      this.tagsNative = tags as Tag[];
+      this.updateAvailableTags();
+    })
+  }
+
+  updateAvailableTags() {
+    if(!this.task) return;
+    this.tagService.getTagsForTask(this.task.id).subscribe(tags => {
+      if (!(tags instanceof HttpErrorResponse)) {
+        this.currentTags = tags;
+        this.tags = this.tagsNative?.reduce((acc: any, tag) => {
+          acc[tag.id] = tag.name;
+          return acc;
+        }, {});
+        tags.forEach(tag => {
+          delete this.tags[tag.id];
+        })
+      }
+    })
+  }
+
   updateAvailableRisks() {
     this.riskService.getAllRisks(0, '').subscribe(risks => {
       if (risks && !(risks instanceof HttpErrorResponse)) {
@@ -345,6 +389,34 @@ export class TaskViewComponent implements OnInit {
       error: (error) => {
         this.alertService.showAlert('danger', 'Ошибка при откреплении риска от задачи: ' + (error?.error?.message || "Неизвестная ошибка"));
         console.error('Error deleting risk from task:', error);
+      }
+    });
+  }
+
+  addTag(tag: Tag) {
+    if (!this.task) return;
+    this.tagService.addTagToTask(this.task.id, tag.id).subscribe({
+      next: () => {
+        this.alertService.showAlert('success', 'Тег успешно добавлен к задаче');
+        this.updateAvailableTags();
+      },
+      error: (error) => {
+        this.alertService.showAlert('danger', 'Ошибка при добавлении тега к задаче: ' + (error?.error?.message || "Неизвестная ошибка"));
+        console.error('Error adding tag to task:', error);
+      }
+    });
+  }
+
+  deleteTag(tag: Tag) {
+    if (!this.task) return;
+    this.tagService.removeTagFromTask(this.task.id, tag.id).subscribe({
+      next: () => {
+        this.alertService.showAlert('success', 'Тег успешно откреплен от задачи');
+        this.updateAvailableTags();
+      },
+      error: (error) => {
+        this.alertService.showAlert('danger', 'Ошибка при откреплении тега от задачи: ' + (error?.error?.message || "Неизвестная ошибка"));
+        console.error('Error deleting tag from task:', error);
       }
     });
   }
@@ -484,4 +556,6 @@ export class TaskViewComponent implements OnInit {
   protected readonly faCheck = faCheck;
   protected readonly faUser = faUser;
   protected readonly faTrash = faTrash;
+  protected readonly faTimes = faTimes;
+  protected readonly faPlus = faPlus;
 }
