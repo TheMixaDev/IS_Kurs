@@ -40,22 +40,61 @@ export class TableComponent {
   }
 
 
-  changePage(newPage: number) {
+  changePage(newPage: number | string) {
+    if(typeof newPage === 'string') return;
+    newPage = Number(newPage);
     if (newPage >= 0 && newPage < this.pageInfo!.totalPages) {
       this.currentPage = newPage;
       this.pageChange.emit(this.currentPage);
     }
   }
 
-  get pages(): number[] {
+  addOne(page: number | string) : string {
+    if(typeof page === 'string') return page;
+    page = Number(page);
+    return (page + 1).toString();
+  }
+
+  get pages(): (number | string)[] {
     if (!this.pageInfo) {
       return [];
     }
-    const pageNumbers = [];
-    for (let i = 0; i < this.pageInfo.totalPages; i++) {
-      pageNumbers.push(i);
+
+    const totalPages = this.pageInfo.totalPages - 1;
+
+    if (totalPages <= 4) {
+      return Array.from({ length: totalPages + 1 }, (_, i) => i);
     }
-    return pageNumbers;
+
+    const currentPage = this.currentPage;
+    const pages: (number | string)[] = [];
+
+    pages.push(0);
+    if(currentPage + 1 > 2)
+      pages.push('...');
+
+    let start = currentPage;
+    let end = currentPage + 2;
+
+    if (start < 1) {
+      start = 1;
+      end = 2;
+    }
+    if (end >= totalPages) {
+      start = totalPages - 3;
+      end = totalPages;
+    }
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+
+    if(currentPage + 1 < totalPages - 2)
+      pages.push('...');
+    if(!pages.includes(totalPages))
+      pages.push(totalPages);
+
+    return pages;
   }
 
   protected readonly Math = Math;

@@ -42,10 +42,10 @@
           </button>
         </li>
         <li *ngFor="let page of pages">
-          <button (click)="changePage(page)"
+          <button (click)="page !== '...' ? changePage(page) : null"
                   [class.active]="currentPage === page"
                   class="pagination-button">
-            {{ page + 1}}
+            {{ addOne(page) }}
           </button>
         </li>
         <li>
