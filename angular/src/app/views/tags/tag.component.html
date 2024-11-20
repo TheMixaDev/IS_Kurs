@@ -34,4 +34,11 @@
       </td>
     </tr>
   }
+  @if (!tags || tags.length == 0) {
+    <tr table-row>
+      <td table-cell colspan="3" class="text-center bg-gray-50">
+        Нет данных
+      </td>
+    </tr>
+  }
 </app-table-component>

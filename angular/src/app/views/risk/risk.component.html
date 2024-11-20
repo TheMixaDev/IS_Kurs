@@ -12,6 +12,13 @@
             <td table-cell>{{topTenRisk.totalEstimatedLoss}}</td>
           </tr>
         }
+        @if(!topTenRisks || topTenRisks.length < 1) {
+          <tr table-row>
+            <td table-cell colspan="2" class="text-center bg-gray-50">
+              Нет данных
+            </td>
+          </tr>
+        }
       </app-table-component>
     </div>
 
@@ -75,7 +82,7 @@
       } @else {
         <app-table-component [columns]="['Описание', 'Вероятность', 'Потери']" [creationEnabled]="false">
           <tr table-row>
-            <td table-cell colspan="4" class="text-center bg-gray-50">
+            <td table-cell colspan="3" class="text-center bg-gray-50">
               Нет данных
             </td>
           </tr>

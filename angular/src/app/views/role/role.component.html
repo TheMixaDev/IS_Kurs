@@ -50,5 +50,11 @@
       </td>
     </tr>
   }
+  @if(!roles || roles.length < 1) {
+    <tr table-row>
+      <td table-cell colspan="3" class="text-center bg-gray-50">
+        Нет данных
+      </td>
+    </tr>
+  }
 </app-table-component>
-<!-- Сделать "Нет ролей" -->
