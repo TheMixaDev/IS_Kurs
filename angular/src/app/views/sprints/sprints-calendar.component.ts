@@ -11,6 +11,7 @@ import {CalendarService} from "../../services/server/calendar.service";
 import {Day} from "../../models/misc/day";
 import {MessageDto} from "../../models/dto/message-dto";
 import {HttpErrorResponse} from "@angular/common/http";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-sprints-calendar',
@@ -38,11 +39,13 @@ export class SprintsCalendarComponent implements AfterViewInit, OnInit {
   };
   sprints : SprintTeamDto[] = [];
   dayOffs : Day[] = [];
-  
+
   constructor(private sprintService : SprintService,
               private alertService: AlertService,
               private calendarService: CalendarService,
-              private cdRef: ChangeDetectorRef) {
+              private cdRef: ChangeDetectorRef,
+              private router: Router
+  ) {
     this.sprintService.sprint$.subscribe(() => {
       this.update();
     });
@@ -104,6 +107,7 @@ export class SprintsCalendarComponent implements AfterViewInit, OnInit {
         start: moment(sprint.startDate).toDate(),
         end: moment(sprint.endDate).add(1, 'days').toDate(),
         display: 'block',
+        url: `/tasks?sprintId=${sprint.sprintId}&sprintVersion=${sprint.majorVersion}`,
         backgroundColor: sprint.teamColor,
         allDay: true
       })
