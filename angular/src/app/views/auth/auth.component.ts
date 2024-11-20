@@ -33,7 +33,6 @@ export class AuthComponent implements OnInit {
     this.authService.login(loginRequest).subscribe({
       next: () => {
         this.alertService.showAlert('success', 'Успешная авторизация!');
-        this.router.navigate(['/']);
       },
       error: (error) => {
         this.sending = false;
