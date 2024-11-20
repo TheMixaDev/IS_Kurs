@@ -29,6 +29,8 @@ import {DatePipe} from "@angular/common";
 import {PriorityParserPipe} from "../../pipe/priority-parser.pipe";
 import {ActivatedRoute, Router} from "@angular/router";
 import {PriorityIconPipe} from "../../pipe/priority-icon.pipe";
+import {CreateTaskModalComponent} from "./create-task/create-task-modal.component";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-tasks',
@@ -98,7 +100,8 @@ export class TasksComponent implements OnInit {
     private sprintService: SprintService,
     private authService: AuthService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private modalService: NgbModal
   ) {
     this.authService.user$.subscribe(user => this.currentUser = user);
   }
@@ -191,6 +194,12 @@ export class TasksComponent implements OnInit {
         }
       })
     })
+  }
+
+  openCreateModal() {
+    const modalRef = this.modalService.open(CreateTaskModalComponent, {
+      size: 'lg'
+    });
   }
 
   goToUser($event: any, implementer: User) {
