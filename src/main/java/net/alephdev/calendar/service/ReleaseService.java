@@ -32,7 +32,7 @@ public class ReleaseService {
     public Release createRelease(ReleaseDto releaseDto) {
         Release release = new Release();
         Sprint sprint = sprintRepository.findById(releaseDto.getSprintId())
-                .orElseThrow(() -> new NoSuchElementException("Sprint not found"));
+                .orElseThrow(() -> new NoSuchElementException("Спринт не найден"));
 
         release.setVersion(releaseDto.getVersion());
         release.setReleaseDate(releaseDto.getReleaseDate());
@@ -43,11 +43,11 @@ public class ReleaseService {
 
     public Release updateRelease(Integer id, ReleaseDto updatedRelease) {
         Release release = releaseRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Release not found"));
+                .orElseThrow(() -> new NoSuchElementException("Релиз не найден"));
 
         if (updatedRelease.getSprintId() != null) {
             Sprint sprint = sprintRepository.findById(updatedRelease.getSprintId())
-                    .orElseThrow(() -> new NoSuchElementException("Sprint not found"));
+                    .orElseThrow(() -> new NoSuchElementException("Спринт не найден"));
             release.setSprint(sprint);
         }
 

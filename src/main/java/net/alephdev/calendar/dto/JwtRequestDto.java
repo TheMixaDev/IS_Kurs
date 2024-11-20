@@ -8,11 +8,11 @@ import jakarta.validation.constraints.Size;
 @Getter
 @AllArgsConstructor
 public class JwtRequestDto {
-    @NotBlank(message = "Username cannot be empty")
-    @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters")
+    @NotBlank(message = "Имя не должно быть пустое")
+    @Size(min = 3, max = 50, message = "Имя должно быть от 3 до 50 символов")
     private final String username;
 
-    @NotBlank(message = "Password cannot be empty")
-    @Size(min = 6, max = 100, message = "Password must be between 6 and 100 characters")
+    @NotBlank(message = "Пароль не должен быть пустой")
+    @Size(min = 6, max = 100, message = "Пароль должен быть от 6 до 100 символов")
     private final String password;
 }

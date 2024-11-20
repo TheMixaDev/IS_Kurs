@@ -29,7 +29,7 @@ public class CalendarController {
             return ResponseEntity.ok(new MessageDto(response));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new MessageDto("Unable to get calendar information"));
+                    .body(new MessageDto("Не удалось получить информацию для календаря"));
         }
     }
 

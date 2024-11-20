@@ -48,7 +48,7 @@ public class TeamController {
         return new ResponseEntity<>(team, HttpStatus.OK);
     }
 
-    @GetMapping("/load") // /api/teams/load?teamId=1&sprintId=1
+    @GetMapping("/load")
     public ResponseEntity<ObjectDto> getTeamLoad(
         @RequestParam Integer teamId,
         @RequestParam Integer sprintId

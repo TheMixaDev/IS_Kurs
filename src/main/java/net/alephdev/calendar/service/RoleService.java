@@ -34,7 +34,7 @@ public class RoleService {
 
     public Role updateRole(Integer id, Role updatedRole) {
         Role role = roleRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Role not found"));
+                .orElseThrow(() -> new NoSuchElementException("Роль не найдена"));
 
         role.setName(updatedRole.getName());
         role.setResponsibilities(updatedRole.getResponsibilities());
@@ -44,7 +44,7 @@ public class RoleService {
 
     public ResponseEntity<Void> deleteRole(Integer id) {
         if (id <= 1) {
-            throw new IllegalArgumentException("Cannot delete default role");
+            throw new IllegalArgumentException("Невозможно удалить специальную роль");
         }
         if (roleRepository.findById(id).isPresent()) {
             roleRepository.deleteById(id);
@@ -75,6 +75,6 @@ public class RoleService {
 
     public Role getRole(Integer id) {
         return roleRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Role not found"));
+                .orElseThrow(() -> new NoSuchElementException("Роль не найдена"));
     }
 }

@@ -34,7 +34,7 @@ public class TeamService {
 
     public Team updateTeam(Integer id, Team updatedTeam) {
         Team team = teamRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Team not found"));
+                .orElseThrow(() -> new NoSuchElementException("Команда не найдена"));
 
         team.setName(updatedTeam.getName());
         team.setColor(updatedTeam.getColor());

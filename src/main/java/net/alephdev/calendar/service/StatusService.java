@@ -27,7 +27,7 @@ public class StatusService {
 
     public Status updateStatus(Integer id, Status updatedStatus) {
         Status status = statusRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Status not found"));
+                .orElseThrow(() -> new NoSuchElementException("Статус не найден"));
 
         status.setName(updatedStatus.getName());
         status.setDescription(updatedStatus.getDescription());
@@ -37,7 +37,7 @@ public class StatusService {
 
     public ResponseEntity<Void> deleteStatus(Integer id) {
         if(id <= 1) {
-            throw new IllegalArgumentException("Cannot delete default status");
+            throw new IllegalArgumentException("Невозможно удалить стандартный статус");
         }
         if (statusRepository.findById(id).isPresent()) {
             statusRepository.deleteById(id);
@@ -49,6 +49,6 @@ public class StatusService {
 
     public Status getStatus(Integer statusId) {
         return statusRepository.findById(statusId)
-                .orElseThrow(() -> new NoSuchElementException("Status not found"));
+                .orElseThrow(() -> new NoSuchElementException("Статус не найден"));
     }
 }

@@ -1,6 +1,8 @@
 package net.alephdev.calendar.jwt;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -49,10 +51,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             } catch (ExpiredJwtException e) {
                 response.setStatus(HttpStatus.UNAUTHORIZED.value());
                 System.out.println("JWT Token has expired");
-            } catch (io.jsonwebtoken.security.SignatureException ex){
-                System.out.println("Invalid JWT signature");
-                response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            } catch (io.jsonwebtoken.MalformedJwtException ex){
+            } catch (SignatureException | MalformedJwtException e){
                 System.out.println("Invalid JWT signature");
                 response.setStatus(HttpStatus.UNAUTHORIZED.value());
             }
@@ -69,7 +68,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             } else {
                 response.setStatus(HttpStatus.UNAUTHORIZED.value());
-                response.getWriter().write("{\"error\": \"JWT token is invalid or expired\"}");
+                response.getWriter().write("{\"Ошибка\": \"JWT токен неверен или испорчен\"}");
             }
         }
         chain.doFilter(request, response);

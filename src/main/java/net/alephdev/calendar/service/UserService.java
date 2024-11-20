@@ -42,13 +42,13 @@ public class UserService {
 
     public User getUserByLogin(String login) {
         return userRepository.findById(login)
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Пользователь не найден"));
     }
 
     @Transactional
     public User register(UserDto userDto) {
         if (userRepository.findByLoginIgnoreCase(userDto.getLogin()).isPresent()) {
-            throw new IllegalArgumentException("User with this login already exists");
+            throw new IllegalArgumentException("Пользователь с таким логином уже зарегистрирован");
         }
 
         User user = User.builder()

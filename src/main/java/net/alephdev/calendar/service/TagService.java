@@ -35,7 +35,7 @@ public class TagService {
 
     public Tag updateTag(Integer id, Tag updatedTag) {
         Tag tag = tagRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Tag not found"));
+                .orElseThrow(() -> new NoSuchElementException("Тег не найден"));
 
         tag.setName(updatedTag.getName());
         tag.setDescription(updatedTag.getDescription());
@@ -53,7 +53,7 @@ public class TagService {
 
     public void addTagToTask(Task task, Tag tag, User user) {
         if(!taskService.canEditTask(user, task)) {
-            throw new IllegalArgumentException("You are not allowed to add tags to this task");
+            throw new IllegalArgumentException("Вы не можете добавлять тег к этой задаче");
         }
         TaskTag taskTag = new TaskTag();
         taskTag.setTask(task);
@@ -63,7 +63,7 @@ public class TagService {
 
     public void removeTagFromTask(Task task, Tag tag, User user) {
         if(!taskService.canEditTask(user, task)) {
-            throw new IllegalArgumentException("You are not allowed to remove tags from this task");
+            throw new IllegalArgumentException("Вы не можете удалять тег у этой задачи");
         }
         taskTagRepository.deleteByTaskAndTag(task, tag);
     }
@@ -75,6 +75,6 @@ public class TagService {
 
     public Tag getTag(Integer id) {
         return tagRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Tag not found"));
+                .orElseThrow(() -> new NoSuchElementException("Тег не найден"));
     }
 }

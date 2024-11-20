@@ -45,7 +45,7 @@ public class SprintService {
     public Sprint createSprint(SprintDto sprintDto) {
         Sprint sprint = new Sprint();
         Team team = teamRepository.findById(sprintDto.getTeamId())
-                .orElseThrow(() -> new NoSuchElementException("Team not found"));
+                .orElseThrow(() -> new NoSuchElementException("Команда не найдена"));
 
         sprint.setMajorVersion(sprintDto.getMajorVersion());
         sprint.setStartDate(sprintDto.getStartDate());
@@ -59,7 +59,7 @@ public class SprintService {
 
     public Sprint updateSprint(Integer id, SprintDto updatedSprint) {
         Sprint sprint = sprintRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Sprint not found"));
+                .orElseThrow(() -> new NoSuchElementException("Спринт не найден"));
 
         sprint.setMajorVersion(updatedSprint.getMajorVersion());
         sprint.setStartDate(updatedSprint.getStartDate());
@@ -69,7 +69,7 @@ public class SprintService {
 
         if(updatedSprint.getTeamId() != null) {
             Team team = teamRepository.findById(updatedSprint.getTeamId())
-                    .orElseThrow(() -> new NoSuchElementException("Team not found"));
+                    .orElseThrow(() -> new NoSuchElementException("Команда не найдена"));
             sprint.setTeam(team);
         }
 
@@ -86,7 +86,7 @@ public class SprintService {
 
     public List<Release> getSprintReleases(Integer sprintId) {
         Sprint sprint = sprintRepository.findById(sprintId)
-                .orElseThrow(() -> new NoSuchElementException("Sprint not found"));
+                .orElseThrow(() -> new NoSuchElementException("Спринт не найден"));
         return releaseRepository.findAllBySprint(sprint, Sort.by(Sort.Direction.ASC, "releaseDate"));
     }
 
@@ -104,6 +104,6 @@ public class SprintService {
 
     public Sprint getSprint(Integer sprintId) {
         return sprintRepository.findById(sprintId)
-                .orElseThrow(() -> new NoSuchElementException("Sprint not found"));
+                .orElseThrow(() -> new NoSuchElementException("Спринт не найден"));
     }
 }

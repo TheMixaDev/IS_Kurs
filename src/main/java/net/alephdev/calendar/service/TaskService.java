@@ -66,14 +66,14 @@ public class TaskService {
         task.setStoryPoints(taskDto.getStoryPoints());
         task.setPriorityEnum(taskDto.getPriorityEnum());
         task.setCreatedBy(user);
-        task.setStatus(statusRepository.findById(1).orElseThrow(() -> new NoSuchElementException("Default status not found")));
+        task.setStatus(statusRepository.findById(1).orElseThrow(() -> new NoSuchElementException("Стандартный статус не найден")));
 
         return taskRepository.save(task);
     }
 
     public Task updateTask(Integer id, TaskDto updatedTask) {
         Task task = taskRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Task not found"));
+                .orElseThrow(() -> new NoSuchElementException("Задача не найдена"));
 
         if(updatedTask.getName() != null)  task.setName(updatedTask.getName());
         if(updatedTask.getStoryPoints() != null) task.setStoryPoints(updatedTask.getStoryPoints());
@@ -83,7 +83,7 @@ public class TaskService {
 
     public Task getTask(Integer id) {
         return taskRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Task not found"));
+                .orElseThrow(() -> new NoSuchElementException("Задача не найдена"));
     }
 
 
@@ -118,7 +118,7 @@ public class TaskService {
     @Transactional
     public Task assignImplementer(Integer taskId, String implementerLogin) {
         Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new NoSuchElementException("Task not found"));
+                .orElseThrow(() -> new NoSuchElementException("Задача не найдена"));
         try {
             User implementer = userService.getUserByLogin(implementerLogin);
             task.setImplementer(implementer);
@@ -132,7 +132,7 @@ public class TaskService {
     @Transactional
     public Task updateStatus(Integer taskId, Integer statusId, User user) {
         Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new NoSuchElementException("Task not found"));
+                .orElseThrow(() -> new NoSuchElementException("Задача не найдена"));
 
         if (userService.isPrivileged(user)) {
             // Admin can set any status
@@ -146,10 +146,10 @@ public class TaskService {
             if (allowedStatus.isPresent()) {
                 task.setStatus(allowedStatus.get());
             } else {
-                throw new IllegalArgumentException("You are not allowed to set this status");
+                throw new IllegalArgumentException("Вы не можете ставить статус этой задаче");
             }
         } else {
-            throw new IllegalArgumentException("You are not authorized to update the task status");
+            throw new IllegalArgumentException("Вы не можете обновлять статус этой задаче");
         }
 
         return taskRepository.save(task);
@@ -158,11 +158,11 @@ public class TaskService {
     @Transactional
     public Task assignSprint(Integer taskId, Integer sprintId) {
         Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new NoSuchElementException("Task not found"));
+                .orElseThrow(() -> new NoSuchElementException("Задача не найдена"));
 
         try {
             Sprint sprint = sprintRepository.findById(sprintId)
-                    .orElseThrow(() -> new NoSuchElementException("Sprint not found"));
+                    .orElseThrow(() -> new NoSuchElementException("Спринт не найден"));
             task.setSprint(sprint);
         } catch (NoSuchElementException e) {
             task.setSprint(null);

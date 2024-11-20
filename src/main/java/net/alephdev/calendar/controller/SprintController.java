@@ -71,7 +71,6 @@ public class SprintController {
         return sprintService.deleteSprint(id);
     }
 
-    // Получение списка спринтов по году и команде с использованием функции
     @GetMapping("/filtered")
     public ResponseEntity<List<SprintTeamDto>> getSprintsByYearAndTeam(
             @RequestParam Integer year,

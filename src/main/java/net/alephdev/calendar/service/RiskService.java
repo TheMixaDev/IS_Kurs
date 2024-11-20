@@ -42,7 +42,7 @@ public class RiskService {
 
     public Risk updateRisk(Integer id, Risk updatedRisk) {
         Risk risk = riskRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Risk not found"));
+                .orElseThrow(() -> new NoSuchElementException("Риск не найден"));
 
         risk.setDescription(updatedRisk.getDescription());
         risk.setProbability(updatedRisk.getProbability());
@@ -53,7 +53,7 @@ public class RiskService {
 
     public Risk getRisk(Integer id) {
         return riskRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Risk not found"));
+                .orElseThrow(() -> new NoSuchElementException("Риск не найден"));
     }
 
     public ResponseEntity<Void> deleteRisk(Integer id) {
@@ -67,7 +67,7 @@ public class RiskService {
     // Добавление риска к задаче
     public void addRiskToTask(Task task, Risk risk, User user) {
         if(!taskService.canEditTask(user, task)) {
-            throw new IllegalArgumentException("You are not allowed to add risks to this task");
+            throw new IllegalArgumentException("Вы не можете добавлять риск к этой задаче");
         }
         TaskRisk taskRisk = new TaskRisk();
         taskRisk.setTask(task);
@@ -77,7 +77,7 @@ public class RiskService {
 
     public void removeRiskFromTask(Task task, Risk risk, User user) {
         if(!taskService.canEditTask(user, task)) {
-            throw new IllegalArgumentException("You are not allowed to remove risks from this task");
+            throw new IllegalArgumentException("Вы не можете удалять риск у этой задачи");
         }
         taskRiskRepository.deleteByTaskAndRisk(task, risk);
     }
@@ -87,10 +87,9 @@ public class RiskService {
         return taskRisks.stream().map(TaskRisk::getRisk).collect(Collectors.toList());
     }
 
-    // Добавление риска к идее
     public void addRiskToIdea(Idea idea, Risk risk, User user) {
         if(!ideaService.canEditIdea(idea, user)) {
-            throw new IllegalArgumentException("You are not allowed to add risks to this idea");
+            throw new IllegalArgumentException("Вы не можете добавлять риск к этой идее");
         }
         IdeaRisk ideaRisk = new IdeaRisk();
         ideaRisk.setIdea(idea);
@@ -100,7 +99,7 @@ public class RiskService {
 
     public void removeRiskFromIdea(Idea idea, Risk risk, User user) {
         if(!ideaService.canEditIdea(idea, user)) {
-            throw new IllegalArgumentException("You are not allowed to remove risks from this idea");
+            throw new IllegalArgumentException("Вы не можете добавлять риск у этой идеи");
         }
         ideaRiskRepository.deleteByIdeaAndRisk(idea, risk);
     }

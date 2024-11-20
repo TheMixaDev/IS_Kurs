@@ -40,13 +40,13 @@ public class IdeaService {
 
     public Idea updateIdea(Integer id, IdeaDto updatedIdea, User user) {
         Idea idea = ideaRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Idea not found"));
+                .orElseThrow(() -> new NoSuchElementException("Идея не найдена"));
 
         if(canEditIdea(idea, user)) {
             idea.setDescription(updatedIdea.getDescription());
             return ideaRepository.save(idea);
         }
-        throw new IllegalArgumentException("Not permitted to update idea");
+        throw new IllegalArgumentException("Недостаточно прав для редактирования идеи");
     }
 
 
@@ -62,6 +62,6 @@ public class IdeaService {
 
     public Idea getIdea(Integer ideaId) {
         return ideaRepository.findById(ideaId)
-                .orElseThrow(() -> new NoSuchElementException("Idea not found"));
+                .orElseThrow(() -> new NoSuchElementException("Идея не найдена"));
     }
 }
