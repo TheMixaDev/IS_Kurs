@@ -51,7 +51,7 @@ export class IdeaComponent implements OnInit {
     'PENDING': 'Ожидает',
     'REJECTED': 'Отклонена',
   };
-  _selectedStatus: string | null = null;
+  _selectedStatus: string | null = 'PENDING';
 
   get selectedStatus() {
     return this._selectedStatus;
