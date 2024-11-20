@@ -6,9 +6,7 @@ import {TableComponent} from "../../components/table/table.component";
 import {TableRowComponent} from "../../components/table/table-row.component";
 import {TooltipBinding} from "../../components/bindings/tooltip.binding";
 import {UiButtonComponent} from "../../components/ui/ui-button.component";
-import {faChartSimple, faEdit, faPlus, faStar, faTrash} from "@fortawesome/free-solid-svg-icons";
-import { RoleService } from "../../services/server/role.service";
-import { Role } from "../../models/role";
+import {faChartSimple, faEdit, faPlus, faSearch, faTrash} from "@fortawesome/free-solid-svg-icons";
 import { AlertService } from "../../services/alert.service";
 import { initFlowbite } from "flowbite";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
@@ -19,13 +17,13 @@ import { TopRiskDto } from "../../models/dto/top-risk-dto";
 import { HttpErrorResponse } from "@angular/common/http";
 import { Page } from "../../models/misc/page";
 import { UiDropdownComponent } from "../../components/ui/ui-dropdown.component";
+import { CreateRiskModalComponent } from "./create-risk/create-risk-modal.component";
 
 @Component({
-  selector: 'app-status',
+  selector: 'app-risk',
   standalone: true,
   imports: [
     FaIconComponent,
-    UiDropdownComponent,
     PrimaryButtonBinding,
     TableCellComponent,
     TableComponent,
@@ -40,10 +38,12 @@ export class RiskComponent implements OnInit {
   topTenRisks: TopRiskDto[] = [];
   allRisks: Page<Risk> | null = null;
   currentPage: number = 0;
+  search = '';
 
   constructor(private riskSerive: RiskService, private alertService: AlertService, private modalService: NgbModal) {
     this.riskSerive.risk$.subscribe(() => {
       this.loadTopRisks();
+      this.loadRisks();
     });
   }
 
@@ -71,9 +71,53 @@ export class RiskComponent implements OnInit {
     });
   }
 
+  searchChange() {
+    this.loadTopRisks();
+    this.loadRisks();
+  }
+
   changePage(page: number) {
     this.currentPage = page;
     this.loadRisks();
+  }
+
+  openCreateModal(){
+    this.modalService.open(CreateRiskModalComponent, {
+      size: 'lg'
+    });
+    
+  }
+
+  openEditModal(risk: Risk){
+    if (risk) {
+      const modalRef = this.modalService.open(CreateRiskModalComponent, {
+        size: 'lg'
+      });
+      modalRef.componentInstance.risk = risk;
+    }
+  }
+
+  openDeleteModal(risk: Risk) {
+    const modalRef = this.modalService.open(ConfirmModalComponent, {
+      size: 'md'
+    });
+    modalRef.componentInstance.content = `Вы уверены, что хотите удалить риск "${risk.description}"?`;
+    modalRef.componentInstance.warning = `При удалении риска, он удалится у всех задач и тегов.`;
+    modalRef.result.then((result) => {
+      if (result === 'delete') {
+        this.riskSerive.deleteRisk(risk.id).subscribe({
+          next: () => {
+            this.loadTopRisks();
+            this.loadRisks();
+            this.alertService.showAlert('success', 'Риск успешно удален');
+          },
+          error: (error) => {
+            this.alertService.showAlert('danger', 'Ошибка при удалении риска: ' + (error?.error?.message || "Неизвестная ошибка"));
+            console.error('Error deleting risk:', error);
+          }
+        });
+      }
+    });
   }
 
   
@@ -82,4 +126,5 @@ export class RiskComponent implements OnInit {
   protected readonly faEdit = faEdit;
   protected readonly faTrash = faTrash;
   protected readonly faChartSimple = faChartSimple;
+  protected readonly faSearch = faSearch;
 }

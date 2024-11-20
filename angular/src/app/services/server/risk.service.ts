@@ -6,6 +6,7 @@ import {catchError} from "rxjs/operators";
 import {Risk} from "../../models/risk";
 import {TopRiskDto} from "../../models/dto/top-risk-dto";
 import {Page} from "../../models/misc/page";
+import { RiskDto } from "../../models/dto/risk-dto";
 
 @Injectable({
   providedIn: 'root'
@@ -26,13 +27,13 @@ export class RiskService {
     );
   }
 
-  createRisk(risk: Risk): Observable<Risk | HttpErrorResponse> {
+  createRisk(risk: RiskDto): Observable<Risk | HttpErrorResponse> {
     return this.http.post<Risk>(`${this.apiService.apiUrl}/risks`, risk, { headers: this.apiService.getHeaders() }).pipe(
       catchError(this.apiService.handleError)
     );
   }
 
-  updateRisk(id: number, updatedRisk: Risk): Observable<Risk | HttpErrorResponse> {
+  updateRisk(id: number, updatedRisk: RiskDto): Observable<Risk | HttpErrorResponse> {
     return this.http.put<Risk>(`${this.apiService.apiUrl}/risks/${id}`, updatedRisk, { headers: this.apiService.getHeaders() }).pipe(
       catchError(this.apiService.handleError)
     );

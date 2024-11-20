@@ -17,7 +17,7 @@ import { ConfirmModalComponent } from "../../components/modal/confirm-modal.comp
 import {RoleStatusesModalComponent} from "./statuses/role-statuses-modal.component";
 
 @Component({
-  selector: 'app-status',
+  selector: 'app-role',
   standalone: true,
   imports: [
     FaIconComponent,

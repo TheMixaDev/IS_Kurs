@@ -1,21 +1,11 @@
 <div class="flex gap-4">
     <div class="w-1/3" >
       <h2 class="text-xl font-semibold mb-4">Топ 10 рисков</h2>
-      <app-table-component [columns]="['Описание', 'Потери']" [creationEnabled]="false">
+      <app-table-component [columns]="['Описание', 'Значение риска']" [creationEnabled]="false">
         @for(topTenRisk of topTenRisks; track topTenRisk.riskId) {
           <tr table-row>
             <td table-cell>{{topTenRisk.description}}</td>
             <td table-cell>{{topTenRisk.totalEstimatedLoss}}</td>
-            <td table-cell class="w-[174px]">
-              <ui-button color="warning" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-edit">
-                <fa-icon [icon]="faEdit" />
-              </ui-button>
-              <div id="tooltip-edit" tooltip>Изменить</div>
-              <ui-button color="danger" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-delete">
-                <fa-icon [icon]="faTrash"/>
-              </ui-button>
-              <div id="tooltip-delete" tooltip>Удалить</div>
-            </td>
           </tr>
         }
       </app-table-component>
@@ -25,13 +15,23 @@
       <h2 class="text-xl font-semibold mb-4">Все риски</h2>
       
       <div class="flex items-center justify-between mb-4">
-        <div class="w-[260px]">
-          <ui-dropdown>
-            Выберите риск
-          </ui-dropdown>
+        <div class="relative inline-block mx-auto mb-2 lg:mb-0 search-bar">
+          <div>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <fa-icon [icon]="faSearch"/>
+              </div>
+              <input type="text"
+                     [(ngModel)]="search"
+                     (blur)="searchChange()"
+                     (keydown.enter)="searchChange()"
+                     class="block w-full p-2 !pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                     placeholder="Поиск">
+            </div>
+          </div>
         </div>
         <div class="w-[260px]">
-          <button primary class="w-full">
+          <button primary class="w-full" (click)="openCreateModal()">
             <fa-icon [icon]="faPlus" />
             Создать риск
           </button>
@@ -40,7 +40,7 @@
   
       @if(allRisks) {
         <app-table-component 
-          [columns]="['Описание', 'Вероятность', 'Потери']" 
+          [columns]="['Описание', 'Вероятность', 'Потери', 'Действия']" 
           [pageInfo]="allRisks.page" 
           (pageChange)="changePage($event)">
           @for(risk of allRisks.content; track risk.id) {
@@ -49,11 +49,11 @@
               <td table-cell>{{risk.probability}}</td>
               <td table-cell>{{risk.estimatedLoss}}</td>
               <td table-cell class="w-[174px]">
-                <ui-button color="warning" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-edit">
+                <ui-button (click)="openEditModal(risk)" color="warning" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-edit">
                   <fa-icon [icon]="faEdit" />
                 </ui-button>
                 <div id="tooltip-edit" tooltip>Изменить</div>
-                <ui-button color="danger" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-delete">
+                <ui-button (click)="openDeleteModal(risk)" color="danger" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-delete">
                   <fa-icon [icon]="faTrash"/>
                 </ui-button>
                 <div id="tooltip-delete" tooltip>Удалить</div>

@@ -4,12 +4,8 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UiButtonComponent } from '../../../components/ui/ui-button.component';
 import { UiDropdownComponent } from '../../../components/ui/ui-dropdown.component';
-import { SprintService } from '../../../services/server/sprint.service';
-import { TeamService } from '../../../services/server/team.service';
 import { AlertService } from '../../../services/alert.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { SprintDto } from '../../../models/dto/sprint-dto';
-import { Team } from '../../../models/team';
 import {IconDefinition} from "@fortawesome/fontawesome-svg-core";
 import { Role } from '../../../models/role';
 import { RoleService } from '../../../services/server/role.service';
@@ -93,7 +89,7 @@ export class CreateRoleModalComponent implements OnInit {
   protected readonly faPen = faPen;
   protected readonly faClose = faClose;
 
-  get modalTitle() : string { return this.isEditing ? 'Редактирование роль' : 'Создание роли' }
+  get modalTitle() : string { return this.isEditing ? 'Редактирование роли' : 'Создание роли' }
   get submitButtonText() : string { return this.isEditing ? 'Обновить роль' : 'Создать роль' }
   get submitButtonIcon() : IconDefinition { return this.isEditing ? this.faPen : this.faPlus }
   get submitButtonColor() : string { return this.isEditing ? 'warning' : 'primary' }
