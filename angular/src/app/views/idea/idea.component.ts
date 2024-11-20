@@ -23,6 +23,7 @@ import {AlertService} from "../../services/alert.service";
 import {UserService} from "../../services/server/user.service";
 import { Status } from "../../models/status";
 import { StatusService } from "../../services/server/status.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-idea',
@@ -65,7 +66,9 @@ export class IdeaComponent implements OnInit {
   constructor(private ideaService: IdeaService,
               private authService: AuthService,
               private alertService: AlertService,
-              private modalService: NgbModal) {
+              private modalService: NgbModal,
+              private router: Router
+  ) {
     this.ideaService.idea$.subscribe(() => {
       this.updateIdeas();
     })
@@ -100,7 +103,10 @@ export class IdeaComponent implements OnInit {
     }).catch(() => {});
   }
 
-  editIdea(idea: Idea) {
+  editIdea($event: any, idea: Idea) {
+    if($event) {
+      $event.stopPropagation();
+    }
     const modalRef = this.modalService.open(CreateIdeaModalComponent, { size: 'lg' });
     modalRef.componentInstance.idea = idea;
     modalRef.result.then(() => {
@@ -108,16 +114,38 @@ export class IdeaComponent implements OnInit {
     }).catch(() => {});
   }
 
-  approveIdea(idea: Idea) {
+  approveIdea($event: any, idea: Idea) {
+    if($event) {
+      $event.stopPropagation();
+    }
     this.setIdeaStatus(idea, IdeaStatus.APPROVED);
   }
 
-  discardIdea(idea: Idea) {
+  discardIdea($event: any, idea: Idea) {
+    if($event) {
+      $event.stopPropagation();
+    }
     this.setIdeaStatus(idea, IdeaStatus.REJECTED);
   }
 
-  returnIdea(idea: Idea) {
+  returnIdea($event: any, idea: Idea) {
+    if($event) {
+      $event.stopPropagation();
+    }
     this.setIdeaStatus(idea, IdeaStatus.PENDING);
+  }
+
+  openTaskView($event: any, id: number) {
+    if($event) {
+      $event.stopPropagation();
+    }
+    this.router.navigate([`tasks/${id}`]);
+  }
+
+  openIdeaModal(idea: Idea) {
+    const modalRef = this.modalService.open(CreateIdeaModalComponent, { size: 'lg' });
+    modalRef.componentInstance.idea = idea;
+    modalRef.componentInstance.viewMode = true;
   }
 
   private setIdeaStatus(idea: Idea, status: IdeaStatus) {

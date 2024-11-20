@@ -1,14 +1,25 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import {Component, input, Input, OnInit} from '@angular/core';
+import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-import { faClose, faPlus, faPen } from '@fortawesome/free-solid-svg-icons';
+import {faClose, faPlus, faPen, faTrash} from '@fortawesome/free-solid-svg-icons';
 import { UiButtonComponent } from '../../../components/ui/ui-button.component';
 import { IdeaService } from '../../../services/server/idea.service';
 import { AlertService } from '../../../services/alert.service';
 import { IdeaDto } from '../../../models/dto/idea-dto';
 import { Idea } from '../../../models/idea';
 import {IconDefinition} from "@fortawesome/fontawesome-svg-core";
+import {NgIf} from "@angular/common";
+import {TableCellComponent} from "../../../components/table/table-cell.component";
+import {TableComponent} from "../../../components/table/table.component";
+import {TableRowComponent} from "../../../components/table/table-row.component";
+import {TooltipBinding} from "../../../components/bindings/tooltip.binding";
+import {AuthService} from "../../../services/server/auth.service";
+import {Risk} from "../../../models/risk";
+import {HttpErrorResponse} from "@angular/common/http";
+import {RiskService} from "../../../services/server/risk.service";
+import {AddRiskModalComponent} from "../../tasks/task-view/add-risk/add-risk-modal.component";
+import {ConfirmModalComponent} from "../../../components/modal/confirm-modal.component";
 
 @Component({
   selector: 'app-create-idea-modal',
@@ -17,12 +28,23 @@ import {IconDefinition} from "@fortawesome/fontawesome-svg-core";
     FaIconComponent,
     UiButtonComponent,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    NgIf,
+    TableCellComponent,
+    TableComponent,
+    TableRowComponent,
+    TooltipBinding
   ],
   templateUrl: 'create-idea-modal.component.html'
 })
 export class CreateIdeaModalComponent implements OnInit {
   @Input() idea: Idea | null = null;
+  @Input() viewMode = false;
+
+  currentUser = this.authService.getUser();
+
+  risks: Risk[] = [];
+  availableRisks: { [key: number]: string } = {};
 
   createForm = new FormGroup({
     description: new FormControl('', [Validators.required])
@@ -33,13 +55,17 @@ export class CreateIdeaModalComponent implements OnInit {
   constructor(
     private ideaService: IdeaService,
     private alertService: AlertService,
-    private activeModal: NgbActiveModal
+    private activeModal: NgbActiveModal,
+    private authService: AuthService,
+    private riskService: RiskService,
+    private modalService: NgbModal
   ) {}
 
   ngOnInit() {
     if (this.idea) {
       this.isEditing = true;
       this.createForm.patchValue(this.idea);
+      this.loadRisks();
     }
   }
 
@@ -72,6 +98,85 @@ export class CreateIdeaModalComponent implements OnInit {
       });
   }
 
+  loadRisks() {
+    if(!this.idea) return;
+    this.riskService.getRisksForIdea(this.idea.id).subscribe(risks => {
+      if (!(risks instanceof HttpErrorResponse)) {
+        this.risks = risks;
+        this.updateAvailableRisks();
+      }
+    })
+  }
+
+  updateAvailableRisks() {
+    this.riskService.getAllRisks(0, '').subscribe(risks => {
+      if (risks && !(risks instanceof HttpErrorResponse)) {
+        this.availableRisks = (risks.content as Risk[]).reduce((acc: any, risk) => {
+          acc[risk.id] = risk.description;
+          return acc;
+        }, {});
+        if(this.risks) {
+          this.risks.forEach(risk => {
+            delete this.availableRisks[risk.id];
+          })
+        }
+      }
+    })
+  }
+
+  openAddRiskModal() {
+    const modalRef = this.modalService.open(AddRiskModalComponent, {
+      size: 'md'
+    });
+    modalRef.componentInstance.dropdown = this.availableRisks;
+    modalRef.result.then(data => {
+      if(data as number) {
+        this.addRisk(data);
+      }
+    });
+  }
+
+  addRisk(riskId: number) {
+    if (!this.idea) return;
+
+    this.riskService.addRiskToIdea(this.idea.id, riskId).subscribe({
+      next: () => {
+        this.alertService.showAlert('success', 'Риск успешно добавлен к идее');
+        this.loadRisks();
+      },
+      error: (error) => {
+        this.alertService.showAlert('danger', 'Ошибка при добавлении риска к идее: ' + (error?.error?.message || "Неизвестная ошибка"));
+        console.error('Error adding risk to task:', error);
+      }
+    });
+  }
+
+  openDeleteModal(risk: any) {
+    const modalRef = this.modalService.open(ConfirmModalComponent, {
+      size: 'md'
+    });
+    modalRef.componentInstance.content = `Открепить риск "${risk.description}" от идеи?`;
+    modalRef.result.then((result) => {
+      if (result === 'delete') {
+        this.deleteRisk(risk.id);
+      }
+    });
+  }
+
+  deleteRisk(riskId: number) {
+    if (!this.idea) return;
+    this.riskService.removeRiskFromIdea(this.idea.id, riskId).subscribe({
+      next: () => {
+        this.alertService.showAlert('success', 'Риск успешно откреплен от идеи');
+        this.loadRisks();
+      },
+      error: (error) => {
+        this.alertService.showAlert('danger', 'Ошибка при откреплении риска от идеи: ' + (error?.error?.message || "Неизвестная ошибка"));
+        console.error('Error deleting risk from task:', error);
+      }
+    });
+  }
+
   closeModal() {
     this.activeModal.close();
   }
@@ -84,4 +189,6 @@ export class CreateIdeaModalComponent implements OnInit {
   get submitButtonText() : string { return this.isEditing ? 'Обновить идею' : 'Создать идею' }
   get submitButtonIcon() : IconDefinition { return this.isEditing ? this.faPen : this.faPlus }
   get submitButtonColor() : string { return this.isEditing ? 'warning' : 'primary' }
+
+  protected readonly faTrash = faTrash;
 }

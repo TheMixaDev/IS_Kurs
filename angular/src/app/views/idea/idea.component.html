@@ -22,7 +22,7 @@
 @if(ideas) {
   <app-table-component [columns]="['Автор', 'Описание', 'Статус', 'Действия']" [pageInfo]="ideas.page" (pageChange)="changePage($event)">
     @for(idea of ideas.content; track idea.id) {
-      <tr table-row>
+      <tr table-row (click)="openIdeaModal(idea)">
         <td table-cell class="w-[216px]">
           {{idea.authorLogin.login}}
         </td>
@@ -35,13 +35,13 @@
         <td table-cell class="w-[174px]">
           @if(idea.statusEnumId == IdeaStatus.PENDING) {
             @if(user?.role?.id == 1) { <!-- TODO норм проверка прав-->
-              <ui-button color="primary" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-approve" (click)="approveIdea(idea)">
+              <ui-button color="primary" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-approve" (click)="approveIdea($event, idea)">
                 <fa-icon [icon]="faCheck"/>
               </ui-button>
               <div id="tooltip-approve" tooltip>
                 Принять
               </div>
-              <ui-button color="danger" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-discard" (click)="discardIdea(idea)">
+              <ui-button color="danger" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-discard" (click)="discardIdea($event, idea)">
                 <fa-icon [icon]="faTimes"/>
               </ui-button>
               <div id="tooltip-discard" tooltip>
@@ -49,7 +49,7 @@
               </div>
             }
             @if (idea.authorLogin.login == user?.login) {
-              <ui-button color="warning" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-edit" (click)="editIdea(idea)">
+              <ui-button color="warning" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-edit" (click)="editIdea($event, idea)">
                 <fa-icon [icon]="faEdit"/>
               </ui-button>
               <div id="tooltip-edit" tooltip>
@@ -57,15 +57,15 @@
               </div>
             }
           }
-          @if(idea.statusEnumId == IdeaStatus.APPROVED) {
-            <ui-button color="primary" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-view">
+          @if(idea.statusEnumId == IdeaStatus.APPROVED && idea.task != null) {
+            <ui-button color="primary" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-view" (click)="openTaskView($event, idea.task.id)">
               <fa-icon [icon]="faEye"/>
             </ui-button>
             <div id="tooltip-view" tooltip>
               Просмотреть задачу
             </div>
-          } @else if(idea.statusEnumId == IdeaStatus.REJECTED && user?.role?.id == 1) {
-            <ui-button color="warning" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-return" (click)="returnIdea(idea)">
+          } @else if(idea.statusEnumId != IdeaStatus.PENDING && user?.role?.id == 1) {
+            <ui-button color="warning" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-return" (click)="returnIdea($event, idea)">
               <fa-icon [icon]="faRotateLeft"/>
             </ui-button>
             <div id="tooltip-return" tooltip>

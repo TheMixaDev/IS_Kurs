@@ -1,7 +1,7 @@
 <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
   <div class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
     <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-      {{ modalTitle }}
+      {{ viewMode ? 'Просмотр идеи' : modalTitle }}
     </h3>
     <button (click)="closeModal()" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
       <fa-icon [icon]="faClose" class="text-xl"/>
@@ -10,11 +10,50 @@
   <form [formGroup]="createForm" (ngSubmit)="handleSubmit()">
     <div class="grid gap-4 mb-4 sm:grid-cols-1">
       <div class="sm:col-span-1">
-        <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Описание</label>
-        <textarea formControlName="description" id="description" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Введите описание"></textarea>
+        @if(viewMode) {
+          {{ idea?.description }}
+        }
+        @else {
+          <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Описание</label>
+          <textarea formControlName="description" id="description" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Введите описание"></textarea>
+        }
       </div>
     </div>
-    <ui-button type="submit" [disabled]="!createForm.valid" [color]="submitButtonColor">
+    <app-table-component [columns]="['Описание', 'Вероятность', 'Потери', 'Действия']"
+                         [creationEnabled]="currentUser?.role?.id === 1"
+                         (creationClick)="openAddRiskModal()"
+                         *ngIf="isEditing"
+                         headerText="Риски"
+                         creationText="Добавить">
+      @if(risks.length > 0) {
+        @for(risk of risks; track risk.id) {
+          <tr table-row>
+            <td table-cell>{{risk.description}}</td>
+            <td table-cell>{{risk.probability}}</td>
+            <td table-cell>{{risk.estimatedLoss}}</td>
+            <td table-cell>
+              <ui-button
+                color="danger"
+                classExtension="!py-2 !px-3 ml-1"
+                data-tooltip-target="tooltip-delete"
+                (click)="openDeleteModal(risk)">
+                <fa-icon [icon]="faTrash"/>
+              </ui-button>
+              <div id="tooltip-delete" tooltip>
+                Удалить
+              </div>
+            </td>
+          </tr>
+        }
+      } @else {
+        <tr table-row>
+          <td table-cell colspan="4" class="text-center bg-gray-50">
+            Нет данных
+          </td>
+        </tr>
+      }
+    </app-table-component>
+    <ui-button type="submit" [disabled]="!createForm.valid" [color]="submitButtonColor" *ngIf="!viewMode">
       <fa-icon [icon]="submitButtonIcon"/>
       {{ submitButtonText }}
     </ui-button>
