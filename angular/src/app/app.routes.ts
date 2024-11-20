@@ -7,6 +7,7 @@ import {TeamsComponent} from "./views/teams/teams.component";
 import {UsersComponent} from "./views/users/users.component";
 import {TasksComponent} from "./views/tasks/tasks.component";
 import {RiskComponent} from "./views/risk/risk.component";
+import {TaskViewComponent} from "./views/tasks/task-view/task-view.component";
 
 export const routes: Routes = [
   {
@@ -16,6 +17,10 @@ export const routes: Routes = [
   {
     path: 'tasks',
     component: TasksComponent
+  },
+  {
+    path: 'tasks/:id',
+    component: TaskViewComponent
   },
   {
     path: 'idea',

@@ -27,7 +27,8 @@ import {Sprint} from "../../models/sprint";
 import {UiDropdownComponent} from "../../components/ui/ui-dropdown.component";
 import {DatePipe} from "@angular/common";
 import {PriorityParserPipe} from "../../pipe/priority-parser.pipe";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
+import {PriorityIconPipe} from "../../pipe/priority-icon.pipe";
 
 @Component({
   selector: 'app-tasks',
@@ -43,7 +44,8 @@ import {ActivatedRoute} from "@angular/router";
     TooltipBinding,
     UiDropdownComponent,
     DatePipe,
-    PriorityParserPipe
+    PriorityParserPipe,
+    PriorityIconPipe
   ],
   templateUrl: 'tasks.component.html'
 })
@@ -95,7 +97,8 @@ export class TasksComponent implements OnInit {
     private statusService: StatusService,
     private sprintService: SprintService,
     private authService: AuthService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {
     this.authService.user$.subscribe(user => this.currentUser = user);
   }
@@ -107,9 +110,9 @@ export class TasksComponent implements OnInit {
       this.loadCurrentUser();
       this.loadStatuses();
       if(sprintId && sprintVersion) {
-        this.goToSprint(sprintId, sprintVersion);
+        this.goToSprint(null, sprintId, sprintVersion);
       } else if(this.currentUser) {
-        this.goToUser(this.currentUser);
+        this.goToUser(null, this.currentUser);
       } else {
         this.updateTasks();
       }
@@ -190,20 +193,33 @@ export class TasksComponent implements OnInit {
     })
   }
 
-  goToUser(implementer: User) {
+  goToUser($event: any, implementer: User) {
+    if($event) {
+      $event.stopPropagation();
+    }
     this.loadUsers(implementer.login)?.then(() => {
       this.selectedImplementerLogin = implementer.login;
     });
   }
 
-  goToSprint(sprintId: number, sprintVersion: string) {
+  goToSprint($event: any, sprintId: number, sprintVersion: string) {
+    if($event) {
+      $event.stopPropagation();
+    }
     this.loadSprints(sprintVersion)?.then(() => {
       this.selectedSprintId = sprintId;
     });
   }
 
-  goToStatus(status: Status) {
+  goToStatus($event: any, status: Status) {
+    if($event) {
+      $event.stopPropagation();
+    }
     this.selectedStatusId = status.id;
+  }
+
+  goToTask(task: Task) {
+    this.router.navigate([`tasks/${task.id}`]);
   }
 
   protected readonly faPlus = faPlus;

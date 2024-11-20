@@ -1,0 +1,344 @@
+import {Component, ElementRef, OnInit, ViewChild} from "@angular/core";
+import {ActivatedRoute} from "@angular/router";
+import {Task, TaskPriority} from "../../../models/task";
+import {TaskService} from "../../../services/server/task.service";
+import {FaIconComponent} from "@fortawesome/angular-fontawesome";
+import {faCheck, faCircle, faPen, faUser} from "@fortawesome/free-solid-svg-icons";
+import {PriorityIconPipe} from "../../../pipe/priority-icon.pipe";
+import {PriorityParserPipe} from "../../../pipe/priority-parser.pipe";
+import {UiDropdownComponent} from "../../../components/ui/ui-dropdown.component";
+import {FormsModule} from "@angular/forms";
+import {Page} from "../../../models/misc/page";
+import {User} from "../../../models/user";
+import {UserService} from "../../../services/server/user.service";
+import {HttpErrorResponse} from "@angular/common/http";
+import {Sprint} from "../../../models/sprint";
+import {SprintService} from "../../../services/server/sprint.service";
+import {Status} from "../../../models/status";
+import {StatusService} from "../../../services/server/status.service";
+import {AuthService} from "../../../services/server/auth.service";
+import {RoleService} from "../../../services/server/role.service";
+import {AlertService} from "../../../services/alert.service";
+import {NgIf} from "@angular/common";
+import {TaskDto} from "../../../models/dto/task-dto";
+
+@Component({
+  selector: 'app-task-view',
+  standalone: true,
+  imports: [
+    FaIconComponent,
+    PriorityIconPipe,
+    PriorityParserPipe,
+    UiDropdownComponent,
+    FormsModule,
+    NgIf
+  ],
+  templateUrl: 'task-view.component.html'
+})
+export class TaskViewComponent implements OnInit {
+  taskId: number | null = null;
+  originalTask: Task | null = null;
+  task: Task | null = null;
+  currentUser: User | null = null;
+
+  priorityMap: { [key: string]: string } = {
+    'LOW': 'Низкий',
+    'MEDIUM': 'Средний',
+    'CRITICAL': 'Критичный',
+  };
+
+  editingStoryPoints = false;
+  @ViewChild('storyPointsInput') storyPointsInput?: ElementRef;
+
+  users: { [key: string]: string } = {};
+  usersLoad: boolean = false;
+  usersNative: Page<User> | null = null;
+
+  sprints: { [key: number]: string } = {};
+  sprintsLoad: boolean = false;
+  sprintsNative: Page<Sprint> | null = null;
+
+  statuses: { [key: number]: string } = {};
+  statusesNative: Status[] | null = null;
+
+  _priorityWrapper: string | null = null;
+  _implementerWrapper: string | null = null;
+  _sprintWrapper: number | null = null;
+  _statusWrapper: number | null = null;
+
+  get implementerWrapper(): string | null {
+    return this._implementerWrapper;
+  }
+  set implementerWrapper(value: string | null) {
+    this._implementerWrapper = value;
+    if(value == null || value.length < 1) {
+      if(this.task) {
+        this.task.implementer = null;
+        this.updateImplementer();
+      }
+      return;
+    }
+    if(Object.keys(this.users).includes(value as string) && this.task) {
+      this.task.implementer = this.usersNative?.content.filter(u => u.login == value)[0] || null;
+      this.updateImplementer();
+    } else if(this.task) {
+      this.loadUsers(value as string)?.then(() => {
+        if(this.task) {
+          this.task.implementer = this.usersNative?.content.filter(u => u.login == value)[0] || null;
+          this.updateImplementer();
+        }
+      });
+    }
+  }
+
+  get sprintWrapper(): number | null {
+    return this._sprintWrapper;
+  }
+  set sprintWrapper(value: number | null) {
+    this._sprintWrapper = value;
+    if(value == null || value < 1) {
+      if(this.task) {
+        this.task.sprint = null;
+        this.updateSprint();
+      }
+      return;
+    }
+    for(let sprintId of Object.keys(this.sprints)) {
+      let sprint = this.sprints[parseInt(sprintId)];
+      if(sprint == value.toString()) {
+        if(this.task) {
+          this.task.sprint = this.sprintsNative?.content.filter(s => s.id == parseInt(sprintId))[0] || null;
+          this.updateSprint();
+        }
+        return;
+      }
+    }
+    if(this.task) {
+      this.sprintService.getSprint(value).subscribe(sprint => {
+        if(!(sprint instanceof HttpErrorResponse)) {
+          if(this.task) {
+            this.task.sprint = sprint as Sprint;
+            this.updateSprint();
+          }
+          this.loadSprints(sprint.majorVersion)?.then(() => {
+            /*if(this.task) {
+              this.task.sprint = this.sprintsNative?.content.filter(s => s.id == value)[0] || null;
+              // TODO ? DEBUG THROTTLING
+            }*/
+          });
+        }
+      })
+    }
+  }
+
+  get statusWrapper(): number | null {
+    return this._statusWrapper;
+  }
+  set statusWrapper(value: number | null) {
+    this._statusWrapper = value;
+    if(this.task) {
+      this.task.status = this.statusesNative?.filter(s => s.id == value)[0] as Status;
+      this.updateStatus();
+    }
+  }
+
+  get priorityWrapper(): string | null {
+    return this._priorityWrapper;
+  }
+  set priorityWrapper(value: string) {
+    this._priorityWrapper = value;
+    if(this.task) {
+      this.task.priorityEnum = value as TaskPriority;
+      this.updatePriority();
+    }
+  }
+
+  constructor(private route: ActivatedRoute,
+              private alertService: AlertService,
+              private authService: AuthService,
+              private taskService: TaskService,
+              private userService: UserService,
+              private sprintService: SprintService,
+              private statusService: StatusService,
+              private roleService: RoleService
+              ) {
+    this.authService.user$.subscribe(user => this.currentUser = user);
+  }
+
+  ngOnInit() {
+    this.currentUser = this.authService.getUser();
+    this.route.paramMap.subscribe(params => {
+      if(params.get('id') as string) {
+        this.taskId = parseInt(params.get('id') as string) || null;
+        if(this.taskId) {
+          this.taskService.getTask(this.taskId).subscribe(task => {
+            if(!(task instanceof HttpErrorResponse)) {
+              this.task = task as Task;
+              this.updateOriginalTask(task as Task);
+              this.implementerWrapper = this.task.implementer?.login || null;
+              this.sprintWrapper = this.task.sprint?.id || null;
+              this.priorityWrapper = this.task.priorityEnum;
+              this.loadStatuses().then(() => {
+                this.statusWrapper = task.status.id;
+              });
+            }
+          });
+        }
+        console.log('Task ID:', this.taskId);
+      }
+    });
+  }
+
+  loadUsers(login: string) : Promise<void> | null {
+    if(!login || login.length < 1) {
+      this.users = {};
+      return null;
+    }
+    this.usersLoad = true;
+    return new Promise(resolve => {
+      this.userService.getAllUsers(0, login).subscribe(users => {
+        this.usersLoad = false;
+        if(!(users instanceof HttpErrorResponse)) {
+          this.usersNative = users;
+          this.users = (users.content as User[]).reduce((acc: any, user) => {
+            acc[user.login] = `${user.firstName} ${user.lastName}`;
+            return acc;
+          }, {});
+          resolve();
+        }
+      })
+    });
+  }
+
+  loadSprints(sprint: string) : Promise<void> | null  {
+    if(!sprint || sprint.length < 1) {
+      this.sprints = {};
+      return null;
+    }
+    this.sprintsLoad = true;
+    return new Promise(resolve => {
+      this.sprintService.getAllSprints(0, sprint).subscribe(sprints => {
+        this.sprintsLoad = false;
+        if(!(sprints instanceof HttpErrorResponse)) {
+          this.sprintsNative = sprints;
+          this.sprints = (sprints.content as Sprint[]).reduce((acc: any, sprint) => {
+            acc[sprint.id] = sprint.majorVersion;
+            return acc;
+          }, {})
+          resolve();
+        }
+      })
+    })
+  }
+
+  loadStatuses() : Promise<void> {
+    return new Promise(resolve => {
+      if(this.currentUser?.role?.id == 1) {
+        this.statusService.getAllStatuses().subscribe(statuses => {
+          this.parseStatuses(statuses, resolve);
+        });
+      } else if (this.currentUser && this.currentUser.role && this.currentUser.role.id) {
+        this.roleService.getRoleStatuses(this.currentUser.role.id).subscribe(statuses => {
+          this.parseStatuses(statuses, resolve);
+        });
+      }
+    })
+  }
+
+  parseStatuses(statuses : Status[] | HttpErrorResponse, resolve: () => void) {
+    if(!(statuses instanceof HttpErrorResponse)) {
+      this.statusesNative = statuses;
+      this.statuses = (statuses as Status[]).reduce((acc: any, status) => {
+        acc[status.id] = status.name;
+        return acc;
+      }, {})
+      resolve();
+    }
+  }
+
+  assignMyself() {
+    if(this.task) {
+      this.task.implementer = this.currentUser;
+      this.updateImplementer();
+      this.implementerWrapper = this.currentUser?.login || null;
+    }
+  }
+
+  private updateImplementer() {
+    if(this.task && this.originalTask &&
+      (
+        this.task.implementer?.login != this.originalTask.implementer?.login ||
+        (this.task.implementer == null && this.originalTask.implementer != null) ||
+        (this.task.implementer != null && this.originalTask.implementer == null)
+      )
+    ) {
+      let implementer = this.task.implementer?.login || "";
+      this.taskService.assignImplementer(this.task.id, implementer).subscribe(() => {
+        this.alertService.showAlert('success', 'Исполнитель обновлен');
+        this.updateOriginalTask(this.task as Task);
+      });
+    }
+  }
+
+  updateSprint() {
+    if(this.task && this.originalTask &&
+      (
+        this.task.sprint?.id != this.originalTask.sprint?.id ||
+        (this.task.sprint == null && this.originalTask.sprint != null) ||
+        (this.task.sprint != null && this.originalTask.sprint == null)
+      )
+    ) {
+      let sprint = this.task.sprint?.id || 0;
+      this.taskService.assignSprintToTask(this.task.id, sprint).subscribe(() => {
+        this.alertService.showAlert('success', 'Спринт обновлен');
+        this.updateOriginalTask(this.task as Task);
+      });
+    }
+  }
+
+  updateStatus() {
+    if(this.task && this.originalTask && this.task.status.id != this.originalTask.status.id) {
+      // @ts-ignore
+      this.taskService.updateTaskStatus(this.task.id, this.task.status.id).subscribe(() => {
+        this.alertService.showAlert('success', 'Статус обновлен');
+        this.updateOriginalTask(this.task as Task);
+      });
+    }
+  }
+
+  editStoryPoints() {
+    this.editingStoryPoints = true;
+    setTimeout(() => {
+      this.storyPointsInput?.nativeElement.focus();
+      this.storyPointsInput?.nativeElement.select();
+    }, 0);
+  }
+
+  saveStoryPoints() {
+    this.editingStoryPoints = false;
+    if(this.task && this.originalTask && this.task.storyPoints != this.originalTask.storyPoints) {
+      this.taskService.updateTask(this.task.id, { storyPoints: this.task.storyPoints || 0 } as TaskDto).subscribe(() => {
+        this.alertService.showAlert('success', 'Story Points обновлены');
+        this.updateOriginalTask(this.task as Task);
+      })
+    }
+  }
+
+  updatePriority() {
+    if(this.task && this.originalTask && this.task.priorityEnum != this.originalTask.priorityEnum) {
+      this.taskService.updateTask(this.task.id, { priorityEnum: this.task.priorityEnum } as TaskDto).subscribe(() => {
+        this.alertService.showAlert('success', 'Приоритет обновлен');
+        this.updateOriginalTask(this.task as Task);
+      })
+    }
+  }
+
+  updateOriginalTask(task: Task) {
+    this.originalTask = JSON.parse(JSON.stringify(task));
+  }
+
+  protected readonly faPen = faPen;
+  protected readonly faCircle = faCircle;
+  protected readonly faCheck = faCheck;
+  protected readonly faUser = faUser;
+}

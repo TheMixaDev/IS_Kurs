@@ -72,6 +72,12 @@ public class TaskController {
         return taskService.getAllTasks(page);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Task> getTask(@PathVariable Integer id) {
+        Task task = taskService.getTask(id);
+        return new ResponseEntity<>(task, HttpStatus.OK);
+    }
+
     @PostMapping
     public ResponseEntity<Task> createTask(@RequestBody TaskDto task, @CurrentUser User user) {
         if (taskService.canCreateTask(user)) {

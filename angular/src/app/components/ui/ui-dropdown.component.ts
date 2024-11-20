@@ -18,6 +18,18 @@ import {faSearch} from "@fortawesome/free-solid-svg-icons";
   selector: 'ui-dropdown',
   standalone: true,
   templateUrl: './ui-dropdown.component.html',
+  styles: `
+    .hidden-dropdown {
+      height: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+      margin-bottom: 0;
+      margin-top: 0;
+      opacity: 0!important;
+      color: transparent;
+      cursor: default;
+    }
+  `,
   imports: [
     FormsModule,
     NgForOf,
@@ -39,6 +51,8 @@ export class UiDropdownComponent implements ControlValueAccessor, OnInit {
   @Input() resetValue: any = null;
   @Input() searchOnly = false;
   @Input() searchInProgress = true;
+  @Input() buttonHidden = false;
+  @Input() searchHidden = false;
   @Output() modelValueChange = new EventEmitter<any>();
   @Output() searchChange = new EventEmitter<string>();
   @Output() changed = new EventEmitter<void>();
@@ -115,5 +129,11 @@ export class UiDropdownComponent implements ControlValueAccessor, OnInit {
 
   searchChangeEmit($event: any) {
     this.searchChange.emit(this.search);
+  }
+
+  triggerSelector() {
+    setTimeout(() => {
+      this.showSelector = !this.showSelector;
+    }, 0);
   }
 }

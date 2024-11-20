@@ -1,5 +1,6 @@
 package net.alephdev.calendar.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import net.alephdev.calendar.dto.TaskDto;
@@ -74,9 +75,9 @@ public class TaskService {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Task not found"));
 
-        task.setName(updatedTask.getName());
-        task.setStoryPoints(updatedTask.getStoryPoints());
-        task.setPriorityEnum(updatedTask.getPriorityEnum());
+        if(updatedTask.getName() != null)  task.setName(updatedTask.getName());
+        if(updatedTask.getStoryPoints() != null) task.setStoryPoints(updatedTask.getStoryPoints());
+        if(updatedTask.getPriorityEnum() != null) task.setPriorityEnum(updatedTask.getPriorityEnum());
         return taskRepository.save(task);
     }
 
@@ -118,9 +119,12 @@ public class TaskService {
     public Task assignImplementer(Integer taskId, String implementerLogin) {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new NoSuchElementException("Task not found"));
-
-        User implementer = userService.getUserByLogin(implementerLogin);
-        task.setImplementer(implementer);
+        try {
+            User implementer = userService.getUserByLogin(implementerLogin);
+            task.setImplementer(implementer);
+        } catch (EntityNotFoundException e) {
+            task.setImplementer(null);
+        }
 
         return taskRepository.save(task);
     }
@@ -156,10 +160,14 @@ public class TaskService {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new NoSuchElementException("Task not found"));
 
-        Sprint sprint = sprintRepository.findById(sprintId)
-                .orElseThrow(() -> new NoSuchElementException("Sprint not found"));
+        try {
+            Sprint sprint = sprintRepository.findById(sprintId)
+                    .orElseThrow(() -> new NoSuchElementException("Sprint not found"));
+            task.setSprint(sprint);
+        } catch (NoSuchElementException e) {
+            task.setSprint(null);
+        }
 
-        task.setSprint(sprint);
         return taskRepository.save(task);
     }
 }

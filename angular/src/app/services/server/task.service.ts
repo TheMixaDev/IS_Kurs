@@ -22,6 +22,10 @@ export class TaskService {
     return this.http.get<Page<Task>>(`${this.apiService.apiUrl}/tasks`, { params, headers: this.apiService.getHeaders() }).pipe(catchError(this.apiService.handleError));
   }
 
+  getTask(id: number) : Observable<Task | HttpErrorResponse>{
+    return this.http.get<Task>(`${this.apiService.apiUrl}/tasks/${id}`, { headers: this.apiService.getHeaders() }).pipe(catchError(this.apiService.handleError));
+  }
+
 
   createTask(taskDto: TaskDto): Observable<Task | HttpErrorResponse> {
     return this.http.post<Task>(`${this.apiService.apiUrl}/tasks`, taskDto, { headers: this.apiService.getHeaders() }).pipe(catchError(this.apiService.handleError));
