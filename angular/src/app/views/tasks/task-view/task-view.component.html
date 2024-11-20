@@ -2,10 +2,18 @@
   <section class="">
     <div class="items-center lg:flex">
       <div class="py-2 px-4 w-[672px] lg:py-4 align-self-start">
-        <h2 class="mb-2 text-xl font-semibold leading-none text-gray-900 md:text-2xl dark:text-white">
+        <h1 class="mb-2 text-xl font-semibold leading-none text-gray-900 md:text-2xl dark:text-white">
           <fa-icon [icon]="(task.priorityEnum | priorityIcon).icon" [style.color]="(task.priorityEnum | priorityIcon).color"/>
           Задача № {{ task.id }}
-        </h2>
+
+          <ui-button
+            color="danger"
+            classExtension="!py-2 !px-3 ml-1 delete-button"
+            data-tooltip-target="tooltip-delete"
+            (click)="openDeleteTaskModal()">
+            <fa-icon [icon]="faTrash"/>
+          </ui-button>
+        </h1>
         <dl class="flex items-center space-x-6">
           <div class="w-1/2">
             <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">Создатель</dt>
@@ -118,8 +126,22 @@
           </div>
         </dl>
         <dl>
-          <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">Информация</dt>
-          <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">{{ task.name }}</dd>
+          <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">
+            Информация
+            <fa-icon [icon]="faPen" [style.color]="'orange'" class="cursor-pointer" *ngIf="!editingName" (click)="editName()"/>
+            <fa-icon [icon]="faCheck" [style.color]="'green'" class="cursor-pointer" *ngIf="editingName" (click)="saveName()"/>
+          </dt>
+          <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">
+            @if(editingName) {
+              <textarea
+                #nameInput
+                class="text-black m-0 py-0 px-0 bg-transparent border-0 w-full min-h-[300px]"
+                type="text"
+                [(ngModel)]="task.name"></textarea>
+            } @else {
+              {{ task.name }}
+            }
+          </dd>
         </dl>
       </div>
       <div class="w-[672px] align-self-start">

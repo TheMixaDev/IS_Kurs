@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild} from "@angular/core";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {Task, TaskPriority} from "../../../models/task";
 import {TaskService} from "../../../services/server/task.service";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
@@ -26,7 +26,6 @@ import {TableRowComponent} from "../../../components/table/table-row.component";
 import {TableCellComponent} from "../../../components/table/table-cell.component";
 import {Risk} from "../../../models/risk";
 import {RiskService} from "../../../services/server/risk.service";
-import {AddStatusModalComponent} from "../../role/statuses/add-status/add-status-modal.component";
 import {AddRiskModalComponent} from "./add-risk/add-risk-modal.component";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {TooltipBinding} from "../../../components/bindings/tooltip.binding";
@@ -65,6 +64,9 @@ export class TaskViewComponent implements OnInit {
 
   editingStoryPoints = false;
   @ViewChild('storyPointsInput') storyPointsInput?: ElementRef;
+
+  editingName = false;
+  @ViewChild('nameInput') nameInput?: ElementRef;
 
   risks: Risk[] = [];
   availableRisks: { [key: number]: string } = {};
@@ -173,6 +175,7 @@ export class TaskViewComponent implements OnInit {
   }
 
   constructor(private route: ActivatedRoute,
+              private router: Router,
               private alertService: AlertService,
               private authService: AuthService,
               private taskService: TaskService,
@@ -425,6 +428,24 @@ export class TaskViewComponent implements OnInit {
     }
   }
 
+  editName() {
+    this.editingName = true;
+    setTimeout(() => {
+      this.nameInput?.nativeElement.focus();
+      this.nameInput?.nativeElement.select();
+    }, 0);
+  }
+
+  saveName() {
+    this.editingName = false;
+    if(this.task && this.originalTask && this.task.name != this.originalTask.name) {
+      this.taskService.updateTask(this.task.id, { name: this.task.name } as TaskDto).subscribe(() => {
+        this.alertService.showAlert('success', 'Информация обновлена');
+        this.updateOriginalTask(this.task as Task);
+      })
+    }
+  }
+
   updatePriority() {
     if(this.task && this.originalTask && this.task.priorityEnum != this.originalTask.priorityEnum) {
       this.taskService.updateTask(this.task.id, { priorityEnum: this.task.priorityEnum } as TaskDto).subscribe(() => {
@@ -436,6 +457,26 @@ export class TaskViewComponent implements OnInit {
 
   updateOriginalTask(task: Task) {
     this.originalTask = JSON.parse(JSON.stringify(task));
+  }
+
+  openDeleteTaskModal() {
+    const modal = this.modalService.open(ConfirmModalComponent);
+    modal.componentInstance.message = 'Вы действительно хотите удалить задачу № ' + this.task?.id + '?';
+    modal.componentInstance.warning = 'Вся информация, связанная с задачей, будет утеряна.';
+    modal.result.then((result) => {
+      if (result === 'delete') {
+        this.deleteTask();
+      }
+    });
+  }
+
+  deleteTask() {
+    if(this.task) {
+      this.taskService.deleteTask(this.task.id).subscribe(() => {
+        this.alertService.showAlert('success', 'Задача удалена');
+        this.router.navigate(['tasks']);
+      });
+    }
   }
 
   protected readonly faPen = faPen;

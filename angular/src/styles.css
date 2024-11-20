@@ -20,3 +20,7 @@
     @apply mr-2 mb-0
   }
 }
+
+.delete-button {
+  transform: translate(0, -4px);
+}
