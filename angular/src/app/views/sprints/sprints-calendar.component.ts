@@ -135,6 +135,11 @@ export class SprintsCalendarComponent implements AfterViewInit, OnInit {
         let currentDate = moment(`${year}-01-01`, 'YYYY-MM-DD');
         for(let i of data as string) {
           if(i == '1' || i == '2') {
+            let date = currentDate.toDate();
+            let now = new Date();
+            if(date.getUTCDate() == now.getUTCDate() && date.getUTCMonth() == now.getUTCMonth() && date.getUTCFullYear() == now.getUTCFullYear()) {
+                continue;
+            }
             result.push(new Day(currentDate.toDate(), i == '1'));
           }
           currentDate = currentDate.add(1, 'day');
