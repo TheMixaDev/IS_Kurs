@@ -3,7 +3,16 @@ import {TableComponent} from "../../components/table/table.component";
 import {DatePipe, NgClass, NgForOf} from "@angular/common";
 import {UiButtonComponent} from "../../components/ui/ui-button.component";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
-import {faCircle, faPencil, faPlus, faSearch, faTrash, faWarning} from "@fortawesome/free-solid-svg-icons";
+import {
+  faCircle,
+  faInfo,
+  faInfoCircle,
+  faPencil,
+  faPlus,
+  faSearch,
+  faTrash,
+  faWarning
+} from "@fortawesome/free-solid-svg-icons";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {TeamService} from "../../services/server/team.service";
@@ -11,6 +20,7 @@ import {Team} from "../../models/team";
 import {CreateTeamModalComponent} from "./create-team/create-team-modal.component";
 import {PrimaryButtonBinding} from "../../components/bindings/primary-button.binding";
 import {UiDropdownComponent} from "../../components/ui/ui-dropdown.component";
+import {TeamLoadModalComponent} from "./team-load/team-load-modal.component";
 
 @Component({
   selector: 'app-teams',
@@ -56,6 +66,13 @@ export class TeamsComponent implements OnInit {
     });
   }
 
+  teamClick(team: Team) {
+    const modalRef = this.modalService.open(TeamLoadModalComponent, {
+      size: 'lg'
+    });
+    modalRef.componentInstance.team = team;
+  }
+
   ngOnInit() {
     this.updateTeams();
   }
@@ -66,4 +83,6 @@ export class TeamsComponent implements OnInit {
   protected readonly faCircle = faCircle;
   protected readonly faWarning = faWarning;
   protected readonly faSearch = faSearch;
+  protected readonly faInfo = faInfo;
+  protected readonly faInfoCircle = faInfoCircle;
 }

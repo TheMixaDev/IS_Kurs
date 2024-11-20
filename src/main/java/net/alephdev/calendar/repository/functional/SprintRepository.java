@@ -7,6 +7,7 @@ import net.alephdev.calendar.models.Sprint;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,4 +23,6 @@ public interface SprintRepository extends JpaRepository<Sprint, Integer> {
     List<UserStoryPointsProjection> getStoryPointsPerUser(@Param("sprintId") Integer sprintId);
 
     Page<Sprint> findAllByMajorVersionContaining(String majorVersion, Pageable page);
+
+    Page<Sprint> findAllByMajorVersionContainingAndTeamId(String majorVersion, Integer teamId, PageRequest endDate);
 }

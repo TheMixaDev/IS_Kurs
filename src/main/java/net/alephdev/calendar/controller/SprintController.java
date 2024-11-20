@@ -32,9 +32,13 @@ public class SprintController {
     @GetMapping
     public Page<Sprint> getAllSprints(
             @RequestParam @DefaultValue("0") int page,
-            @RequestParam(required = false) String majorVersion
+            @RequestParam(required = false) String majorVersion,
+            @RequestParam(required = false) Integer teamId
     ) {
         if (majorVersion != null) {
+            if(teamId != null) {
+                return sprintService.getSprintsByMajorVersionAndTeam(page, majorVersion, teamId);
+            }
             return sprintService.getSprintsByMajorVersion(page, majorVersion);
         }
         return sprintService.getAllSprints(page);

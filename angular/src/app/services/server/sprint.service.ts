@@ -23,10 +23,11 @@ export class SprintService {
     this.sprintSubject.next({});
   }
 
-  getAllSprints(page: number = 0, majorVersion?: string): Observable<Page<Sprint> | HttpErrorResponse> {
-    let params: { page: string, majorVersion?: string } = { page: page.toString() };
+  getAllSprints(page: number = 0, majorVersion?: string, teamId?: number): Observable<Page<Sprint> | HttpErrorResponse> {
+    let params: { page: string, majorVersion?: string, teamId?: string } = { page: page.toString() };
     if(majorVersion) params.majorVersion = majorVersion;
-    
+    if(teamId) params.teamId = teamId.toString();
+
     return this.http.get<Page<Sprint>>(`${this.apiService.apiUrl}/sprints`, { params, headers: this.apiService.getHeaders() }).pipe(
       catchError(this.apiService.handleError)
     );

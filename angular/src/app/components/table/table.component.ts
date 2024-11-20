@@ -22,6 +22,7 @@ export class TableComponent {
   @Input() creationText = 'Создать';
   @Input() columns: string[] = [];
   @Input() headerText: string | null = null;
+  @Input() maxHeight: string | null = null;
 
   @Input() pageInfo: PageInfo | null = null;
 

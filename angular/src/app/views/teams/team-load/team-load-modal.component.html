@@ -1,0 +1,59 @@
+<div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+  <div class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
+    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+      Загрузка команды {{ team?.name }}
+    </h3>
+    <button (click)="closeModal(null)" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
+      <fa-icon [icon]="faClose" class="text-xl"/>
+    </button>
+  </div>
+  <div>
+    <div class="w-full">
+      <ui-dropdown
+        [options]="sprints"
+        [(modelValue)]="selectedSprintId"
+        [searchOnly]="true"
+        [searchInProgress]="sprintsLoad"
+        (searchChange)="loadSprints($event)"
+        [allowReset]="true"
+        class="w-full"
+        resetValue=""
+      >Выберите спринт</ui-dropdown>
+    </div>
+    <p class="p-2 text-center">
+      @if(resultLoad) {
+        Загрузка...
+      } @else {
+        @if(result != null) {
+          Загрузка на спринт составляет <b>{{result.toFixed(2)}}</b> У.Е.
+        } @else {
+          Спринт не выбран
+        }
+      }
+    </p>
+    <div class="w-full">
+      <app-table-component [columns]="['Пользователь', 'Story Points']" maxHeight="50vh">
+        @for(userSp of userStoryPoints; track userSp.userLogin) {
+          <tr table-row>
+            <td table-cell>
+              {{userSp.userLogin}}
+            </td>
+            <td table-cell>
+              {{userSp.totalStoryPoints}}
+            </td>
+          </tr>
+        }
+        @if(userStoryPoints.length == 0) {
+          <tr table-row>
+            <td table-cell colspan="2" class="text-center bg-gray-50">
+              Нет данных
+            </td>
+          </tr>
+        }
+      </app-table-component>
+    </div>
+    <ui-button color="danger" class="ml-2" (click)="closeModal(null)">
+      Закрыть
+    </ui-button>
+  </div>
+</div>

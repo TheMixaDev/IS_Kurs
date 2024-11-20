@@ -35,10 +35,19 @@
           </p>
         </div>
         <div class="space-y-2 justify-content-end">
-          <ui-button color="warning" classExtension="w-[200px]" class="block" (click)="editTeam(team)">
-            <fa-icon [icon]="faPencil"/>
-            Редактировать
-          </ui-button>
+          <div>
+            <ui-button
+              color="primary"
+              classExtension="!py-2 !px-3 !mr-1 inline-block"
+              data-tooltip-target="tooltip-delete"
+              (click)="teamClick(team)">
+              <fa-icon [icon]="faInfoCircle"/>
+            </ui-button>
+            <ui-button color="warning" classExtension="w-[200px]" class="inline-block" (click)="editTeam(team)">
+              <fa-icon [icon]="faPencil"/>
+              Редактировать
+            </ui-button>
+          </div>
           @if(!team.isActive) {
             <div class="text-danger-600 text-center user-select-none">
               <fa-icon [icon]="faWarning"></fa-icon>
