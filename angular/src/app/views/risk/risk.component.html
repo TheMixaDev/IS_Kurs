@@ -1,0 +1,74 @@
+<div class="flex gap-4">
+    <div class="w-1/3" >
+      <h2 class="text-xl font-semibold mb-4">Топ 10 рисков</h2>
+      <app-table-component [columns]="['Описание', 'Потери']" [creationEnabled]="false">
+        @for(topTenRisk of topTenRisks; track topTenRisk.riskId) {
+          <tr table-row>
+            <td table-cell>{{topTenRisk.description}}</td>
+            <td table-cell>{{topTenRisk.totalEstimatedLoss}}</td>
+            <td table-cell class="w-[174px]">
+              <ui-button color="warning" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-edit">
+                <fa-icon [icon]="faEdit" />
+              </ui-button>
+              <div id="tooltip-edit" tooltip>Изменить</div>
+              <ui-button color="danger" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-delete">
+                <fa-icon [icon]="faTrash"/>
+              </ui-button>
+              <div id="tooltip-delete" tooltip>Удалить</div>
+            </td>
+          </tr>
+        }
+      </app-table-component>
+    </div>
+  
+    <div class="w-2/3">
+      <h2 class="text-xl font-semibold mb-4">Все риски</h2>
+      
+      <div class="flex items-center justify-between mb-4">
+        <div class="w-[260px]">
+          <ui-dropdown>
+            Выберите риск
+          </ui-dropdown>
+        </div>
+        <div class="w-[260px]">
+          <button primary class="w-full">
+            <fa-icon [icon]="faPlus" />
+            Создать риск
+          </button>
+        </div>
+      </div>
+  
+      @if(allRisks) {
+        <app-table-component 
+          [columns]="['Описание', 'Вероятность', 'Потери']" 
+          [pageInfo]="allRisks.page" 
+          (pageChange)="changePage($event)">
+          @for(risk of allRisks.content; track risk.id) {
+            <tr table-row>
+              <td table-cell>{{risk.description}}</td>
+              <td table-cell>{{risk.probability}}</td>
+              <td table-cell>{{risk.estimatedLoss}}</td>
+              <td table-cell class="w-[174px]">
+                <ui-button color="warning" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-edit">
+                  <fa-icon [icon]="faEdit" />
+                </ui-button>
+                <div id="tooltip-edit" tooltip>Изменить</div>
+                <ui-button color="danger" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-delete">
+                  <fa-icon [icon]="faTrash"/>
+                </ui-button>
+                <div id="tooltip-delete" tooltip>Удалить</div>
+              </td>
+            </tr>
+          }
+        </app-table-component>
+      } @else {
+        <app-table-component [columns]="['Описание', 'Вероятность', 'Потери']" [creationEnabled]="false">
+          <tr table-row>
+            <td table-cell colspan="4" class="text-center bg-gray-50">
+              Нет данных
+            </td>
+          </tr>
+        </app-table-component>
+      }
+    </div>
+  </div>

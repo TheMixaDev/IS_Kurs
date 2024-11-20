@@ -46,12 +46,24 @@ export class IdeaComponent implements OnInit {
   ideas: Page<Idea> | null = null;
   currentPage: number = 0;
   user: User | null = null;
-  statuses: Status[] = [];
-  selectedStatusId: string = '';
-  statusOptions: { [key: string]: string } = {};
+  filteredStatusMap: { [key: string]: string } = {};
+  statusMap: { [key: string]: string } = {
+    'APPROVED': 'Принята',
+    'PENDING': 'Ожидает',
+    'REJECTED': 'Отклонена',
+  };
+  _selectedStatus: string | null = null;
+
+  get selectedStatus() {
+    return this._selectedStatus;
+  }
+  set selectedStatus(value) {
+    this._selectedStatus = value;
+    this.currentPage = 0;
+    this.updateIdeas(this._selectedStatus);
+  }
 
   constructor(private ideaService: IdeaService,
-              private statusService: StatusService,
               private authService: AuthService,
               private alertService: AlertService,
               private modalService: NgbModal) {
@@ -59,34 +71,38 @@ export class IdeaComponent implements OnInit {
       this.updateIdeas();
     })
     this.authService.user$.subscribe(this.loadUserData.bind(this));
-    this.statusService.status$.subscribe(() => {
-      this.loadStatuses();
-    });
   }
 
   ngOnInit() {
     this.loadUserData();
-    this.loadStatuses();
     this.updateIdeas();
+    this.filteredStatusMap = { ...this.statusMap };
+  }
+
+  filterStatuses(searchText: string) {
+    if (!searchText) {
+      this.filteredStatusMap = { ...this.statusMap };
+      return;
+    }
+
+    const search = searchText.toLowerCase();
+    this.filteredStatusMap = Object.entries(this.statusMap)
+      .filter(([key, value]) => 
+        key.toLowerCase().includes(search) || 
+        value.toLowerCase().includes(search)
+      )
+      .reduce((acc, [key, value]) => {
+        acc[key] = value;
+        return acc;
+      }, {} as { [key: string]: string });
   }
 
   loadUserData() {
     this.user = this.authService.getUser();
   }
 
-  loadStatuses() {
-    this.statusService.getAllStatuses().subscribe(statuses => {
-      if(statuses instanceof HttpErrorResponse) return;
-      this.statuses = statuses;
-      this.statusOptions = statuses.reduce((acc, status) => {
-        acc[status.name] = status.name;
-        return acc;
-      }, {} as { [key: string]: string });
-    })
-  }
-
-  updateIdeas() {
-    this.ideaService.getAllIdeas(this.currentPage).subscribe(ideas => {
+  updateIdeas(selStatus?: string | null) {
+    this.ideaService.getAllIdeas(this.currentPage, selStatus ).subscribe(ideas => {
       if(ideas instanceof HttpErrorResponse) return;
       this.ideas = ideas;
     })
@@ -141,9 +157,12 @@ export class IdeaComponent implements OnInit {
     });
   }
 
-  onStatusChange() {
+
+  onStatusChange(event: string) {
     this.currentPage = 0;
-    this.updateIdeas();
+    this.filterStatuses(event);
+    this._selectedStatus = event;
+    this.updateIdeas(event);
   }
 
   protected readonly faPlus = faPlus;

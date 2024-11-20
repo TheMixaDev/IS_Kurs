@@ -29,12 +29,9 @@ public class IdeaController {
     @GetMapping
     public Page<Idea> getAllIdeas(
             @RequestParam @DefaultValue("0") int page,
-            @RequestParam(required = false) Idea.Status status
+            @RequestParam(required = false) String status
     ) {
-        if(status != null) {
-            return ideaService.getAllIdeasByStatus(status, page);
-        }
-        return ideaService.getAllIdeas(page);
+        return ideaService.getAllIdeasFiltered(status, page);
     }
 
     @PostMapping

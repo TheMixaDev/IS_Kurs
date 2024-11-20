@@ -6,6 +6,7 @@ import {IdeaComponent} from "./views/idea/idea.component";
 import {TeamsComponent} from "./views/teams/teams.component";
 import {UsersComponent} from "./views/users/users.component";
 import {TasksComponent} from "./views/tasks/tasks.component";
+import {RiskComponent} from "./views/risk/risk.component";
 
 export const routes: Routes = [
   {
@@ -35,5 +36,9 @@ export const routes: Routes = [
   {
     path: 'role',
     component: RoleComponent
-  }
+  },
+  {
+    path: 'risk',
+    component: RiskComponent
+  },
 ];

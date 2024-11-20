@@ -20,7 +20,7 @@ export class IdeaService {
     this.ideaSubject.next({});
   }
 
-  getAllIdeas(page: number = 0, status?: string): Observable<Page<Idea> | HttpErrorResponse> {
+  getAllIdeas(page: number = 0, status?: string | null): Observable<Page<Idea> | HttpErrorResponse> {
     let params: { page: string, status?: string } = { page: page.toString() };
     if(status) params.status = status;
 

@@ -1,11 +1,9 @@
 package net.alephdev.calendar.controller;
 
 import net.alephdev.calendar.annotation.AuthorizedRequired;
-import net.alephdev.calendar.annotation.CurrentUser;
 import net.alephdev.calendar.annotation.PrivilegeRequired;
 import net.alephdev.calendar.dto.ObjectDto;
 import net.alephdev.calendar.models.Team;
-import net.alephdev.calendar.models.User;
 import net.alephdev.calendar.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

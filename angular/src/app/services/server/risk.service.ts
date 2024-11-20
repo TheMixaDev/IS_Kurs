@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {Observable} from "rxjs";
+import {Observable, Subject} from "rxjs";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {ApiService} from "./api.service";
 import {catchError} from "rxjs/operators";
@@ -11,7 +11,14 @@ import {Page} from "../../models/misc/page";
   providedIn: 'root'
 })
 export class RiskService {
+  private riskSubject = new Subject<{}>();
+  risk$ = this.riskSubject.asObservable();
+  
   constructor(private http: HttpClient, private apiService: ApiService) {}
+
+  initiateUpdate() {
+    this.riskSubject.next({});
+  }
 
   getAllRisks(page: number = 0): Observable<Page<Risk> | HttpErrorResponse> {
     return this.http.get<Page<Risk>>(`${this.apiService.apiUrl}/risks`, { params: { page: page.toString() }, headers: this.apiService.getHeaders() }).pipe(
