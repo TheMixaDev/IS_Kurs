@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {Observable} from "rxjs";
+import {Observable, Subject} from "rxjs";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {ApiService} from "./api.service";
 import {catchError} from "rxjs/operators";
@@ -9,7 +9,14 @@ import {Tag} from "../../models/tag";
   providedIn: 'root'
 })
 export class TagService {
+  private statusSubject = new Subject<{}>();
+  tag$ = this.statusSubject.asObservable();
+
   constructor(private http: HttpClient, private apiService: ApiService) {}
+
+  initiateUpdate() {
+    this.statusSubject.next({});
+  }
 
   getAllTags(): Observable<Tag[] | HttpErrorResponse> {
     return this.http.get<Tag[]>(`${this.apiService.apiUrl}/tags`, { headers: this.apiService.getHeaders() }).pipe(catchError(this.apiService.handleError));

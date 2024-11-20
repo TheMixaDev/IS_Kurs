@@ -59,7 +59,6 @@ export class RiskComponent implements OnInit {
     this.riskSerive.getAllRisks(this.currentPage, this.search).subscribe(risks => {
       if(risks instanceof HttpErrorResponse) return;
       this.allRisks = risks;
-      console.log(this.allRisks);
       if(this.currentPage != 0 && this.allRisks.content.length === 0){
         this.currentPage = this.currentPage - 1;
         this.loadRisks();

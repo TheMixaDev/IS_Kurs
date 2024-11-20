@@ -8,14 +8,13 @@ import {
   faLightbulb,
   faListCheck,
   faStar,
-  faUser, faUsers
+  faUser, faUsers, faPaperclip
 } from "@fortawesome/free-solid-svg-icons";
 import {AuthService} from "../services/server/auth.service";
 import {User} from "../models/user";
 import {AsyncPipe, NgIf} from "@angular/common";
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {RouterLink} from "@angular/router";
-import {UserService} from "../services/server/user.service";
 import {CreateUserModalComponent} from "../views/users/create-user/create-user-modal.component";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 
@@ -67,4 +66,5 @@ export class MenuComponent implements OnInit {
   protected readonly faStar = faStar;
   protected readonly faBolt = faBolt;
   protected readonly faUsers = faUsers;
+  protected readonly faPaperclip = faPaperclip;
 }

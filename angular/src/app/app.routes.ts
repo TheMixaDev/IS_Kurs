@@ -8,6 +8,7 @@ import {UsersComponent} from "./views/users/users.component";
 import {TasksComponent} from "./views/tasks/tasks.component";
 import {RiskComponent} from "./views/risk/risk.component";
 import {TaskViewComponent} from "./views/tasks/task-view/task-view.component";
+import { TagComponent } from './views/tags/tag.component';
 
 export const routes: Routes = [
   {
@@ -45,5 +46,9 @@ export const routes: Routes = [
   {
     path: 'risk',
     component: RiskComponent
+  },
+  {
+    path: 'tag',
+    component: TagComponent
   },
 ];
