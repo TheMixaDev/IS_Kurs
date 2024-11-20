@@ -2,7 +2,7 @@ import {Component, OnInit} from "@angular/core";
 import {
   faCircle,
   faEdit,
-  faPlus, faSearch,
+  faPlus,
   faTrash
 } from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
@@ -226,5 +226,4 @@ export class TasksComponent implements OnInit {
   protected readonly faCircle = faCircle;
   protected readonly faEdit = faEdit;
   protected readonly faTrash = faTrash;
-  protected readonly faSearch = faSearch;
 }

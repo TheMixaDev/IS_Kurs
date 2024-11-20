@@ -1,125 +1,162 @@
 @if(task) {
   <section class="">
-    <div class="py-8 px-4 mx-auto max-w-2xl lg:py-16">
-      <h2 class="mb-2 text-xl font-semibold leading-none text-gray-900 md:text-2xl dark:text-white">
-        <fa-icon [icon]="(task.priorityEnum | priorityIcon).icon" [style.color]="(task.priorityEnum | priorityIcon).color"/>
-        Задача № {{ task.id }}
-      </h2>
-      <dl class="flex items-center space-x-6">
-        <div class="w-1/2">
-          <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">Создатель</dt>
-          <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">{{ task.createdBy.firstName }} {{ task.createdBy.lastName }} ({{ task.createdBy.login }})</dd>
-        </div>
-        <div class="w-1/2">
-          <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">
-            Приоритет
-            <fa-icon [icon]="faPen" [style.color]="'orange'" class="cursor-pointer" (click)="priorityDropdown.triggerSelector()"/>
-          </dt>
-          <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">
-            <fa-icon [icon]="(task.priorityEnum | priorityIcon).icon" [style.color]="(task.priorityEnum | priorityIcon).color"/>
-            {{ task.priorityEnum | priorityParser }}
-            <ui-dropdown
-              #priorityDropdown
-              [(ngModel)]="priorityWrapper"
-              [options]="priorityMap"
-              [buttonHidden]="true"
-              [searchHidden]="true"/>
-          </dd>
-        </div>
-      </dl>
-      <dl class="flex items-center space-x-6">
-        <div class="w-1/2">
-          <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">
-            Исполнитель
-            <fa-icon [icon]="faPen" [style.color]="'orange'" class="cursor-pointer mr-1" (click)="usersDropdown.triggerSelector()"/>
-            <fa-icon [icon]="faUser" [style.color]="'blue'" class="cursor-pointer" (click)="assignMyself()"/>
-          </dt>
-          <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">
-            @if(task.implementer) {
-              {{ task.implementer.firstName }} {{ task.implementer.lastName }} ({{ task.implementer.login }})
-            } @else {
-              Не назначен
-            }
-            <ui-dropdown
-              #usersDropdown
-              [(ngModel)]="implementerWrapper"
-              [options]="users"
-              [searchOnly]="true"
-              [searchInProgress]="usersLoad"
-              (searchChange)="loadUsers($event)"
-              [allowReset]="true"
-              [resetValue]="null"
-              [buttonHidden]="true"/>
-          </dd>
-        </div>
-        <div class="w-1/2">
-          <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">
-            Story Points
-            <fa-icon [icon]="faPen" [style.color]="'orange'" class="cursor-pointer" *ngIf="!editingStoryPoints" (click)="editStoryPoints()"/>
-            <fa-icon [icon]="faCheck" [style.color]="'green'" class="cursor-pointer" *ngIf="editingStoryPoints" (click)="saveStoryPoints()"/>
-          </dt>
-          <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">
-            @if(editingStoryPoints) {
-              <input
-                #storyPointsInput
-                class="text-black m-0 py-0 px-0 bg-transparent border-0"
-                type="number"
-                [(ngModel)]="task.storyPoints">
-            } @else {
-              @if(task.storyPoints) {
-                {{ task.storyPoints }}
+    <div class="items-center lg:flex">
+      <div class="py-2 px-4 w-[672px] lg:py-4 align-self-start">
+        <h2 class="mb-2 text-xl font-semibold leading-none text-gray-900 md:text-2xl dark:text-white">
+          <fa-icon [icon]="(task.priorityEnum | priorityIcon).icon" [style.color]="(task.priorityEnum | priorityIcon).color"/>
+          Задача № {{ task.id }}
+        </h2>
+        <dl class="flex items-center space-x-6">
+          <div class="w-1/2">
+            <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">Создатель</dt>
+            <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">{{ task.createdBy.firstName }} {{ task.createdBy.lastName }} ({{ task.createdBy.login }})</dd>
+          </div>
+          <div class="w-1/2">
+            <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">
+              Приоритет
+              <fa-icon [icon]="faPen" [style.color]="'orange'" class="cursor-pointer" (click)="priorityDropdown.triggerSelector()"/>
+            </dt>
+            <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">
+              <fa-icon [icon]="(task.priorityEnum | priorityIcon).icon" [style.color]="(task.priorityEnum | priorityIcon).color"/>
+              {{ task.priorityEnum | priorityParser }}
+              <ui-dropdown
+                #priorityDropdown
+                [(ngModel)]="priorityWrapper"
+                [options]="priorityMap"
+                [buttonHidden]="true"
+                [searchHidden]="true"/>
+            </dd>
+          </div>
+        </dl>
+        <dl class="flex items-center space-x-6">
+          <div class="w-1/2">
+            <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">
+              Исполнитель
+              <fa-icon [icon]="faPen" [style.color]="'orange'" class="cursor-pointer mr-1" (click)="usersDropdown.triggerSelector()"/>
+              <fa-icon [icon]="faUser" [style.color]="'blue'" class="cursor-pointer" (click)="assignMyself()"/>
+            </dt>
+            <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">
+              @if(task.implementer) {
+                {{ task.implementer.firstName }} {{ task.implementer.lastName }} ({{ task.implementer.login }})
               } @else {
-                -
+                Не назначен
               }
+              <ui-dropdown
+                #usersDropdown
+                [(ngModel)]="implementerWrapper"
+                [options]="users"
+                [searchOnly]="true"
+                [searchInProgress]="usersLoad"
+                (searchChange)="loadUsers($event)"
+                [allowReset]="true"
+                [resetValue]="null"
+                [buttonHidden]="true"/>
+            </dd>
+          </div>
+          <div class="w-1/2">
+            <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">
+              Story Points
+              <fa-icon [icon]="faPen" [style.color]="'orange'" class="cursor-pointer" *ngIf="!editingStoryPoints" (click)="editStoryPoints()"/>
+              <fa-icon [icon]="faCheck" [style.color]="'green'" class="cursor-pointer" *ngIf="editingStoryPoints" (click)="saveStoryPoints()"/>
+            </dt>
+            <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">
+              @if(editingStoryPoints) {
+                <input
+                  #storyPointsInput
+                  class="text-black m-0 py-0 px-0 bg-transparent border-0"
+                  type="number"
+                  [(ngModel)]="task.storyPoints">
+              } @else {
+                @if(task.storyPoints) {
+                  {{ task.storyPoints }}
+                } @else {
+                  -
+                }
+              }
+            </dd>
+          </div>
+        </dl>
+        <dl class="flex items-center space-x-6">
+          <div class="w-1/2">
+            <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">
+              Спринт
+              <fa-icon [icon]="faPen" [style.color]="'orange'" class="cursor-pointer" (click)="sprintDropdown.triggerSelector()"/>
+            </dt>
+            <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">
+              @if(task.sprint) {
+                <fa-icon [icon]="faCircle" [style.color]="task.sprint.team.color"/>
+                {{ task.sprint.majorVersion }}
+              } @else {
+                Не назначен
+              }
+              <ui-dropdown
+                #sprintDropdown
+                [(ngModel)]="sprintWrapper"
+                [options]="sprints"
+                [searchOnly]="true"
+                [searchInProgress]="sprintsLoad"
+                (searchChange)="loadSprints($event)"
+                [allowReset]="true"
+                [resetValue]="null"
+                [buttonHidden]="true"/>
+            </dd>
+          </div>
+          <div class="w-1/2">
+            <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">
+              Статус
+              <fa-icon [icon]="faPen" [style.color]="'orange'" class="cursor-pointer" (click)="statusDropdown.triggerSelector()"/>
+            </dt>
+            <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">
+              {{ task.status.name }}
+              <ui-dropdown
+                #statusDropdown
+                [(ngModel)]="statusWrapper"
+                [options]="statuses"
+                [buttonHidden]="true"
+                [searchHidden]="true"/>
+            </dd>
+          </div>
+        </dl>
+        <dl>
+          <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">Информация</dt>
+          <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">{{ task.name }}</dd>
+        </dl>
+      </div>
+      <div class="w-[672px] align-self-start">
+        <app-table-component [columns]="['Описание', 'Вероятность', 'Потери', 'Действия']"
+                              [creationEnabled]="currentUser?.role?.id === 1"
+                              (creationClick)="openAddRiskModal()"
+                              headerText="Риски"
+                              creationText="Добавить">
+          @if(risks.length > 0) {
+            @for(risk of risks; track risk.id) {
+              <tr table-row>
+                <td table-cell>{{risk.description}}</td>
+                <td table-cell>{{risk.probability}}</td>
+                <td table-cell>{{risk.estimatedLoss}}</td>
+                <td table-cell>
+                  <ui-button
+                    color="danger"
+                    classExtension="!py-2 !px-3 ml-1"
+                    data-tooltip-target="tooltip-delete"
+                    (click)="openDeleteModal(risk)">
+                    <fa-icon [icon]="faTrash"/>
+                  </ui-button>
+                  <div id="tooltip-delete" tooltip>
+                    Удалить
+                  </div>
+                </td>
+              </tr>
             }
-          </dd>
-        </div>
-      </dl>
-      <dl class="flex items-center space-x-6">
-        <div class="w-1/2">
-          <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">
-            Спринт
-            <fa-icon [icon]="faPen" [style.color]="'orange'" class="cursor-pointer" (click)="sprintDropdown.triggerSelector()"/>
-          </dt>
-          <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">
-            @if(task.sprint) {
-              <fa-icon [icon]="faCircle" [style.color]="task.sprint.team.color"/>
-              {{ task.sprint.majorVersion }}
-            } @else {
-              Не назначен
-            }
-            <ui-dropdown
-              #sprintDropdown
-              [(ngModel)]="sprintWrapper"
-              [options]="sprints"
-              [searchOnly]="true"
-              [searchInProgress]="sprintsLoad"
-              (searchChange)="loadSprints($event)"
-              [allowReset]="true"
-              [resetValue]="null"
-              [buttonHidden]="true"/>
-          </dd>
-        </div>
-        <div class="w-1/2">
-          <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">
-            Статус
-            <fa-icon [icon]="faPen" [style.color]="'orange'" class="cursor-pointer" (click)="statusDropdown.triggerSelector()"/>
-          </dt>
-          <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">
-            {{ task.status.name }}
-            <ui-dropdown
-              #statusDropdown
-              [(ngModel)]="statusWrapper"
-              [options]="statuses"
-              [buttonHidden]="true"
-              [searchHidden]="true"/>
-          </dd>
-        </div>
-      </dl>
-      <dl>
-        <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">Информация</dt>
-        <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">{{ task.name }}</dd>
-      </dl>
+          } @else {
+            <tr table-row>
+              <td table-cell colspan="3" class="text-center bg-gray-50">
+                Нет данных
+              </td>
+            </tr>
+          }
+        </app-table-component>
+      </div>
     </div>
   </section>
 }

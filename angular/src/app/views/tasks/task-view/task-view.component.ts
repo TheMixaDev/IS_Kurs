@@ -3,7 +3,7 @@ import {ActivatedRoute} from "@angular/router";
 import {Task, TaskPriority} from "../../../models/task";
 import {TaskService} from "../../../services/server/task.service";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
-import {faCheck, faCircle, faPen, faUser} from "@fortawesome/free-solid-svg-icons";
+import {faCheck, faCircle, faPen, faTrash, faUser} from "@fortawesome/free-solid-svg-icons";
 import {PriorityIconPipe} from "../../../pipe/priority-icon.pipe";
 import {PriorityParserPipe} from "../../../pipe/priority-parser.pipe";
 import {UiDropdownComponent} from "../../../components/ui/ui-dropdown.component";
@@ -21,6 +21,17 @@ import {RoleService} from "../../../services/server/role.service";
 import {AlertService} from "../../../services/alert.service";
 import {NgIf} from "@angular/common";
 import {TaskDto} from "../../../models/dto/task-dto";
+import {TableComponent} from "../../../components/table/table.component";
+import {TableRowComponent} from "../../../components/table/table-row.component";
+import {TableCellComponent} from "../../../components/table/table-cell.component";
+import {Risk} from "../../../models/risk";
+import {RiskService} from "../../../services/server/risk.service";
+import {AddStatusModalComponent} from "../../role/statuses/add-status/add-status-modal.component";
+import {AddRiskModalComponent} from "./add-risk/add-risk-modal.component";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {TooltipBinding} from "../../../components/bindings/tooltip.binding";
+import {UiButtonComponent} from "../../../components/ui/ui-button.component";
+import {ConfirmModalComponent} from "../../../components/modal/confirm-modal.component";
 
 @Component({
   selector: 'app-task-view',
@@ -31,7 +42,12 @@ import {TaskDto} from "../../../models/dto/task-dto";
     PriorityParserPipe,
     UiDropdownComponent,
     FormsModule,
-    NgIf
+    NgIf,
+    TableComponent,
+    TableRowComponent,
+    TableCellComponent,
+    TooltipBinding,
+    UiButtonComponent
   ],
   templateUrl: 'task-view.component.html'
 })
@@ -49,6 +65,9 @@ export class TaskViewComponent implements OnInit {
 
   editingStoryPoints = false;
   @ViewChild('storyPointsInput') storyPointsInput?: ElementRef;
+
+  risks: Risk[] = [];
+  availableRisks: { [key: number]: string } = {};
 
   users: { [key: string]: string } = {};
   usersLoad: boolean = false;
@@ -160,7 +179,9 @@ export class TaskViewComponent implements OnInit {
               private userService: UserService,
               private sprintService: SprintService,
               private statusService: StatusService,
-              private roleService: RoleService
+              private roleService: RoleService,
+              private riskService: RiskService,
+              private modalService: NgbModal
               ) {
     this.authService.user$.subscribe(user => this.currentUser = user);
   }
@@ -174,6 +195,7 @@ export class TaskViewComponent implements OnInit {
           this.taskService.getTask(this.taskId).subscribe(task => {
             if(!(task instanceof HttpErrorResponse)) {
               this.task = task as Task;
+              this.loadRisks();
               this.updateOriginalTask(task as Task);
               this.implementerWrapper = this.task.implementer?.login || null;
               this.sprintWrapper = this.task.sprint?.id || null;
@@ -243,6 +265,85 @@ export class TaskViewComponent implements OnInit {
         });
       }
     })
+  }
+
+  loadRisks() {
+    if(!this.task) return;
+    this.riskService.getRisksForTask(this.task.id).subscribe(risks => {
+      if (!(risks instanceof HttpErrorResponse)) {
+        this.risks = risks;
+        this.updateAvailableRisks();
+      }
+    })
+  }
+
+  updateAvailableRisks() {
+    this.riskService.getAllRisks(0, '').subscribe(risks => {
+      if (risks && !(risks instanceof HttpErrorResponse)) {
+        this.availableRisks = (risks.content as Risk[]).reduce((acc: any, risk) => {
+          acc[risk.id] = risk.description;
+          return acc;
+        }, {});
+        if(this.risks) {
+          this.risks.forEach(risk => {
+            delete this.availableRisks[risk.id];
+          })
+        }
+      }
+    })
+  }
+
+  openAddRiskModal() {
+    const modalRef = this.modalService.open(AddRiskModalComponent, {
+      size: 'md'
+    });
+    modalRef.componentInstance.dropdown = this.availableRisks;
+    modalRef.result.then(data => {
+      if(data as number) {
+        this.addRisk(data);
+      }
+    });
+  }
+
+  addRisk(riskId: number) {
+    if (!this.task) return;
+
+    this.riskService.addRiskToTask(this.task.id, riskId).subscribe({
+      next: () => {
+        this.alertService.showAlert('success', 'Риск успешно добавлен к задаче');
+        this.loadRisks();
+      },
+      error: (error) => {
+        this.alertService.showAlert('danger', 'Ошибка при добавлении риска к задаче: ' + (error?.error?.message || "Неизвестная ошибка"));
+        console.error('Error adding risk to task:', error);
+      }
+    });
+  }
+
+  openDeleteModal(risk: Risk) {
+    const modalRef = this.modalService.open(ConfirmModalComponent, {
+      size: 'md'
+    });
+    modalRef.componentInstance.content = `Открепить риск "${risk.description}" от задачи?`;
+    modalRef.result.then((result) => {
+      if (result === 'delete') {
+        this.deleteRisk(risk.id);
+      }
+    });
+  }
+
+  deleteRisk(riskId: number) {
+    if (!this.task) return;
+    this.riskService.removeRiskFromTask(this.task.id, riskId).subscribe({
+      next: () => {
+        this.alertService.showAlert('success', 'Риск успешно откреплен от задачи');
+        this.loadRisks();
+      },
+      error: (error) => {
+        this.alertService.showAlert('danger', 'Ошибка при откреплении риска от задачи: ' + (error?.error?.message || "Неизвестная ошибка"));
+        console.error('Error deleting risk from task:', error);
+      }
+    });
   }
 
   parseStatuses(statuses : Status[] | HttpErrorResponse, resolve: () => void) {
@@ -341,4 +442,5 @@ export class TaskViewComponent implements OnInit {
   protected readonly faCircle = faCircle;
   protected readonly faCheck = faCheck;
   protected readonly faUser = faUser;
+  protected readonly faTrash = faTrash;
 }
