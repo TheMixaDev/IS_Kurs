@@ -39,14 +39,14 @@
                 <p class="text-xs text-gray-500 break-all font-11">
                     {{currentUser.email}}
                 </p>
-                <p class="text-xs text-gray-400">
-                    {{currentUser.role?.name}}
+                <p class="text-xs text-gray-400" *ngIf="currentUser.role">
+                    {{currentUser.role.name}}
                 </p>
-                <p class="text-xs text-gray-400 flex items-center gap-1">
+                <p class="text-xs text-gray-400 flex items-center gap-1" *ngIf="currentUser.team">
                     Команда:
                     <span class="flex items-center">
-                        <span class="w-2 h-2 rounded-full mr-1" [style.backgroundColor]="currentUser.team?.color"></span>
-                        {{currentUser.team?.name}}
+                        <span class="w-2 h-2 rounded-full mr-1" [style.backgroundColor]="currentUser.team.color"></span>
+                        {{currentUser.team.name}}
                     </span>
                 </p>
               </div>

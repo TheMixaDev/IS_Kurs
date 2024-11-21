@@ -59,7 +59,8 @@ export class CreateUserModalComponent implements OnInit {
     lastName: new FormControl('', [Validators.required, Validators.maxLength(255), CustomValidators.noWhitespace()]),
     teamId: new FormControl(0),
     roleId: new FormControl(0),
-    password: new FormControl('')
+    password: new FormControl(''),
+    confirmPassword: new FormControl('')
   });
 
   get errors() {
@@ -81,6 +82,18 @@ export class CreateUserModalComponent implements OnInit {
       return 'Не заполнено поле фамилия.';
     if(this.createForm.get('lastName')?.errors?.['maxlength'])
       return 'Длина поля фамилия не должна превышать 255 символов.';
+    if(!this.isEditing) {
+      if(this.createForm.get('password')?.errors?.['required'])
+        return 'Не заполнено поле пароль.';
+      if(this.createForm.get('password')?.errors?.['maxlength'])
+        return 'Длина поля пароль не должна превышать 255 символов.';
+      if(this.createForm.get('confirmPassword')?.errors?.['required'])
+        return 'Не заполнено поле подтверждение пароля.';
+      if(this.createForm.get('confirmPassword')?.errors?.['maxlength'])
+        return 'Длина поля подтверждение пароля не должна превышать 255 символов.';
+      if(this.createForm.get('password')?.value != this.createForm.get('confirmPassword')?.value)
+        return 'Пароли не совпадают.';
+    }
     return '';
   }
 
@@ -117,6 +130,9 @@ export class CreateUserModalComponent implements OnInit {
         teamId: this.user.team?.id || 0,
         roleId: this.user.role?.id || 0
       });
+    } else {
+      this.createForm.get('password')?.addValidators([Validators.required, Validators.maxLength(256)]);
+      this.createForm.get('confirmPassword')?.addValidators([Validators.required, Validators.maxLength(256)]);
     }
   }
 
@@ -179,6 +195,7 @@ export class CreateUserModalComponent implements OnInit {
 
   updateUser(userData: UserDto, teamId: number, roleId: number) {
     if (!this.user) return;
+    userData.password = null;
 
     this.userService.updateUser(this.user.login, userData).subscribe({
       next: () => {

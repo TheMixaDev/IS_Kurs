@@ -59,14 +59,38 @@
       <div>
         <ui-dropdown [options]="roles" formControlName="roleId" [allowReset]="true" [resetValue]="''">Выберите роль</ui-dropdown>
       </div>
-      <div>
-        <ui-button *ngIf="isEditing" type="button" color="warning" (click)="openChangePasswordModal()" classExtension="w-full" class="w-full">
+      @if(!isEditing) {
+        <div>
+          <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Пароль</label>
+          <input
+            formControlName="password"
+            type="password"
+            id="password"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="Введите пароль"
+            [ngClass]="{'input-error': createForm.get('password')?.invalid && createForm.get('password')?.touched}"
+          >
+        </div>
+        <div>
+          <label for="confirmPassword" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Повтор пароля</label>
+          <input
+            formControlName="confirmPassword"
+            type="password"
+            id="confirmPassword"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="Повторите пароль"
+            [ngClass]="{'input-error': createForm.get('confirmPassword')?.invalid && createForm.get('confirmPassword')?.touched}"
+          >
+        </div>
+      }
+      <div *ngIf="isEditing">
+        <ui-button type="button" color="warning" (click)="openChangePasswordModal()" classExtension="w-full" class="w-full">
           <fa-icon [icon]="faLock"></fa-icon>
           Обновить пароль
         </ui-button>
       </div>
-      <div>
-        <ui-button *ngIf="isEditing && currentUser?.role?.id === 1 && currentUser?.login !== user?.login" type="button" color="danger" (click)="openDeleteConfirmationModal()" classExtension="w-full" class="w-full">
+      <div *ngIf="isEditing && currentUser?.role?.id === 1 && currentUser?.login !== user?.login">
+        <ui-button type="button" color="danger" (click)="openDeleteConfirmationModal()" classExtension="w-full" class="w-full">
           <fa-icon [icon]="faBan"></fa-icon>
           Отключить пользователя
         </ui-button>
