@@ -1,5 +1,5 @@
 import {Component, input, Input, OnInit} from '@angular/core';
-import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {NgbActiveModal, NgbModal, NgbTooltip} from '@ng-bootstrap/ng-bootstrap';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {faClose, faPlus, faPen, faTrash} from '@fortawesome/free-solid-svg-icons';
@@ -33,7 +33,8 @@ import {ConfirmModalComponent} from "../../../components/modal/confirm-modal.com
     TableCellComponent,
     TableComponent,
     TableRowComponent,
-    TooltipBinding
+    TooltipBinding,
+    NgbTooltip
   ],
   templateUrl: 'create-idea-modal.component.html'
 })

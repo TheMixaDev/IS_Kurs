@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {NgbActiveModal, NgbModal, NgbTooltip} from '@ng-bootstrap/ng-bootstrap';
 import { DatePipe } from '@angular/common';
 import {faClose, faEdit, faPlus, faTrash} from '@fortawesome/free-solid-svg-icons';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
@@ -30,7 +30,8 @@ import {AuthService} from "../../../services/server/auth.service";
     FaIconComponent,
     NgIf,
     UiButtonComponent,
-    PrimaryButtonBinding
+    PrimaryButtonBinding,
+    NgbTooltip
   ],
   templateUrl: './release-modal.component.html'
 })

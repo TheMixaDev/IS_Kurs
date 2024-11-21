@@ -13,7 +13,7 @@ import {UiButtonComponent} from "../../components/ui/ui-button.component";
 import { Status } from "../../models/status";
 import { StatusService } from "../../services/server/status.service";
 import { AlertService } from "../../services/alert.service";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import {NgbModal, NgbTooltip} from "@ng-bootstrap/ng-bootstrap";
 import { initFlowbite } from "flowbite";
 import { ConfirmModalComponent } from "../../components/modal/confirm-modal.component";
 import { CreateStatusModalComponent } from "./create-status/create-status-modal.component";
@@ -33,7 +33,8 @@ import {AuthService} from "../../services/server/auth.service";
     TableRowComponent,
     TooltipBinding,
     UiButtonComponent,
-    NgIf
+    NgIf,
+    NgbTooltip
   ],
   templateUrl: './status.component.html'
 })

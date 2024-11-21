@@ -9,10 +9,10 @@
       [class.hidden-dropdown]="buttonHidden"
     >
       @if(isNotSelected) {
-        <ng-content></ng-content>
+        <ng-content [class.!hidden]="buttonHidden"></ng-content>
       }
       @if(options && options[modelValue]) {
-        <div class="table-cell-lines two-lines">
+        <div class="table-cell-lines two-lines" [class.!hidden]="buttonHidden">
           {{ options[modelValue] }}
         </div>
       }

@@ -44,3 +44,11 @@
 .three-lines {
   -webkit-line-clamp: 3;
 }
+
+.tooltip-arrow {
+  display: none!important;
+}
+
+.tooltip {
+  @apply !mb-1
+}

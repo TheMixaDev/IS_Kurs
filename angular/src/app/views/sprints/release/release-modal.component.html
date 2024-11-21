@@ -10,10 +10,10 @@
           <td table-cell>{{ release.releaseDate | date:'dd.MM.yyyy' }}</td>
           <td table-cell>{{ release.description || 'Нет описания' }}</td>
           <td table-cell class="w-[132px]" *ngIf="isAdmin">
-            <ui-button color="warning" classExtension="!py-2 !px-3 ml-1" (click)="openEditModal(release)">
+            <ui-button color="warning" classExtension="!py-2 !px-3 ml-1" (click)="openEditModal(release)" ngbTooltip="Изменить">
               <fa-icon [icon]="faEdit"/>
             </ui-button>
-            <ui-button color="danger" classExtension="!py-2 !px-3 ml-1" (click)="deleteRelease(release)">
+            <ui-button color="danger" classExtension="!py-2 !px-3 ml-1" (click)="deleteRelease(release)" ngbTooltip="Удалить">
               <fa-icon [icon]="faTrash"/>
             </ui-button>
           </td>

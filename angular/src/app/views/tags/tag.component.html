@@ -21,10 +21,10 @@
         </div>
       </td>
       <td table-cell class="w-[132px]" *ngIf="isAdmin">
-        <ui-button color="warning" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-edit" (click)="openEditModal(tag)">
+        <ui-button color="warning" classExtension="!py-2 !px-3 ml-1" ngbTooltip="Изменить" (click)="openEditModal(tag)">
           <fa-icon [icon]="faEdit"/>
         </ui-button>
-        <ui-button color="danger" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-delete" (click)="openDeleteModal(tag)">
+        <ui-button color="danger" classExtension="!py-2 !px-3 ml-1" ngbTooltip="Удалить" (click)="openDeleteModal(tag)">
           <fa-icon [icon]="faTrash"/>
         </ui-button>
       </td>

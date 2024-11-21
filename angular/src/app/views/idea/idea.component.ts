@@ -17,7 +17,7 @@ import {HttpErrorResponse} from "@angular/common/http";
 import {StatusParserPipe} from "../../pipe/status-parser.pipe";
 import {User} from "../../models/user";
 import {AuthService} from "../../services/server/auth.service";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {NgbModal, NgbTooltip} from "@ng-bootstrap/ng-bootstrap";
 import {CreateIdeaModalComponent} from "./create-idea/create-idea-modal.component";
 import {AlertService} from "../../services/alert.service";
 import {UserService} from "../../services/server/user.service";
@@ -39,7 +39,8 @@ import {Router} from "@angular/router";
     TableRowComponent,
     TooltipBinding,
     UiButtonComponent,
-    StatusParserPipe
+    StatusParserPipe,
+    NgbTooltip
   ],
   templateUrl: './idea.component.html'
 })

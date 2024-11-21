@@ -11,7 +11,7 @@ import { RoleService } from "../../services/server/role.service";
 import { Role } from "../../models/role";
 import { AlertService } from "../../services/alert.service";
 import { initFlowbite } from "flowbite";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import {NgbModal, NgbTooltip} from "@ng-bootstrap/ng-bootstrap";
 import { CreateRoleModalComponent } from "./create-role/create-role-modal.component";
 import { ConfirmModalComponent } from "../../components/modal/confirm-modal.component";
 import {RoleStatusesModalComponent} from "./statuses/role-statuses-modal.component";
@@ -29,7 +29,8 @@ import {NgIf} from "@angular/common";
     TableRowComponent,
     TooltipBinding,
     UiButtonComponent,
-    NgIf
+    NgIf,
+    NgbTooltip
   ],
   templateUrl: './role.component.html'
 })

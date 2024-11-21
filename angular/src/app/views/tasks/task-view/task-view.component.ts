@@ -27,7 +27,7 @@ import {TableCellComponent} from "../../../components/table/table-cell.component
 import {Risk} from "../../../models/risk";
 import {RiskService} from "../../../services/server/risk.service";
 import {AddRiskModalComponent} from "./add-risk/add-risk-modal.component";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {NgbModal, NgbTooltip} from "@ng-bootstrap/ng-bootstrap";
 import {TooltipBinding} from "../../../components/bindings/tooltip.binding";
 import {UiButtonComponent} from "../../../components/ui/ui-button.component";
 import {ConfirmModalComponent} from "../../../components/modal/confirm-modal.component";
@@ -48,7 +48,8 @@ import {TagService} from "../../../services/server/tag.service";
     TableRowComponent,
     TableCellComponent,
     TooltipBinding,
-    UiButtonComponent
+    UiButtonComponent,
+    NgbTooltip
   ],
   templateUrl: 'task-view.component.html'
 })

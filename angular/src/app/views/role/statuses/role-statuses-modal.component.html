@@ -12,7 +12,7 @@
         </div>
       </td>
       <td table-cell class="w-[0px]" *ngIf="isAdmin">
-        <ui-button color="danger" classExtension="!py-2 !px-3 ml-1" (click)="deleteStatus(status)">
+        <ui-button color="danger" classExtension="!py-2 !px-3 ml-1" (click)="deleteStatus(status)" ngbTooltip="Удалить">
           <fa-icon [icon]="faTrash"/>
         </ui-button>
       </td>

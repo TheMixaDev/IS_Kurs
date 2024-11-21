@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {NgbActiveModal, NgbModal, NgbTooltip} from '@ng-bootstrap/ng-bootstrap';
 import {faClose, faTrash} from '@fortawesome/free-solid-svg-icons';
 import {FaIconComponent} from '@fortawesome/angular-fontawesome';
 import {NgIf, NgForOf} from "@angular/common";
@@ -33,7 +33,8 @@ import {AuthService} from "../../../services/server/auth.service";
     UiButtonComponent,
     UiDropdownComponent,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgbTooltip
   ],
   templateUrl: 'role-statuses-modal.component.html'
 })
