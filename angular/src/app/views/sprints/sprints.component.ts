@@ -67,7 +67,9 @@ export class SprintsComponent implements OnInit {
   }
 
   set selectedTeamName(value: string) {
-    this._selectedTeamName.next(value);
+    if(value !== this._selectedTeamName.value) {
+      this._selectedTeamName.next(value);
+    }
   }
 
   ngOnInit() {
