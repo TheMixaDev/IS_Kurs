@@ -82,10 +82,10 @@
               </td>
               <td table-cell class="w-[132px]" *ngIf="isAdmin">
                 <div class="flex gap-2">
-                  <ui-button (click)="openEditModal(risk)" color="warning" classExtension="!py-2 !px-3" data-tooltip-target="tooltip-edit">
+                  <ui-button (click)="openEditModal(risk)" color="warning" classExtension="!py-2 !px-3" ngbTooltip="Изменить">
                     <fa-icon [icon]="faEdit" />
                   </ui-button>
-                  <ui-button (click)="openDeleteModal(risk)" color="danger" classExtension="!py-2 !px-3" data-tooltip-target="tooltip-delete">
+                  <ui-button (click)="openDeleteModal(risk)" color="danger" classExtension="!py-2 !px-3" ngbTooltip="Удалить">
                     <fa-icon [icon]="faTrash"/>
                   </ui-button>
                 </div>

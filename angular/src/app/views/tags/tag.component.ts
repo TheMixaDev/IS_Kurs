@@ -11,7 +11,7 @@ import {TableRowComponent} from "../../components/table/table-row.component";
 import {TooltipBinding} from "../../components/bindings/tooltip.binding";
 import {UiButtonComponent} from "../../components/ui/ui-button.component";
 import { AlertService } from "../../services/alert.service";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import {NgbModal, NgbTooltip} from "@ng-bootstrap/ng-bootstrap";
 import { initFlowbite } from "flowbite";
 import { Tag } from "../../models/tag";
 import { TagService } from "../../services/server/tag.service";
@@ -36,7 +36,8 @@ import {AuthService} from "../../services/server/auth.service";
     TooltipBinding,
     UiButtonComponent,
     FormsModule,
-    NgIf
+    NgIf,
+    NgbTooltip
   ],
   templateUrl: './tag.component.html'
 })

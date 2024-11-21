@@ -14,7 +14,7 @@ import {
   faWarning
 } from "@fortawesome/free-solid-svg-icons";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {NgbModal, NgbTooltip} from "@ng-bootstrap/ng-bootstrap";
 import {TeamService} from "../../services/server/team.service";
 import {Team} from "../../models/team";
 import {CreateTeamModalComponent} from "./create-team/create-team-modal.component";
@@ -26,7 +26,7 @@ import {AuthService} from "../../services/server/auth.service";
 @Component({
   selector: 'app-teams',
   standalone: true,
-  imports: [TableComponent, DatePipe, UiButtonComponent, FaIconComponent, ReactiveFormsModule, FormsModule, NgForOf, NgClass, PrimaryButtonBinding, UiDropdownComponent, NgIf],
+  imports: [TableComponent, DatePipe, UiButtonComponent, FaIconComponent, ReactiveFormsModule, FormsModule, NgForOf, NgClass, PrimaryButtonBinding, UiDropdownComponent, NgIf, NgbTooltip],
   templateUrl: './teams.component.html'
 })
 export class TeamsComponent implements OnInit {

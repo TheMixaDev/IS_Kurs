@@ -59,7 +59,7 @@
         </td>
         <td table-cell class="w-0">
           @if (currentUser?.role?.id == 1 || currentUser?.login == user.login) {
-            <ui-button color="warning" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-edit" (click)="editUser(user)">
+            <ui-button color="warning" classExtension="!py-2 !px-3 ml-1" ngbTooltip="Изменить" (click)="editUser(user)">
               <fa-icon [icon]="faEdit"/>
             </ui-button>
           }

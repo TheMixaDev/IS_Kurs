@@ -34,17 +34,17 @@
         {{ sprint.endDate | date:'dd.MM.yyyy' }}
       </td>
       <td table-cell [style.width]="(isAdmin ? '216px' : '132px')">
-        <ui-button color="primary" classExtension="!py-2 !px-3" data-tooltip-target="tooltip-release" (click)="openReleaseModal(sprint)">
+        <ui-button color="primary" classExtension="!py-2 !px-3" ngbTooltip="Релизы" (click)="openReleaseModal(sprint)">
           <fa-icon [icon]="faGear"/>
         </ui-button>
-        <ui-button color="primary" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-tasks" (click)="openTasksView(sprint)">
+        <ui-button color="primary" classExtension="!py-2 !px-3 ml-1" ngbTooltip="Задачи" (click)="openTasksView(sprint)">
           <fa-icon [icon]="faListCheck"/>
         </ui-button>
         @if(isAdmin) {
-          <ui-button color="warning" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-edit" (click)="openEditModal(sprint)">
+          <ui-button color="warning" classExtension="!py-2 !px-3 ml-1" ngbTooltip="Изменить" (click)="openEditModal(sprint)">
             <fa-icon [icon]="faEdit"/>
           </ui-button>
-          <ui-button color="danger" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-delete" (click)="openDeleteModal(sprint)">
+          <ui-button color="danger" classExtension="!py-2 !px-3 ml-1" ngbTooltip="Удалить" (click)="openDeleteModal(sprint)">
             <fa-icon [icon]="faTrash"/>
           </ui-button>
         }

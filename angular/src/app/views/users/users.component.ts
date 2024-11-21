@@ -12,7 +12,7 @@ import {Page} from "../../models/misc/page";
 import {Idea} from "../../models/idea";
 import {User} from "../../models/user";
 import {TeamService} from "../../services/server/team.service";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {NgbModal, NgbTooltip} from "@ng-bootstrap/ng-bootstrap";
 import {UserService} from "../../services/server/user.service";
 import {AuthService} from "../../services/server/auth.service";
 import {HttpErrorResponse} from "@angular/common/http";
@@ -32,7 +32,8 @@ import {NgIf} from "@angular/common";
     TableCellComponent,
     UiButtonComponent,
     TooltipBinding,
-    NgIf
+    NgIf,
+    NgbTooltip
   ],
   templateUrl: './users.component.html'
 })

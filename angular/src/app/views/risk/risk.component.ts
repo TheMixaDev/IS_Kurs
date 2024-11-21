@@ -9,7 +9,7 @@ import {UiButtonComponent} from "../../components/ui/ui-button.component";
 import {faChartSimple, faEdit, faPlus, faSearch, faTrash} from "@fortawesome/free-solid-svg-icons";
 import { AlertService } from "../../services/alert.service";
 import { initFlowbite } from "flowbite";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import {NgbModal, NgbTooltip} from "@ng-bootstrap/ng-bootstrap";
 import { ConfirmModalComponent } from "../../components/modal/confirm-modal.component";
 import { Risk } from "../../models/risk";
 import { RiskService } from "../../services/server/risk.service";
@@ -34,6 +34,7 @@ import {NgIf} from "@angular/common";
     UiButtonComponent,
     FormsModule,
     NgIf,
+    NgbTooltip,
   ],
   templateUrl: './risk.component.html'
 })

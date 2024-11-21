@@ -21,11 +21,11 @@
         </div>
       </td>
       <td table-cell class="w-[132px]" *ngIf="isAdmin">
-        <ui-button color="warning" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-edit" (click)="openEditModal(status)">
+        <ui-button color="warning" classExtension="!py-2 !px-3 ml-1" ngbTooltip="Изменить" (click)="openEditModal(status)">
           <fa-icon [icon]="faEdit"/>
         </ui-button>
         @if(status.id !== 1) {
-          <ui-button color="danger" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-delete" (click)="openDeleteModal(status)">
+          <ui-button color="danger" classExtension="!py-2 !px-3 ml-1" ngbTooltip="Удалить" (click)="openDeleteModal(status)">
             <fa-icon [icon]="faTrash"/>
           </ui-button>
         }

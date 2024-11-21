@@ -27,7 +27,7 @@ import {TableCellComponent} from "../../../components/table/table-cell.component
 import {Risk} from "../../../models/risk";
 import {RiskService} from "../../../services/server/risk.service";
 import {AddRiskModalComponent} from "./add-risk/add-risk-modal.component";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {NgbModal, NgbTooltip} from "@ng-bootstrap/ng-bootstrap";
 import {TooltipBinding} from "../../../components/bindings/tooltip.binding";
 import {UiButtonComponent} from "../../../components/ui/ui-button.component";
 import {ConfirmModalComponent} from "../../../components/modal/confirm-modal.component";
@@ -48,7 +48,8 @@ import {TagService} from "../../../services/server/tag.service";
     TableRowComponent,
     TableCellComponent,
     TooltipBinding,
-    UiButtonComponent
+    UiButtonComponent,
+    NgbTooltip
   ],
   templateUrl: 'task-view.component.html'
 })
@@ -110,7 +111,7 @@ export class TaskViewComponent implements OnInit {
       this.task.implementer = this.usersNative?.content.filter(u => u.login == value)[0] || null;
       this.updateImplementer();
     } else if(this.task) {
-      this.loadUsers(value as string)?.then(() => {
+      this.loadUsers(value as string, false)?.then(() => {
         if(this.task) {
           this.task.implementer = this.usersNative?.content.filter(u => u.login == value)[0] || null;
           this.updateImplementer();
@@ -248,18 +249,18 @@ export class TaskViewComponent implements OnInit {
     });
   }
 
-  loadUsers(login: string) : Promise<void> | null {
+  loadUsers(login: string, onlyActive: boolean = true) : Promise<void> | null {
     if(!login || login.length < 1) {
       this.users = {};
       return null;
     }
     this.usersLoad = true;
     return new Promise(resolve => {
-      this.userService.getAllUsers(0, login).subscribe(users => {
+      this.userService.getAllUsers(0, login, 0, onlyActive).subscribe(users => {
         this.usersLoad = false;
         if(!(users instanceof HttpErrorResponse)) {
           this.usersNative = users;
-          this.users = (users.content as User[]).reduce((acc: any, user) => {
+          this.users = (users.content as User[]).filter(u => u.role && u.team).reduce((acc: any, user) => {
             acc[user.login] = `${user.firstName} ${user.lastName}`;
             return acc;
           }, {});
