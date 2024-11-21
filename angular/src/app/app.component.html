@@ -1,9 +1,13 @@
 <section class="w-full h-full fixed bg-gray-100 dark:bg-gray-900">
-  <div *ngIf="isLoggedIn$ | async; else loginForm" class="h-full">
+  <div *ngIf="isLoggedIn$ | async; else loginForm" class="h-full hide-on-low">
     <app-menu>
       <router-outlet/>
     </app-menu>
   </div>
+  <p class="show-on-low text-center text-xl">
+    <b>Упс!</b> Ваш размер экрана слишком мал для корректной работы сайта.<br><br>
+    Пожалуйста, увеличьте размер экрана или измените масштабирование.
+  </p>
   <ng-template #loginForm>
     <app-auth />
   </ng-template>

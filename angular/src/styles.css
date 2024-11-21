@@ -2,19 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
+.hide-on-low {
+  @apply hidden
+}
+.show-on-low {
+  @apply block
+}
+@media (min-width: 780px) {
+  .hide-on-low {
+    @apply block
+  }
+  .show-on-low {
+    @apply hidden
+  }
+}
+
 .search-bar {
   @apply w-full
+}
+.task-dropdown {
+  @apply w-full inline-block mb-1
 }
 @media (min-width: 1024px) {
   .search-bar {
     width: calc(100% - 260px);
   }
-}
-
-.task-dropdown {
-  @apply w-full inline-block mb-1
-}
-@media (min-width: 1024px) {
   .task-dropdown {
     width: calc(100% / 4 - 8px);
     @apply mr-2 mb-0
