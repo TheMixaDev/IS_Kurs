@@ -16,6 +16,7 @@ import { BehaviorSubject, debounceTime, Subject, takeUntil } from "rxjs";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {CreateSprintModalComponent} from "./create-sprint/create-sprint-modal.component";
 import {NgIf} from "@angular/common";
+import {LoaderService} from "../../services/loader.service";
 
 @Component({
   selector: 'app-sprints',
@@ -43,9 +44,11 @@ export class SprintsComponent implements OnInit {
   constructor(private teamService : TeamService,
               private sprintService: SprintService,
               private authService: AuthService,
-              private modalService: NgbModal
+              private modalService: NgbModal,
+              private loaderService: LoaderService
   ) {
     this.authService.user$.subscribe(this.loadUserData.bind(this));
+    this.loaderService.loader(true);
   }
 
   loadUserData() {

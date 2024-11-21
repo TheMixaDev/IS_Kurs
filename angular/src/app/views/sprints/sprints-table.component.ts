@@ -27,6 +27,8 @@ import {Release} from "../../models/release";
 import {Router} from "@angular/router";
 import {AuthService} from "../../services/server/auth.service";
 import {Subscription} from "rxjs";
+import {LoaderService} from "../../services/loader.service";
+import {LoaderComponent} from "../../components/loader.component";
 
 @Component({
   selector: 'app-sprints-table',
@@ -39,23 +41,39 @@ import {Subscription} from "rxjs";
     DatePipe,
     UiButtonComponent,
     NgbTooltip,
-    TooltipBinding
+    TooltipBinding,
+    LoaderComponent
   ],
   templateUrl: './sprints-table.component.html'
 })
 export class SprintsTableComponent implements OnInit, OnDestroy {
   @Input() selectedTeamName : string = '';
+  initialized = false;
   sprints : SprintTeamDto[] = [];
   year = new Date().getFullYear();
   currentUser = this.authService.getUser();
   sprintSubscription : Subscription;
   constructor(private sprintService : SprintService,
               private alertService : AlertService,
+              private loaderService: LoaderService,
               private authService: AuthService,
               private modalService: NgbModal,
               private router: Router) {
     this.sprintSubscription = this.sprintService.sprint$.subscribe(this.updateSprints.bind(this));
     this.authService.user$.subscribe(this.loadUserData.bind(this));
+  }
+
+  _loadingData = false;
+
+  get loadingData() : boolean {
+    return this._loadingData;
+  }
+
+  set loadingData(value : boolean) {
+    if(this._loadingData == value) return;
+    setTimeout(() => {
+      this._loadingData = value;
+    }, 0);
   }
 
   ngOnDestroy() {
@@ -71,12 +89,18 @@ export class SprintsTableComponent implements OnInit, OnDestroy {
   }
 
   updateSprints() {
-    this.sprints = [];
+    this.loadingData = true;
+    //this.sprints = [];
     this.sprintService.getSprintsByYearAndTeam(this.year, this.selectedTeamName).subscribe(sprints => {
       if(sprints as SprintTeamDto[]) {
         this.sprints = sprints as SprintTeamDto[];
       } else {
         this.alertService.showAlert("danger", "Не удалось получить информацию о спринтах");
+      }
+      this.loadingData = false;
+      if(!this.initialized) {
+        this.initialized = true;
+        this.loaderService.loader(false);
       }
     });
   }

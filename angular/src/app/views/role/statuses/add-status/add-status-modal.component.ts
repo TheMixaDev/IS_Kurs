@@ -9,7 +9,7 @@ import {Status} from "../../../../models/status";
 import {UiDropdownComponent} from "../../../../components/ui/ui-dropdown.component";
 
 @Component({
-  selector: 'app-create-idea-modal',
+  selector: 'app-add-status-modal',
   standalone: true,
   imports: [
     FaIconComponent,

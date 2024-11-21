@@ -32,6 +32,7 @@ import {CreateTaskModalComponent} from "./create-task/create-task-modal.componen
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {TagService} from "../../services/server/tag.service";
 import {Tag} from "../../models/tag";
+import {LoaderService} from "../../services/loader.service";
 
 @Component({
   selector: 'app-tasks',
@@ -58,6 +59,20 @@ export class TasksComponent implements OnInit {
   tasks: Page<Task> | null = null;
   currentPage: number = 0;
   currentUser: User | null = null;
+
+  _initialized = 0;
+
+  get initialized() {
+    return this._initialized;
+  }
+
+  set initialized(value) {
+    if(value > 4) return;
+    this._initialized = value;
+    if(value == 4) {
+      this.loaderService.loader(false);
+    }
+  }
 
   statuses: { [key: number]: string } = {};
   tags: { [key: number]: string } = {};
@@ -115,9 +130,24 @@ export class TasksComponent implements OnInit {
     private authService: AuthService,
     private route: ActivatedRoute,
     private router: Router,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private loaderService: LoaderService
   ) {
     this.authService.user$.subscribe(user => this.currentUser = user);
+    this.loaderService.loader(true);
+  }
+
+  _loadingData = false;
+
+  get loadingData() : boolean {
+    return this._loadingData;
+  }
+
+  set loadingData(value : boolean) {
+    if(this._loadingData == value) return;
+    setTimeout(() => {
+      this._loadingData = value;
+    }, 0);
   }
 
   ngOnInit() {
@@ -139,9 +169,11 @@ export class TasksComponent implements OnInit {
 
   loadCurrentUser() {
     this.currentUser = this.authService.getUser();
+    this.initialized++;
   }
 
   updateTasks() {
+    this.loadingData = true;
     this.taskService.getAllTasks(this.currentPage,
       this.selectedStatusId || undefined,
       this.selectedImplementerLogin || undefined,
@@ -151,6 +183,8 @@ export class TasksComponent implements OnInit {
         if (!(tasks instanceof HttpErrorResponse)) {
           this.tasks = tasks;
         }
+        this.loadingData = false;
+        this.initialized++;
       }
     });
   }
@@ -168,6 +202,7 @@ export class TasksComponent implements OnInit {
           acc[status.id] = status.name;
           return acc;
         }, {})
+      this.initialized++;
     })
   }
 
@@ -178,6 +213,7 @@ export class TasksComponent implements OnInit {
           acc[tag.id] = tag.name;
           return acc;
         }, {})
+      this.initialized++;
     })
   }
 
@@ -231,6 +267,7 @@ export class TasksComponent implements OnInit {
     if($event) {
       $event.stopPropagation();
     }
+    this.loadingData = true;
     this.loadUsers(implementer.login, false)?.then(() => {
       this.selectedImplementerLogin = implementer.login;
     });
@@ -240,6 +277,7 @@ export class TasksComponent implements OnInit {
     if($event) {
       $event.stopPropagation();
     }
+    this.loadingData = true;
     this.loadSprints(sprintVersion)?.then(() => {
       this.selectedSprintId = sprintId;
     });
@@ -249,6 +287,7 @@ export class TasksComponent implements OnInit {
     if($event) {
       $event.stopPropagation();
     }
+    this.loadingData = true;
     this.selectedStatusId = status.id;
   }
 

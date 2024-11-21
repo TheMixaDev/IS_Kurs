@@ -24,6 +24,7 @@ import {UserService} from "../../services/server/user.service";
 import { Status } from "../../models/status";
 import { StatusService } from "../../services/server/status.service";
 import {Router} from "@angular/router";
+import {LoaderService} from "../../services/loader.service";
 
 @Component({
   selector: 'app-idea',
@@ -48,6 +49,9 @@ export class IdeaComponent implements OnInit {
   ideas: Page<Idea> | null = null;
   currentPage: number = 0;
   user: User | null = null;
+
+  initialized = false;
+
   statusMap: { [key: string]: string } = {
     'APPROVED': 'Принята',
     'PENDING': 'Ожидает',
@@ -67,6 +71,7 @@ export class IdeaComponent implements OnInit {
   constructor(private ideaService: IdeaService,
               private authService: AuthService,
               private alertService: AlertService,
+              private loaderService: LoaderService,
               private modalService: NgbModal,
               private router: Router
   ) {
@@ -74,6 +79,20 @@ export class IdeaComponent implements OnInit {
       this.updateIdeas();
     })
     this.authService.user$.subscribe(this.loadUserData.bind(this));
+    this.loaderService.loader(true);
+  }
+
+  _loadingData = false;
+
+  get loadingData() : boolean {
+    return this._loadingData;
+  }
+
+  set loadingData(value : boolean) {
+    if(this._loadingData == value) return;
+    setTimeout(() => {
+      this._loadingData = value;
+    }, 0);
   }
 
   ngOnInit() {
@@ -90,7 +109,13 @@ export class IdeaComponent implements OnInit {
   }
 
   updateIdeas() {
+    this.loadingData = true;
     this.ideaService.getAllIdeas(this.currentPage, this.selectedStatus).subscribe(ideas => {
+      this.loadingData = false;
+      if(!this.initialized) {
+        this.initialized = true;
+        this.loaderService.loader(false);
+      }
       if(ideas instanceof HttpErrorResponse) return;
       this.ideas = ideas;
     })

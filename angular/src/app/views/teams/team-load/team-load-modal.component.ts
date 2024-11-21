@@ -17,7 +17,7 @@ import {TableRowComponent} from "../../../components/table/table-row.component";
 import {TableCellComponent} from "../../../components/table/table-cell.component";
 
 @Component({
-  selector: 'app-create-idea-modal',
+  selector: 'app-team-load-modal',
   standalone: true,
   imports: [
     FaIconComponent,

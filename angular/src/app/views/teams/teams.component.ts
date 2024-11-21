@@ -21,6 +21,7 @@ import {PrimaryButtonBinding} from "../../components/bindings/primary-button.bin
 import {UiDropdownComponent} from "../../components/ui/ui-dropdown.component";
 import {TeamLoadModalComponent} from "./team-load/team-load-modal.component";
 import {AuthService} from "../../services/server/auth.service";
+import {LoaderService} from "../../services/loader.service";
 
 @Component({
   selector: 'app-teams',
@@ -32,12 +33,17 @@ export class TeamsComponent implements OnInit {
   teams : Team[] = [];
   search = '';
   currentUser = this.authService.getUser();
+
+  initialized = false;
+
   constructor(private teamService : TeamService,
               private authService: AuthService,
-              private modalService: NgbModal
+              private modalService: NgbModal,
+              private loaderService: LoaderService
   ) {
     this.teamService.team$.subscribe(this.updateTeams.bind(this));
     this.authService.user$.subscribe(this.loadUserData.bind(this));
+    this.loaderService.loader(true);
   }
 
   loadUserData() {
@@ -73,6 +79,10 @@ export class TeamsComponent implements OnInit {
 
   updateTeams() {
     this.teamService.getAllTeams(!this.isAdmin).subscribe(teams => {
+      if(!this.initialized) {
+        this.initialized = true;
+        this.loaderService.loader(false);
+      }
       this.teams = teams as Team[];
     });
   }

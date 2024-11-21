@@ -15,7 +15,7 @@ import {CustomValidators} from "../../../misc/custom-validators";
 import {NgClass} from "@angular/common";
 
 @Component({
-  selector: 'app-create-idea-modal',
+  selector: 'app-create-task-modal',
   standalone: true,
   imports: [
     FaIconComponent,
