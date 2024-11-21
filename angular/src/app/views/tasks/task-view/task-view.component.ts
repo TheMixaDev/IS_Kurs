@@ -3,7 +3,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {Task, TaskPriority} from "../../../models/task";
 import {TaskService} from "../../../services/server/task.service";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
-import {faCheck, faCircle, faPen, faPlus, faTimes, faTrash, faUser} from "@fortawesome/free-solid-svg-icons";
+import {faCheck, faPen, faPlus, faTimes, faTrash, faUser} from "@fortawesome/free-solid-svg-icons";
 import {PriorityIconPipe} from "../../../pipe/priority-icon.pipe";
 import {PriorityParserPipe} from "../../../pipe/priority-parser.pipe";
 import {UiDropdownComponent} from "../../../components/ui/ui-dropdown.component";
@@ -567,7 +567,6 @@ export class TaskViewComponent implements OnInit {
   }
 
   protected readonly faPen = faPen;
-  protected readonly faCircle = faCircle;
   protected readonly faCheck = faCheck;
   protected readonly faUser = faUser;
   protected readonly faTrash = faTrash;

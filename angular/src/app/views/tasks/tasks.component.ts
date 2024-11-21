@@ -1,6 +1,5 @@
 import {Component, OnInit} from "@angular/core";
 import {
-  faCircle,
   faEdit,
   faPlus,
   faTrash
@@ -233,7 +232,6 @@ export class TasksComponent implements OnInit {
   }
 
   protected readonly faPlus = faPlus;
-  protected readonly faCircle = faCircle;
   protected readonly faEdit = faEdit;
   protected readonly faTrash = faTrash;
 }

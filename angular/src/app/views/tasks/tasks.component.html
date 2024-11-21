@@ -65,9 +65,13 @@
             <span (click)="goToSprint($event, task.sprint.id, task.sprint.majorVersion)" class="text-blue-600 cursor-pointer">
               <div class="table-cell-lines two-lines">
               @if(task.sprint.team && task.sprint.team.color) {
-                <fa-icon [icon]="faCircle" [style.color]="task.sprint.team.color"/>
+                <div class="flex items-center gap-2">
+                  <div [style.background]="task.sprint.team.color" style="width: 10px; height: 10px; border-radius: 50%; border: 1px solid black;"></div>
+                  {{ task.sprint.majorVersion }}
+                </div>
+              }@else{
+                {{ task.sprint.majorVersion }}
               }
-              {{ task.sprint.majorVersion }}
               </div>
             </span>
           }

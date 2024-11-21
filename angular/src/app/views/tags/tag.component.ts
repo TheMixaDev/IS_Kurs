@@ -3,7 +3,7 @@ import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {HeaderItemBinding} from "../../components/bindings/header-item.binding";
 import {PrimaryButtonBinding} from "../../components/bindings/primary-button.binding";
 import {UiDropdownComponent} from "../../components/ui/ui-dropdown.component";
-import {faCircle, faEdit, faGear, faListCheck, faPlus, faStar, faTrash, faSearch} from "@fortawesome/free-solid-svg-icons";
+import {faEdit, faGear, faListCheck, faPlus, faStar, faTrash, faSearch} from "@fortawesome/free-solid-svg-icons";
 import {DatePipe, NgIf} from "@angular/common";
 import {TableCellComponent} from "../../components/table/table-cell.component";
 import {TableComponent} from "../../components/table/table.component";
@@ -125,7 +125,6 @@ export class TagComponent implements OnInit {
   protected readonly faListCheck = faListCheck;
   protected readonly faEdit = faEdit;
   protected readonly faTrash = faTrash;
-  protected readonly faCircle = faCircle;
   protected readonly faGear = faGear;
   protected readonly faStar = faStar;
   protected readonly faSearch = faSearch;

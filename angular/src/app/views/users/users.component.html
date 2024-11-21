@@ -44,9 +44,10 @@
         <td table-cell>
           <div class="table-cell-lines two-lines">
             @if(user.team) {
-              <fa-icon [icon]="faCircle" class="text-black absolute"/>
-              <fa-icon [icon]="faCircle" [style.color]="user.team.color" class="relative"/>
-              {{user.team.name}}
+              <div class="flex items-center gap-2">
+                <div [style.background]="user.team.color" style="width: 10px; height: 10px; border-radius: 50%; border: 1px solid black;"></div>
+                {{user.team.name}}
+              </div>
             } @else {
               Без команды
             }

@@ -1,6 +1,5 @@
 import {Component, OnInit} from "@angular/core";
-import {faCircle, faEdit, faPlus, faSearch} from "@fortawesome/free-solid-svg-icons";
-import { faCircle as faRegularCircle } from "@fortawesome/free-solid-svg-icons";
+import {faEdit, faPlus, faSearch} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {FormsModule} from "@angular/forms";
 import {PrimaryButtonBinding} from "../../components/bindings/primary-button.binding";
@@ -91,7 +90,5 @@ export class UsersComponent implements OnInit {
 
   protected readonly faSearch = faSearch;
   protected readonly faPlus = faPlus;
-  protected readonly faCircle = faCircle;
   protected readonly faEdit = faEdit;
-  protected readonly faRegularCircle = faRegularCircle;
 }

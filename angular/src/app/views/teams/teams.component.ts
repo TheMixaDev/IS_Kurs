@@ -4,7 +4,6 @@ import {DatePipe, NgClass, NgForOf, NgIf} from "@angular/common";
 import {UiButtonComponent} from "../../components/ui/ui-button.component";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {
-  faCircle,
   faInfo,
   faInfoCircle,
   faPencil,
@@ -92,7 +91,6 @@ export class TeamsComponent implements OnInit {
   protected readonly faPencil = faPencil;
   protected readonly faTrash = faTrash;
   protected readonly faPlus = faPlus;
-  protected readonly faCircle = faCircle;
   protected readonly faWarning = faWarning;
   protected readonly faSearch = faSearch;
   protected readonly faInfo = faInfo;

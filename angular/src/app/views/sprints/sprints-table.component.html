@@ -23,8 +23,10 @@
       </td>
       <td table-cell>
         <div class="table-cell-lines two-lines">
-          <fa-icon [icon]="faCircle" [style.color]="sprint.teamColor"/>
-          Команда "{{ sprint.teamName }}"
+          <div class="flex items-center gap-2">
+            <div [style.background]="sprint.teamColor" style="width: 10px; height: 10px; border-radius: 50%; border: 1px solid black;"></div>
+            Команда "{{ sprint.teamName }}"
+          </div>
         </div>
       </td>
       <td table-cell>

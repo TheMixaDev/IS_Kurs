@@ -118,8 +118,10 @@
             </dt>
             <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">
               @if(task.sprint) {
-                <fa-icon [icon]="faCircle" [style.color]="task.sprint.team.color"/>
-                {{ task.sprint.majorVersion }}
+                <div class="flex items-center gap-2">
+                  <div [style.background]="task.sprint.team.color" style="width: 15px; height: 15px; border-radius: 50%; border: 1px solid black;"></div>
+                  {{ task.sprint.majorVersion }}
+                </div>                
               } @else {
                 Не назначен
               }

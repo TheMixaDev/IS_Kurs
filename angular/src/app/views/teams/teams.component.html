@@ -27,8 +27,10 @@
       <div [ngClass]="'w-full grid p-6 bg-white border border-gray-100 rounded-lg hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 grid-cols-[1fr_auto] mb-2 animate-fade animate-once animate-duration-500 animate-ease-out' + (!team.isActive ? ' !bg-gray-300' : '')">
         <div>
           <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-            <fa-icon [icon]="faCircle" [style.color]="team.color"/>
-            Команда "{{ team.name }}"
+            <div class="flex items-center gap-2">
+              <div [style.background]="team.color" style="width: 15px; height: 15px; border-radius: 50%; border: 1px solid black;"></div>
+              {{ team.name }}
+            </div>
           </h5>
           <p class="font-normal text-gray-700 dark:text-gray-400">
             <span *ngFor="let line of team.description?.split('\n')">{{ line }} <br></span>

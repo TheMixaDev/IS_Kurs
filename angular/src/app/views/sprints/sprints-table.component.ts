@@ -3,7 +3,6 @@ import {AlertService} from "../../services/alert.service";
 import {
   faArrowLeft,
   faArrowRight,
-  faCircle,
   faEdit, faGear,
   faListCheck,
   faPlus,
@@ -146,7 +145,6 @@ export class SprintsTableComponent implements OnInit {
   }
 
   protected readonly currentYear = new Date().getFullYear();
-  protected readonly faCircle = faCircle;
   protected readonly faPlus = faPlus;
   protected readonly faArrowRight = faArrowRight;
   protected readonly faArrowLeft = faArrowLeft;
