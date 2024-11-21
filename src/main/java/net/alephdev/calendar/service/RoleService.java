@@ -39,8 +39,9 @@ public class RoleService {
         Role role = roleRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Роль не найдена"));
 
-        role.setName(updatedRole.getName());
-        role.setResponsibilities(updatedRole.getResponsibilities());
+        role.setName(updatedRole.getName().trim());
+        if(updatedRole.getResponsibilities() != null)
+            role.setResponsibilities(updatedRole.getResponsibilities().trim());
 
         return roleRepository.save(role);
     }

@@ -4,6 +4,7 @@ import net.alephdev.calendar.dto.functional.TopRiskProjection;
 import net.alephdev.calendar.models.Risk;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,4 +19,5 @@ public interface RiskRepository extends JpaRepository<Risk, Integer> {
     
     Page<Risk> findByDescriptionContainingIgnoreCase(String description, Pageable pageable);
 
+    Optional<Risk> findByDescription(String description);
 }

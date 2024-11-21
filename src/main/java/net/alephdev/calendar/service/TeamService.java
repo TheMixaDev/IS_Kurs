@@ -32,6 +32,9 @@ public class TeamService {
         team.setName(team.getName().trim());
         if(team.getDescription() != null)
             team.setDescription(team.getDescription().trim());
+        teamRepository.findByName(team.getName()).ifPresent(existingTeam -> {
+            throw new NoSuchElementException("Команда с таким названием уже существует");
+        });
         return teamRepository.save(team);
     }
 
@@ -39,9 +42,15 @@ public class TeamService {
         Team team = teamRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Команда не найдена"));
 
-        team.setName(updatedTeam.getName());
+        if(!team.getName().equals(updatedTeam.getName().trim())) {
+            teamRepository.findByName(updatedTeam.getName().trim()).ifPresent(existingTeam -> {
+                throw new NoSuchElementException("Команда с таким названием уже существует");
+            });
+            team.setName(updatedTeam.getName().trim());
+        }
         team.setColor(updatedTeam.getColor());
-        team.setDescription(updatedTeam.getDescription());
+        if(updatedTeam.getDescription() != null)
+            team.setDescription(updatedTeam.getDescription().trim());
         team.setIsActive(updatedTeam.getIsActive());
 
         return teamRepository.save(team);

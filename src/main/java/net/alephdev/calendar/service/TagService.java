@@ -33,6 +33,9 @@ public class TagService {
         tag.setName(tag.getName().trim());
         if(tag.getDescription() != null)
             tag.setDescription(tag.getDescription().trim());
+        tagRepository.findByName(tag.getName()).ifPresent(existingTag -> {
+            throw new NoSuchElementException("Тег с таким названием уже существует");
+        });
         return tagRepository.save(tag);
     }
 
@@ -40,8 +43,14 @@ public class TagService {
         Tag tag = tagRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Тег не найден"));
 
-        tag.setName(updatedTag.getName());
-        tag.setDescription(updatedTag.getDescription());
+        if(!tag.getName().equals(updatedTag.getName().trim())) {
+            tagRepository.findByName(updatedTag.getName().trim()).ifPresent(existingTag -> {
+                throw new NoSuchElementException("Тег с таким названием уже существует");
+            });
+            tag.setName(updatedTag.getName().trim());
+        }
+        if(updatedTag.getDescription() != null)
+            tag.setDescription(updatedTag.getDescription().trim());
 
         return tagRepository.save(tag);
     }

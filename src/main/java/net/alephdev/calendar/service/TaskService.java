@@ -75,7 +75,7 @@ public class TaskService {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Задача не найдена"));
 
-        if(updatedTask.getName() != null)  task.setName(updatedTask.getName());
+        if(updatedTask.getName() != null)  task.setName(updatedTask.getName().trim());
         if(updatedTask.getStoryPoints() != null) task.setStoryPoints(updatedTask.getStoryPoints());
         if(updatedTask.getPriorityEnum() != null) task.setPriorityEnum(updatedTask.getPriorityEnum());
         return taskRepository.save(task);

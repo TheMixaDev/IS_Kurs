@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +26,9 @@ public class StatusService {
         status.setName(status.getName().trim());
         if(status.getDescription() != null)
             status.setDescription(status.getDescription().trim());
+        statusRepository.findByName(status.getName()).ifPresent(existingStatus -> {
+            throw new NoSuchElementException("Статус с таким названием уже существует");
+        });
         return statusRepository.save(status);
     }
 
@@ -32,8 +36,14 @@ public class StatusService {
         Status status = statusRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Статус не найден"));
 
-        status.setName(updatedStatus.getName());
-        status.setDescription(updatedStatus.getDescription());
+        if(!status.getName().equals(updatedStatus.getName().trim())) {
+            statusRepository.findByName(updatedStatus.getName().trim()).ifPresent(existingStatus -> {
+                throw new NoSuchElementException("Статус с таким названием уже существует");
+            });
+            status.setName(updatedStatus.getName().trim());
+        }
+        if(updatedStatus.getDescription() != null)
+            status.setDescription(updatedStatus.getDescription().trim());
 
         return statusRepository.save(status);
     }

@@ -52,9 +52,10 @@ public class ReleaseService {
             release.setSprint(sprint);
         }
 
-        release.setVersion(updatedRelease.getVersion());
+        release.setVersion(updatedRelease.getVersion().trim());
         release.setReleaseDate(updatedRelease.getReleaseDate());
-        release.setDescription(updatedRelease.getDescription());
+        if(updatedRelease.getDescription() != null)
+            release.setDescription(updatedRelease.getDescription().trim());
 
         return releaseRepository.save(release);
     }

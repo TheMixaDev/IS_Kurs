@@ -43,7 +43,7 @@ public class IdeaService {
                 .orElseThrow(() -> new NoSuchElementException("Идея не найдена"));
 
         if(canEditIdea(idea, user)) {
-            idea.setDescription(updatedIdea.getDescription());
+            idea.setDescription(updatedIdea.getDescription().trim());
             return ideaRepository.save(idea);
         }
         throw new IllegalArgumentException("Недостаточно прав для редактирования идеи");

@@ -65,10 +65,10 @@ public class UserService {
     @Transactional
     public User updateUser(String login, UserDto userDto) {
         User user = getUserByLogin(login);
-        if(userDto.getEmail() != null && !userDto.getEmail().isEmpty()) user.setEmail(userDto.getEmail());
+        if(userDto.getEmail() != null && !userDto.getEmail().isEmpty()) user.setEmail(userDto.getEmail().trim());
         if(userDto.getPassword() != null && !userDto.getPassword().isEmpty()) user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        if(userDto.getFirstName() != null && !userDto.getFirstName().isEmpty()) user.setFirstName(userDto.getFirstName());
-        if(userDto.getLastName() != null && !userDto.getLastName().isEmpty()) user.setLastName(userDto.getLastName());
+        if(userDto.getFirstName() != null && !userDto.getFirstName().isEmpty()) user.setFirstName(userDto.getFirstName().trim());
+        if(userDto.getLastName() != null && !userDto.getLastName().isEmpty()) user.setLastName(userDto.getLastName().trim());
 
         return userRepository.save(user);
     }

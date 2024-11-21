@@ -59,7 +59,7 @@ export class CreateUserModalComponent implements OnInit {
     lastName: new FormControl('', [Validators.required, Validators.maxLength(255), CustomValidators.noWhitespace()]),
     teamId: new FormControl(0),
     roleId: new FormControl(0),
-    password: new FormControl('', [Validators.maxLength(255), CustomValidators.noWhitespace()])
+    password: new FormControl('')
   });
 
   get errors() {
@@ -81,10 +81,6 @@ export class CreateUserModalComponent implements OnInit {
       return 'Не заполнено поле фамилия.';
     if(this.createForm.get('lastName')?.errors?.['maxlength'])
       return 'Длина поля фамилия не должна превышать 255 символов.';
-    if(this.createForm.get('teamId')?.errors?.['required'] || this.createForm.get('teamId')?.errors?.['min'])
-      return 'Не заполнено поле команды.';
-    if(this.createForm.get('roleId')?.errors?.['required'] || this.createForm.get('roleId')?.errors?.['min'])
-      return 'Не заполнено поле роли.';
     return '';
   }
 

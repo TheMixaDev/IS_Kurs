@@ -48,6 +48,9 @@ public class SprintService {
                 .orElseThrow(() -> new NoSuchElementException("Команда не найдена"));
 
         sprint.setMajorVersion(sprintDto.getMajorVersion().trim());
+        sprintRepository.findByMajorVersion(sprintDto.getMajorVersion().trim()).ifPresent(existingSprint -> {
+            throw new NoSuchElementException("Спринт с такой версией уже существует");
+        });
         sprint.setStartDate(sprintDto.getStartDate());
         sprint.setEndDate(sprintDto.getEndDate());
         sprint.setRegressionStart(sprintDto.getRegressionStart());
@@ -61,7 +64,12 @@ public class SprintService {
         Sprint sprint = sprintRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Спринт не найден"));
 
-        sprint.setMajorVersion(updatedSprint.getMajorVersion());
+        if(!sprint.getMajorVersion().equals(updatedSprint.getMajorVersion().trim())) {
+            sprintRepository.findByMajorVersion(updatedSprint.getMajorVersion().trim()).ifPresent(existingSprint -> {
+                throw new NoSuchElementException("Спринт с такой версией уже существует");
+            });
+            sprint.setMajorVersion(updatedSprint.getMajorVersion().trim());
+        }
         sprint.setStartDate(updatedSprint.getStartDate());
         sprint.setEndDate(updatedSprint.getEndDate());
         sprint.setRegressionStart(updatedSprint.getRegressionStart());

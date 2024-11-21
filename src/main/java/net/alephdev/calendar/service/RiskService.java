@@ -38,6 +38,9 @@ public class RiskService {
 
     public Risk createRisk(Risk risk) {
         risk.setDescription(risk.getDescription().trim());
+        riskRepository.findByDescription(risk.getDescription()).ifPresent(existingRisk -> {
+            throw new IllegalArgumentException("Риск с таким названием уже существует");
+        });
         return riskRepository.save(risk);
     }
 
@@ -45,7 +48,12 @@ public class RiskService {
         Risk risk = riskRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Риск не найден"));
 
-        risk.setDescription(updatedRisk.getDescription());
+        if (!risk.getDescription().equals(updatedRisk.getDescription().trim())) {
+            riskRepository.findByDescription(updatedRisk.getDescription().trim()).ifPresent(existingRisk -> {
+                throw new IllegalArgumentException("Риск с таким названием уже существует");
+            });
+            risk.setDescription(updatedRisk.getDescription().trim());
+        }
         risk.setProbability(updatedRisk.getProbability());
         risk.setEstimatedLoss(updatedRisk.getEstimatedLoss());
 

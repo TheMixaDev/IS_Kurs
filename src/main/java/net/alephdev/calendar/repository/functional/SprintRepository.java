@@ -5,6 +5,7 @@ import net.alephdev.calendar.dto.functional.UserStoryPointsProjection;
 import net.alephdev.calendar.models.Sprint;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,4 +26,6 @@ public interface SprintRepository extends JpaRepository<Sprint, Integer> {
     Page<Sprint> findAllByMajorVersionContaining(String majorVersion, Pageable page);
 
     Page<Sprint> findAllByMajorVersionContainingAndTeamId(String majorVersion, Integer teamId, PageRequest endDate);
+
+    Optional<Sprint> findByMajorVersion(String trim);
 }

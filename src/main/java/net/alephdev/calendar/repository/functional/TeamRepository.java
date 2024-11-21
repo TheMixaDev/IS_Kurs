@@ -4,6 +4,7 @@ import net.alephdev.calendar.models.Team;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,4 +18,6 @@ public interface TeamRepository extends JpaRepository<Team, Integer> {
     BigDecimal calculateTeamLoad(@Param("teamId") Integer teamId, @Param("sprintId") Integer sprintId);
 
     List<Team> findAllByIsActive(boolean b, Sort sort);
+
+    Optional<Team> findByName(String name);
 }
