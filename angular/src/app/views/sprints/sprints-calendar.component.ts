@@ -41,10 +41,6 @@ export class SprintsCalendarComponent implements AfterViewInit, OnDestroy {
     weekends: true,
     events: [],
     multiMonthMaxColumns: 2,
-    // validRange: {
-    //   start: '2003-01-01',
-    //   end: '2030-12-31'
-    // },
     buttonText: {
       today: moment().format('DD.MM.YYYY')
     },
