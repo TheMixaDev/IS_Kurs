@@ -9,6 +9,7 @@ import {TasksComponent} from "./views/tasks/tasks.component";
 import {RiskComponent} from "./views/risk/risk.component";
 import {TaskViewComponent} from "./views/tasks/task-view/task-view.component";
 import { TagComponent } from './views/tags/tag.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
 
 export const routes: Routes = [
   {
@@ -51,4 +52,6 @@ export const routes: Routes = [
     path: 'tag',
     component: TagComponent
   },
+  { path: '404', component: NotFoundComponent },
+  { path: '**', redirectTo: '/404' },
 ];
