@@ -9,7 +9,7 @@ import {
   SimpleChanges,
   ViewChild
 } from "@angular/core";
-import {DatePipe} from "@angular/common";
+import {DatePipe, NgIf} from "@angular/common";
 import {FullCalendarComponent, FullCalendarModule} from '@fullcalendar/angular';
 import {CalendarOptions} from '@fullcalendar/core';
 import multiMonthPlugin from '@fullcalendar/multimonth'
@@ -22,17 +22,19 @@ import {Day} from "../../models/misc/day";
 import {MessageDto} from "../../models/dto/message-dto";
 import {HttpErrorResponse} from "@angular/common/http";
 import {Subscription} from "rxjs";
+import {LoaderService} from "../../services/loader.service";
 
 @Component({
   selector: 'app-sprints-calendar',
   standalone: true,
-  imports: [DatePipe, FullCalendarModule],
+  imports: [DatePipe, FullCalendarModule, NgIf],
   templateUrl: './sprints-calendar.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SprintsCalendarComponent implements AfterViewInit, OnDestroy {
   @Input() selectedTeamName : string = '';
   @ViewChild('calendar') calendarComponent!: FullCalendarComponent;
+  initialized = false;
   calendarOptions : CalendarOptions = {
     initialView: 'multiMonthYear',
     plugins: [multiMonthPlugin],
@@ -54,12 +56,26 @@ export class SprintsCalendarComponent implements AfterViewInit, OnDestroy {
 
   constructor(private sprintService : SprintService,
               private alertService: AlertService,
+              private loaderService: LoaderService,
               private calendarService: CalendarService,
               private cdRef: ChangeDetectorRef
   ) {
     this.sprintSubscription = this.sprintService.sprint$.subscribe(() => {
       this.update();
     });
+  }
+
+  _loadingData = false;
+
+  get loadingData() : boolean {
+    return this._loadingData;
+  }
+
+  set loadingData(value : boolean) {
+    setTimeout(() => {
+      this._loadingData = value;
+      this.cdRef.markForCheck();
+    }, 0);
   }
 
   ngOnDestroy() {
@@ -89,6 +105,11 @@ export class SprintsCalendarComponent implements AfterViewInit, OnDestroy {
       } else {
         this.alertService.showAlert("danger", "Не удалось получить информацию о спринтах");
         console.error(sprints as HttpErrorResponse);
+      }
+      this.loadingData = false;
+      if(!this.initialized) {
+        this.initialized = true;
+        this.loaderService.loader(false);
       }
     })
   }
@@ -157,8 +178,10 @@ export class SprintsCalendarComponent implements AfterViewInit, OnDestroy {
     }, 10);
   }
   update() {
-    if(this.selectedTeamName != '')
+    if(this.selectedTeamName != '') {
+      this.loadingData = true;
       this.updateSprints();
+    }
     this.updateDayOffs();
   }
 

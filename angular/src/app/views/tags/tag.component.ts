@@ -20,6 +20,7 @@ import { FormsModule } from "@angular/forms";
 import { ConfirmModalComponent } from "../../components/modal/confirm-modal.component";
 import { CreateTagModalComponent } from "./create-tag/create-tag-modal.component";
 import {AuthService} from "../../services/server/auth.service";
+import {LoaderService} from "../../services/loader.service";
 
 @Component({
   selector: 'app-tag',
@@ -46,8 +47,11 @@ export class TagComponent implements OnInit {
   search = '';
   currentUser = this.authService.getUser();
 
+  initialized = false;
+
   constructor(private tagService: TagService,
               private alertService: AlertService,
+              private loaderService: LoaderService,
               private authService: AuthService,
               private modalService: NgbModal
   ) {
@@ -55,6 +59,7 @@ export class TagComponent implements OnInit {
       this.updateTags();
     });
     this.authService.user$.subscribe(this.loadUserData.bind(this));
+    this.loaderService.loader(true);
   }
 
   loadUserData() {
@@ -78,9 +83,13 @@ export class TagComponent implements OnInit {
 
   updateTags(){
     this.tagService.getAllTags().subscribe(tags => {
-        if(tags instanceof HttpErrorResponse) return;
-        this.tags = tags;
-      })
+      if(!this.initialized) {
+        this.initialized = true;
+        this.loaderService.loader(false);
+      }
+      if(tags instanceof HttpErrorResponse) return;
+      this.tags = tags;
+    })
   }
 
   openCreateModal(){

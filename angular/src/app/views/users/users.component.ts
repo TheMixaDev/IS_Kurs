@@ -19,6 +19,7 @@ import {TooltipBinding} from "../../components/bindings/tooltip.binding";
 import {CreateUserModalComponent} from "./create-user/create-user-modal.component";
 import {NgIf} from "@angular/common";
 import {AlertService} from "../../services/alert.service";
+import {LoaderService} from "../../services/loader.service";
 
 @Component({
   selector: 'app-users',
@@ -42,15 +43,32 @@ export class UsersComponent implements OnInit {
   currentPage: number = 0;
   currentUser: User | null = this.authService.getUser();
 
+  initialized = false;
+
   search = '';
 
   constructor(private userService : UserService,
               private authService: AuthService,
               private alertService: AlertService,
+              private loaderService: LoaderService,
               private modalService: NgbModal
   ) {
     this.userService.user$.subscribe(this.updateUsers.bind(this));
     this.authService.user$.subscribe(this.loadUserData.bind(this));
+    this.loaderService.loader(true);
+  }
+
+  _loadingData = false;
+
+  get loadingData() : boolean {
+    return this._loadingData;
+  }
+
+  set loadingData(value : boolean) {
+    if(this._loadingData == value) return;
+    setTimeout(() => {
+      this._loadingData = value;
+    }, 0);
   }
 
   loadUserData() {
@@ -66,7 +84,13 @@ export class UsersComponent implements OnInit {
   }
 
   updateUsers() {
+    this.loadingData = true;
     this.userService.getAllUsers(this.currentPage, this.search, 0, false).subscribe(users => {
+      this.loadingData = false;
+      if(!this.initialized) {
+        this.initialized = true;
+        this.loaderService.loader(false);
+      }
       if(users instanceof HttpErrorResponse) return;
       this.users = users;
     })

@@ -17,6 +17,7 @@ import { ConfirmModalComponent } from "../../components/modal/confirm-modal.comp
 import {RoleStatusesModalComponent} from "./statuses/role-statuses-modal.component";
 import {AuthService} from "../../services/server/auth.service";
 import {NgIf} from "@angular/common";
+import {LoaderService} from "../../services/loader.service";
 
 @Component({
   selector: 'app-role',
@@ -39,8 +40,11 @@ export class RoleComponent implements OnInit {
   roles: Role[] = [];
   currentUser = this.authService.getUser();
 
+  initialized = false;
+
   constructor(private roleService: RoleService,
               private alertService: AlertService,
+              private loaderService: LoaderService,
               private authService: AuthService,
               private modalService: NgbModal
   ) {
@@ -48,6 +52,7 @@ export class RoleComponent implements OnInit {
       this.updateRoles();
     });
     this.authService.user$.subscribe(this.loadUserData.bind(this));
+    this.loaderService.loader(true);
   }
 
   loadUserData() {
@@ -66,6 +71,10 @@ export class RoleComponent implements OnInit {
   updateRoles(){
     this.roles = [];
     this.roleService.getAllRoles().subscribe(roles => {
+      if(!this.initialized) {
+        this.initialized = true;
+        this.loaderService.loader(false);
+      }
       if(roles as Role[]) {
         this.roles = roles as Role[];
       } else {

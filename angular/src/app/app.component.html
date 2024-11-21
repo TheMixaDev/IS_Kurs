@@ -2,6 +2,7 @@
   <div *ngIf="isLoggedIn$ | async; else loginForm" class="h-full hide-on-low">
     <app-menu>
       <router-outlet/>
+      <app-loader class="globalLoaderParent" *ngIf="loader"/>
     </app-menu>
   </div>
   <p class="show-on-low text-center text-xl">

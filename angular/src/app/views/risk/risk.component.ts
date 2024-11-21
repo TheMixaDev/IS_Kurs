@@ -20,6 +20,7 @@ import { CreateRiskModalComponent } from "./create-risk/create-risk-modal.compon
 import { FormsModule } from '@angular/forms';
 import {AuthService} from "../../services/server/auth.service";
 import {NgIf} from "@angular/common";
+import {LoaderService} from "../../services/loader.service";
 
 @Component({
   selector: 'app-risk',
@@ -45,11 +46,26 @@ export class RiskComponent implements OnInit {
   currentPage: number = 0;
   currentUser = this.authService.getUser();
 
+  _initialized = 0;
+
+  get initialized() {
+    return this._initialized;
+  }
+
+  set initialized(value) {
+    if(value > 2) return;
+    this._initialized = value;
+    if(value == 2) {
+      this.loaderService.loader(false);
+    }
+  }
+
   search = '';
 
   constructor(private riskService: RiskService,
               private alertService: AlertService,
               private authService: AuthService,
+              private loaderService: LoaderService,
               private modalService: NgbModal
   ) {
     this.riskService.risk$.subscribe(() => {
@@ -57,6 +73,20 @@ export class RiskComponent implements OnInit {
       this.loadRisks();
     });
     this.authService.user$.subscribe(this.loadUserData.bind(this));
+    this.loaderService.loader(true);
+  }
+
+  _loadingData = false;
+
+  get loadingData() : boolean {
+    return this._loadingData;
+  }
+
+  set loadingData(value : boolean) {
+    if(this._loadingData == value) return;
+    setTimeout(() => {
+      this._loadingData = value;
+    }, 0);
   }
 
   loadUserData() {
@@ -80,7 +110,10 @@ export class RiskComponent implements OnInit {
   }
 
   loadRisks() {
+    this.loadingData = true;
     this.riskService.getAllRisks(this.currentPage, this.search).subscribe(risks => {
+      this.loadingData = false;
+      this.initialized++;
       if(risks instanceof HttpErrorResponse) return;
       this.allRisks = risks;
       if(this.currentPage != 0 && this.allRisks.content.length === 0){
@@ -93,6 +126,7 @@ export class RiskComponent implements OnInit {
   loadTopRisks() {
     this.topTenRisks = [];
     this.riskService.getTop10Risks().subscribe(risks => {
+      this.initialized++;
       if(risks as TopRiskDto[]) {
         this.topTenRisks = risks as TopRiskDto[];
       } else {

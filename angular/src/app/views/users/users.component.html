@@ -76,6 +76,9 @@
         </td>
       </tr>
     }
+    @if(loadingData) {
+      <span class="mainLoader"></span>
+    }
   </app-table-component>
 } @else {
   <app-table-component [columns]="['Логин', 'Почта', 'ФИО', 'Команда', 'Роль', 'Действия']" [creationEnabled]="false">
@@ -84,5 +87,8 @@
         Нет данных
       </td>
     </tr>
+    @if(loadingData) {
+      <span class="mainLoader"></span>
+    }
   </app-table-component>
 }

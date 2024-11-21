@@ -33,6 +33,7 @@ import {UiButtonComponent} from "../../../components/ui/ui-button.component";
 import {ConfirmModalComponent} from "../../../components/modal/confirm-modal.component";
 import {Tag} from "../../../models/tag";
 import {TagService} from "../../../services/server/tag.service";
+import {LoaderService} from "../../../services/loader.service";
 
 @Component({
   selector: 'app-task-view',
@@ -58,6 +59,20 @@ export class TaskViewComponent implements OnInit {
   originalTask: Task | null = null;
   task: Task | null = null;
   currentUser: User | null = null;
+
+  _initialized = 0;
+
+  get initialized() {
+    return this._initialized;
+  }
+
+  set initialized(value) {
+    if(value > 6) return;
+    this._initialized = value;
+    if(value == 6) {
+      this.loaderService.loader(false);
+    }
+  }
 
   priorityMap: { [key: string]: string } = {
     'LOW': 'Низкий',
@@ -164,6 +179,7 @@ export class TaskViewComponent implements OnInit {
     return this._statusWrapper;
   }
   set statusWrapper(value: number | null) {
+    this.initialized++;
     this._statusWrapper = value;
     if(this.task) {
       this.task.status = this.statusesNative?.filter(s => s.id == value)[0] as Status || this.task.status;
@@ -204,9 +220,11 @@ export class TaskViewComponent implements OnInit {
               private roleService: RoleService,
               private riskService: RiskService,
               private tagService: TagService,
-              private modalService: NgbModal
+              private modalService: NgbModal,
+              private loaderService: LoaderService
               ) {
     this.authService.user$.subscribe(user => this.currentUser = user);
+    this.loaderService.loader(true);
   }
 
   get isAdmin() : boolean {
@@ -329,6 +347,7 @@ export class TaskViewComponent implements OnInit {
   loadRisks() {
     if(!this.task) return;
     this.riskService.getRisksForTask(this.task.id).subscribe(risks => {
+      this.initialized++;
       if (!(risks instanceof HttpErrorResponse)) {
         this.risks = risks;
         this.updateAvailableRisks();
@@ -338,6 +357,7 @@ export class TaskViewComponent implements OnInit {
 
   loadTags() {
     this.tagService.getAllTags().subscribe(tags => {
+      this.initialized++;
       if(tags instanceof HttpErrorResponse) return;
       this.tagsNative = tags as Tag[];
       this.updateAvailableTags();
@@ -477,6 +497,7 @@ export class TaskViewComponent implements OnInit {
   }
 
   private updateImplementer() {
+    this.initialized++;
     if(this.task && this.originalTask &&
       (
         this.task.implementer?.login != this.originalTask.implementer?.login ||
@@ -493,6 +514,7 @@ export class TaskViewComponent implements OnInit {
   }
 
   updateSprint() {
+    this.initialized++;
     if(this.task && this.originalTask &&
       (
         this.task.sprint?.id != this.originalTask.sprint?.id ||
@@ -560,6 +582,7 @@ export class TaskViewComponent implements OnInit {
   }
 
   updatePriority() {
+    this.initialized++;
     if(this.task && this.originalTask && this.task.priorityEnum != this.originalTask.priorityEnum) {
       this.taskService.updateTask(this.task.id, { priorityEnum: this.task.priorityEnum } as TaskDto).subscribe(() => {
         this.alertService.showAlert('success', 'Приоритет обновлен');

@@ -18,6 +18,7 @@ import { initFlowbite } from "flowbite";
 import { ConfirmModalComponent } from "../../components/modal/confirm-modal.component";
 import { CreateStatusModalComponent } from "./create-status/create-status-modal.component";
 import {AuthService} from "../../services/server/auth.service";
+import {LoaderService} from "../../services/loader.service";
 
 @Component({
   selector: 'app-status',
@@ -42,8 +43,11 @@ export class StatusComponent implements OnInit {
   statuses: Status[] = [];
   currentUser = this.authService.getUser();
 
+  initialized = false;
+
   constructor(private statusService: StatusService,
               private alertService: AlertService,
+              private loaderService: LoaderService,
               private authService: AuthService,
               private modalService: NgbModal
   ) {
@@ -51,6 +55,7 @@ export class StatusComponent implements OnInit {
       this.updateStatuses();
     });
     this.authService.user$.subscribe(this.loadUserData.bind(this));
+    this.loaderService.loader(true);
   }
 
   loadUserData() {
@@ -75,6 +80,10 @@ export class StatusComponent implements OnInit {
   updateStatuses(){
     this.statuses = [];
     this.statusService.getAllStatuses().subscribe(statuses => {
+      if(!this.initialized) {
+        this.initialized = true;
+        this.loaderService.loader(false);
+      }
       if(statuses as Status[]) {
         this.statuses = statuses as Status[];
       } else {

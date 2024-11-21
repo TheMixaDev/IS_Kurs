@@ -95,11 +95,17 @@
         <td table-cell colspan="7" class="text-center bg-gray-50">Нет задач</td>
       </tr>
     }
+    @if(loadingData) {
+      <span class="mainLoader"></span>
+    }
   </app-table-component>
 } @else {
   <app-table-component [columns]="['Название', 'Story Points', 'Приоритет', 'Исполнитель', 'Спринт', 'Статус', 'Создана']" [creationEnabled]="false">
     <tr table-row>
       <td table-cell colspan="7" class="text-center bg-gray-50">Нет данных</td>
     </tr>
+    @if(loadingData) {
+      <span class="mainLoader"></span>
+    }
   </app-table-component>
 }
