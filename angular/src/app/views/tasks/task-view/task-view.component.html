@@ -125,8 +125,10 @@
               @if(task.sprint) {
                 <div class="flex items-center gap-2">
                   <div [style.background]="task.sprint.team.color" style="width: 15px; height: 15px; border-radius: 50%; border: 1px solid black;"></div>
-                  {{ task.sprint.majorVersion }}
-                </div>                
+                  <span class="text-blue-600 cursor-pointer" (click)="goToSprint(task.sprint.id, task.sprint.majorVersion)">
+                    {{ task.sprint.majorVersion }}
+                  </span>
+                </div>
               } @else {
                 Не назначен
               }

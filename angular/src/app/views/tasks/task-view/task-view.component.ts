@@ -599,4 +599,13 @@ export class TaskViewComponent implements OnInit {
   protected readonly faTrash = faTrash;
   protected readonly faTimes = faTimes;
   protected readonly faPlus = faPlus;
+
+  goToSprint(id: number, majorVersion: string) {
+    this.router.navigate(['tasks'], {
+      queryParams: {
+        sprintId: id,
+        sprintVersion: majorVersion
+      }
+    });
+  }
 }
