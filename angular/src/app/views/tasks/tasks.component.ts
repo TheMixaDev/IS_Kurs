@@ -156,17 +156,17 @@ export class TasksComponent implements OnInit {
     })
   }
 
-  loadUsers(login: string) : Promise<void> | null {
+  loadUsers(login: string, onlyActive : boolean = true) : Promise<void> | null {
     if(login.length < 1) {
       this.users = {};
       return null;
     }
     this.usersLoad = true;
     return new Promise(resolve => {
-      this.userService.getAllUsers(0, login).subscribe(users => {
+      this.userService.getAllUsers(0, login, 0, onlyActive).subscribe(users => {
         this.usersLoad = false;
         if(!(users instanceof HttpErrorResponse)) {
-          this.users = (users.content as User[]).reduce((acc: any, user) => {
+          this.users = (users.content as User[]).filter(u => u.role && u.team || u.login == this.currentUser?.login).reduce((acc: any, user) => {
             acc[user.login] = `${user.firstName} ${user.lastName}`;
             return acc;
           }, {});
@@ -206,7 +206,7 @@ export class TasksComponent implements OnInit {
     if($event) {
       $event.stopPropagation();
     }
-    this.loadUsers(implementer.login)?.then(() => {
+    this.loadUsers(implementer.login, false)?.then(() => {
       this.selectedImplementerLogin = implementer.login;
     });
   }

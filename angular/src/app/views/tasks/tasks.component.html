@@ -76,7 +76,7 @@
             </span>
           }
         </td>
-        <td table-cell>
+        <td table-cell class="w-[130px]">
           <div (click)="goToStatus($event, task.status)" class="text-blue-600 cursor-pointer table-cell-lines three-lines text-xs">
             {{ task.status.name }}
           </div>
@@ -85,7 +85,7 @@
     }
     @if(tasks.content.length === 0) {
       <tr table-row>
-        <td table-cell colspan="7" class="text-center bg-gray-50">Нет данных</td>
+        <td table-cell colspan="7" class="text-center bg-gray-50">Нет задач</td>
       </tr>
     }
   </app-table-component>

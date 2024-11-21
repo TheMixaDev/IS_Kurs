@@ -282,7 +282,7 @@ export class TaskViewComponent implements OnInit {
         this.usersLoad = false;
         if(!(users instanceof HttpErrorResponse)) {
           this.usersNative = users;
-          this.users = (users.content as User[]).filter(u => u.role && u.team).reduce((acc: any, user) => {
+          this.users = (users.content as User[]).filter(u => u.role && u.team || u.login == this.currentUser?.login).reduce((acc: any, user) => {
             acc[user.login] = `${user.firstName} ${user.lastName}`;
             return acc;
           }, {});
