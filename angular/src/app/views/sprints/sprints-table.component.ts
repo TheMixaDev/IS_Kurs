@@ -81,8 +81,10 @@ export class SprintsTableComponent implements OnInit {
     initFlowbite();
   }
   changeYear(amount : number) {
-    this.year += amount;
-    this.updateSprints();
+    if(this.year + amount <= 2030 && this.year + amount >= 2000){
+      this.year += amount;
+      this.updateSprints();
+    } 
   }
 
   openEditModal(sprint: SprintTeamDto) {
