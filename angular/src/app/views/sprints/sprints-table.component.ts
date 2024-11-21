@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from "@angular/core";
+import {Component, Input, OnDestroy, OnInit} from "@angular/core";
 import {AlertService} from "../../services/alert.service";
 import {
   faArrowLeft,
@@ -26,6 +26,7 @@ import {ReleaseModalComponent} from "./release/release-modal.component";
 import {Release} from "../../models/release";
 import {Router} from "@angular/router";
 import {AuthService} from "../../services/server/auth.service";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-sprints-table',
@@ -42,20 +43,23 @@ import {AuthService} from "../../services/server/auth.service";
   ],
   templateUrl: './sprints-table.component.html'
 })
-export class SprintsTableComponent implements OnInit {
+export class SprintsTableComponent implements OnInit, OnDestroy {
   @Input() selectedTeamName : string = '';
   sprints : SprintTeamDto[] = [];
   year = new Date().getFullYear();
   currentUser = this.authService.getUser();
+  sprintSubscription : Subscription;
   constructor(private sprintService : SprintService,
               private alertService : AlertService,
               private authService: AuthService,
               private modalService: NgbModal,
               private router: Router) {
-    this.sprintService.sprint$.subscribe(() => {
-      this.updateSprints();
-    });
+    this.sprintSubscription = this.sprintService.sprint$.subscribe(this.updateSprints.bind(this));
     this.authService.user$.subscribe(this.loadUserData.bind(this));
+  }
+
+  ngOnDestroy() {
+    this.sprintSubscription.unsubscribe();
   }
 
   loadUserData() {
@@ -77,14 +81,15 @@ export class SprintsTableComponent implements OnInit {
     });
   }
   ngOnInit() {
-    this.updateSprints();
+    if(this.selectedTeamName != '')
+      this.updateSprints();
     initFlowbite();
   }
   changeYear(amount : number) {
     if(this.year + amount <= 2030 && this.year + amount >= 2000){
       this.year += amount;
       this.updateSprints();
-    } 
+    }
   }
 
   openEditModal(sprint: SprintTeamDto) {

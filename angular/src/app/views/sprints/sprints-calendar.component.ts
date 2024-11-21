@@ -1,4 +1,14 @@
-import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, SimpleChanges, ViewChild} from "@angular/core";
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  SimpleChanges,
+  ViewChild
+} from "@angular/core";
 import {DatePipe} from "@angular/common";
 import {FullCalendarComponent, FullCalendarModule} from '@fullcalendar/angular';
 import {CalendarOptions} from '@fullcalendar/core';
@@ -11,7 +21,7 @@ import {CalendarService} from "../../services/server/calendar.service";
 import {Day} from "../../models/misc/day";
 import {MessageDto} from "../../models/dto/message-dto";
 import {HttpErrorResponse} from "@angular/common/http";
-import {Router} from "@angular/router";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-sprints-calendar',
@@ -20,7 +30,7 @@ import {Router} from "@angular/router";
   templateUrl: './sprints-calendar.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SprintsCalendarComponent implements AfterViewInit, OnInit {
+export class SprintsCalendarComponent implements AfterViewInit, OnDestroy {
   @Input() selectedTeamName : string = '';
   @ViewChild('calendar') calendarComponent!: FullCalendarComponent;
   calendarOptions : CalendarOptions = {
@@ -44,26 +54,31 @@ export class SprintsCalendarComponent implements AfterViewInit, OnInit {
   sprints : SprintTeamDto[] = [];
   dayOffs : Day[] = [];
 
+  sprintSubscription : Subscription;
+
   constructor(private sprintService : SprintService,
               private alertService: AlertService,
               private calendarService: CalendarService,
-              private cdRef: ChangeDetectorRef,
-              private router: Router
+              private cdRef: ChangeDetectorRef
   ) {
-    this.sprintService.sprint$.subscribe(() => {
+    this.sprintSubscription = this.sprintService.sprint$.subscribe(() => {
       this.update();
     });
   }
 
+  ngOnDestroy() {
+    this.sprintSubscription.unsubscribe();
+  }
+
   getContrastColor(hexcolor: string): string {
     const hex = hexcolor.replace('#', '');
-    
+
     const r = parseInt(hex.substr(0, 2), 16);
     const g = parseInt(hex.substr(2, 2), 16);
     const b = parseInt(hex.substr(4, 2), 16);
-    
+
     const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-    
+
     return brightness > 128 ? '#000000' : '#FFFFFF';
   }
 
@@ -133,6 +148,10 @@ export class SprintsCalendarComponent implements AfterViewInit, OnInit {
   }
   ngAfterViewInit() {
     if(this.calendarComponent.getApi()) {
+      this.calendarOptions.validRange = {
+        start: '2003-01-01',
+        end: moment().add(5, 'y').format('YYYY')+'-12-31'
+      }
       this.calendarComponent.getApi().addEventSource(this.dayOffEvents.bind(this));
       this.calendarComponent.getApi().addEventSource(this.sprintsEvents.bind(this));
     }
@@ -142,11 +161,9 @@ export class SprintsCalendarComponent implements AfterViewInit, OnInit {
     }, 10);
   }
   update() {
-    this.updateSprints();
+    if(this.selectedTeamName != '')
+      this.updateSprints();
     this.updateDayOffs();
-  }
-  ngOnInit() {
-    this.update();
   }
 
   private async parseCalendar(year: number, data: string | null): Promise<Day[]> {

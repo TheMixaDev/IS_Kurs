@@ -38,8 +38,7 @@ export class SprintsComponent implements OnInit {
   teamOptions: { [key: string]: string } = {};
   currentUser = this.authService.getUser();
 
-  private _selectedTeamName = new BehaviorSubject<string>('');
-  private destroy$ = new Subject<void>();
+  _selectedTeam: string = '';
 
   constructor(private teamService : TeamService,
               private sprintService: SprintService,
@@ -62,26 +61,20 @@ export class SprintsComponent implements OnInit {
     localStorage.setItem("lastView", String(view));
   }
 
-  get selectedTeamName(): string {
-    return this._selectedTeamName.value;
+  get selectedTeam(): string {
+    return this._selectedTeam;
   }
 
-  set selectedTeamName(value: string) {
-    if(value !== this._selectedTeamName.value) {
-      this._selectedTeamName.next(value);
+  set selectedTeam(value: string) {
+    if(value !== this._selectedTeam && value != null) {
+      this._selectedTeam = value;
+      setTimeout(this.sprintService.initiateUpdate.bind(this.sprintService), 0);
     }
   }
 
   ngOnInit() {
     const lastView = localStorage.getItem("lastView");
     this.tableView = lastView === "true";
-
-    this._selectedTeamName.pipe(
-      debounceTime(0),
-      takeUntil(this.destroy$)
-    ).subscribe(() => {
-      this.sprintService.initiateUpdate();
-    });
 
     const user = this.authService.getUser();
     this.teamService.getAllTeams(true).subscribe({
@@ -94,10 +87,9 @@ export class SprintsComponent implements OnInit {
           }, {} as { [key: string]: string });
 
           if (user) {
-            this.selectedTeamName = this.teams.find(
+            this.selectedTeam = this.teams.find(
               team => team.id.toString() === user?.team?.id?.toString() || ''
             )?.name || '';
-            this.sprintService.initiateUpdate();
           }
         }
       },
@@ -107,12 +99,6 @@ export class SprintsComponent implements OnInit {
         this.teamOptions = {};
       }
     });
-
-  }
-
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 
   protected readonly faPlus = faPlus;
