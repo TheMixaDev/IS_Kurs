@@ -18,6 +18,7 @@ import {HttpErrorResponse} from "@angular/common/http";
 import {TooltipBinding} from "../../components/bindings/tooltip.binding";
 import {CreateUserModalComponent} from "./create-user/create-user-modal.component";
 import {NgIf} from "@angular/common";
+import {AlertService} from "../../services/alert.service";
 
 @Component({
   selector: 'app-users',
@@ -45,6 +46,7 @@ export class UsersComponent implements OnInit {
 
   constructor(private userService : UserService,
               private authService: AuthService,
+              private alertService: AlertService,
               private modalService: NgbModal
   ) {
     this.userService.user$.subscribe(this.updateUsers.bind(this));
@@ -91,4 +93,14 @@ export class UsersComponent implements OnInit {
   protected readonly faSearch = faSearch;
   protected readonly faPlus = faPlus;
   protected readonly faEdit = faEdit;
+
+  copyEmail(email: string | null) {
+    if(email) {
+      navigator.clipboard.writeText(email).then(() => {
+        this.alertService.showAlert('success', 'Email скопирован');
+      }).catch(() => {
+        this.alertService.showAlert('danger', 'Не удалось скопировать email');
+      });
+    }
+  }
 }

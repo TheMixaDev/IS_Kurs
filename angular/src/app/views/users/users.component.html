@@ -33,7 +33,9 @@
         </td>
         <td table-cell>
           <div class="table-cell-lines two-lines">
-            {{user.email}}
+            <span class="text-blue-600 cursor-pointer" (click)="copyEmail(user.email)">
+              {{user.email}}
+            </span>
           </div>
         </td>
         <td table-cell>
