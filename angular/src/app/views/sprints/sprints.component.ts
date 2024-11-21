@@ -89,7 +89,7 @@ export class SprintsComponent implements OnInit {
           if (user) {
             this.selectedTeam = this.teams.find(
               team => team.id.toString() === user?.team?.id?.toString() || ''
-            )?.name || '';
+            )?.name || this.teams[0]?.name || '';
           }
         }
       },
