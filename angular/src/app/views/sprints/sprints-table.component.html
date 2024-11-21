@@ -37,28 +37,16 @@
         <ui-button color="primary" classExtension="!py-2 !px-3" data-tooltip-target="tooltip-release" (click)="openReleaseModal(sprint)">
           <fa-icon [icon]="faGear"/>
         </ui-button>
-        <div id="tooltip-release" tooltip>
-          Релизы
-        </div>
         <ui-button color="primary" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-tasks" (click)="openTasksView(sprint)">
           <fa-icon [icon]="faListCheck"/>
         </ui-button>
-        <div id="tooltip-tasks" tooltip>
-          Задачи
-        </div>
         @if(isAdmin) {
           <ui-button color="warning" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-edit" (click)="openEditModal(sprint)">
             <fa-icon [icon]="faEdit"/>
           </ui-button>
-          <div id="tooltip-edit" tooltip>
-            Изменить
-          </div>
           <ui-button color="danger" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-delete" (click)="openDeleteModal(sprint)">
             <fa-icon [icon]="faTrash"/>
           </ui-button>
-          <div id="tooltip-delete" tooltip>
-            Удалить
-          </div>
         }
       </td>
     </tr>

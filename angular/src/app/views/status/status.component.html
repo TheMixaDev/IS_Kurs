@@ -24,16 +24,10 @@
         <ui-button color="warning" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-edit" (click)="openEditModal(status)">
           <fa-icon [icon]="faEdit"/>
         </ui-button>
-        <div id="tooltip-edit" tooltip>
-          Изменить
-        </div>
         @if(status.id !== 1) {
           <ui-button color="danger" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-delete" (click)="openDeleteModal(status)">
             <fa-icon [icon]="faTrash"/>
           </ui-button>
-          <div id="tooltip-delete" tooltip>
-            Удалить
-          </div>
         }
       </td>
     </tr>

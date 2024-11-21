@@ -25,17 +25,11 @@
           <ui-button color="primary" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-status" (click)="openStatusesModal(role)">
             <fa-icon [icon]="faChartSimple"/>
           </ui-button>
-          <div id="tooltip-status" tooltip>
-            Статусы
-          </div>
         }
         @if(isAdmin) {
           <ui-button color="warning" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-edit" (click)="openEditModal(role)">
             <fa-icon [icon]="faEdit" />
           </ui-button>
-          <div id="tooltip-edit" tooltip>
-            Изменить
-          </div>
           @if(role.id !== 1) {
             <ui-button
               color="danger"
@@ -44,9 +38,6 @@
               (click)="openDeleteModal(role)">
               <fa-icon [icon]="faTrash"/>
             </ui-button>
-            <div id="tooltip-delete" tooltip>
-              Удалить
-            </div>
           }
         }
       </td>
