@@ -54,10 +54,10 @@
         >
       </div>
       <div>
-        <ui-dropdown [options]="teams" formControlName="teamId" [allowReset]="true" [resetValue]="'0'">Выберите команду</ui-dropdown>
+        <ui-dropdown [options]="teams" formControlName="teamId" [allowReset]="true" [resetValue]="''">Выберите команду</ui-dropdown>
       </div>
       <div>
-        <ui-dropdown [options]="roles" formControlName="roleId" [allowReset]="true" [resetValue]="'0'">Выберите роль</ui-dropdown>
+        <ui-dropdown [options]="roles" formControlName="roleId" [allowReset]="true" [resetValue]="''">Выберите роль</ui-dropdown>
       </div>
       <div>
         <ui-button *ngIf="isEditing" type="button" color="warning" (click)="openChangePasswordModal()" classExtension="w-full" class="w-full">
