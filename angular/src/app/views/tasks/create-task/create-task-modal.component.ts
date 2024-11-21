@@ -11,6 +11,8 @@ import {TaskDto} from "../../../models/dto/task-dto";
 import {TaskPriority} from "../../../models/task";
 import {Router} from "@angular/router";
 import {HttpErrorResponse} from "@angular/common/http";
+import {CustomValidators} from "../../../misc/custom-validators";
+import {NgClass} from "@angular/common";
 
 @Component({
   selector: 'app-create-idea-modal',
@@ -20,6 +22,7 @@ import {HttpErrorResponse} from "@angular/common/http";
     UiButtonComponent,
     ReactiveFormsModule,
     FormsModule,
+    NgClass,
   ],
   templateUrl: 'create-task-modal.component.html'
 })
@@ -27,8 +30,16 @@ export class CreateTaskModalComponent {
   currentUser = this.authService.getUser();
 
   createForm = new FormGroup({
-    name: new FormControl('', [Validators.required])
+    name: new FormControl('', [Validators.required, Validators.maxLength(2047), CustomValidators.noWhitespace()]),
   });
+
+  get errors() {
+    if (this.createForm.get('name')?.errors?.['required'] || this.createForm.get('name')?.errors?.['pattern'])
+      return 'Не заполнено поле информация.';
+    if (this.createForm.get('name')?.errors?.['maxlength'])
+      return 'Длина поля информация не должна превышать 2047 символов.';
+    return '';
+  }
 
   constructor(
     private taskService: TaskService,

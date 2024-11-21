@@ -7,11 +7,29 @@
       <form class="space-y-4 md:space-y-6" (ngSubmit)="onSubmit()">
         <div>
           <label for="login" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Логин</label>
-          <input type="text" name="login" id="login" [formControl]="login" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="employee" required>
+          <input
+            type="text"
+            name="login"
+            id="login"
+            [formControl]="login"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="employee"
+            required
+            [ngClass]="{'input-error': login.invalid && login.touched}"
+          >
         </div>
         <div>
           <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Пароль</label>
-          <input type="password" name="password" id="password" [formControl]="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+          <input
+            type="password"
+            name="password"
+            id="password"
+            [formControl]="password"
+            placeholder="••••••••"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            required
+            [ngClass]="{'input-error': password.invalid && password.touched}"
+          >
         </div>
         <button type="submit" [disabled]="sending" primary>Войти</button>
       </form>

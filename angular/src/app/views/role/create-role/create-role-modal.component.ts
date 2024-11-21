@@ -10,6 +10,8 @@ import {IconDefinition} from "@fortawesome/fontawesome-svg-core";
 import { Role } from '../../../models/role';
 import { RoleService } from '../../../services/server/role.service';
 import { RoleDto } from '../../../models/dto/role-dto';
+import {CustomValidators} from "../../../misc/custom-validators";
+import {NgClass} from "@angular/common";
 
 
 @Component({
@@ -20,7 +22,8 @@ import { RoleDto } from '../../../models/dto/role-dto';
     UiButtonComponent,
     ReactiveFormsModule,
     UiDropdownComponent,
-    FormsModule
+    FormsModule,
+    NgClass
   ],
   templateUrl: './create-role-modal.component.html'
 })
@@ -28,9 +31,19 @@ export class CreateRoleModalComponent implements OnInit {
   @Input() role: Role | null = null;
 
   createForm = new FormGroup({
-    name: new FormControl('', [Validators.required]),
-    responsibilities: new FormControl('', [Validators.required]),
+    name: new FormControl('', [Validators.required, Validators.maxLength(255), CustomValidators.noWhitespace()]),
+    responsibilities: new FormControl('', [Validators.required, CustomValidators.noWhitespace()]),
   });
+
+  get errors() {
+    if(this.createForm.get('name')?.errors?.['required'] || this.createForm.get('name')?.errors?.['pattern'])
+      return 'Не заполнено поле название.';
+    if(this.createForm.get('name')?.errors?.['maxlength'])
+      return 'Длина поля название не должна превышать 255 символов.';
+    if(this.createForm.get('responsibilities')?.errors?.['required'] || this.createForm.get('responsibilities')?.errors?.['pattern'])
+      return 'Не заполнено поле обязанности.';
+    return '';
+  }
 
   isEditing: boolean = false;
 

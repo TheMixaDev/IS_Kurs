@@ -17,6 +17,8 @@ import {HttpErrorResponse} from "@angular/common/http";
 import {SprintService} from "../../../services/server/sprint.service";
 import {ConfirmModalComponent} from "../../../components/modal/confirm-modal.component";
 import {AuthService} from "../../../services/server/auth.service";
+import {Sprint} from "../../../models/sprint";
+import {SprintTeamDto} from "../../../models/dto/sprint-team-dto";
 
 
 @Component({
@@ -38,6 +40,8 @@ import {AuthService} from "../../../services/server/auth.service";
 export class ReleaseModalComponent {
   @Input() releases: Release[] = [];
   @Input() sprintId: number | null = null;
+  @Input() sprint: SprintTeamDto | null = null;
+
   faClose = faClose;
   currentUser = this.authService.getUser();
 
@@ -86,7 +90,7 @@ export class ReleaseModalComponent {
     const modalRef = this.modalService.open(CreateReleaseModalComponent, {
       size: 'lg'
     });
-    modalRef.componentInstance.sprintId = this.sprintId;
+    modalRef.componentInstance.sprint = this.sprint;
     modalRef.result.then(() => {
       this.releaseService.initiateUpdate();
     });
@@ -96,7 +100,7 @@ export class ReleaseModalComponent {
     const modalRef = this.modalService.open(CreateReleaseModalComponent, {
       size: 'lg'
     });
-    modalRef.componentInstance.sprintId = this.sprintId;
+    modalRef.componentInstance.sprint = this.sprint;
     modalRef.componentInstance.release = release;
     modalRef.result.then(() => {
       this.releaseService.initiateUpdate();

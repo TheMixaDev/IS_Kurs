@@ -8,20 +8,48 @@
       </button>
     </div>
     <form [formGroup]="createForm" (ngSubmit)="handleSubmit()">
-      <div class="grid gap-4 mb-4 sm:grid-cols-2">
+      <div class="grid gap-4 mb-2 sm:grid-cols-1">
         <div>
           <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Описание</label>
-          <input formControlName="description" type="text" id="description" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Введите описание риска">
+          <input
+            formControlName="description"
+            type="text"
+            id="description"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="Введите описание риска"
+            [ngClass]="{'input-error': createForm.get('description')?.invalid && createForm.get('description')?.touched}"
+          >
         </div>
+      </div>
+      <div class="grid gap-4 mb-2 sm:grid-cols-2">
         <div>
             <label for="probability" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Вероятность</label>
-            <input formControlName="probability" type="number" id="probability" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Введите вероятность риска">
+            <input
+              formControlName="probability"
+              type="number"
+              id="probability"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Введите вероятность риска"
+              [ngClass]="{'input-error': createForm.get('probability')?.invalid && createForm.get('probability')?.touched}"
+            >
           </div>
         <div>
           <label for="estimatedLoss" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Потери</label>
-          <input formControlName="estimatedLoss" type="number" id="estimatedLoss" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Введите потери">
+          <input
+            formControlName="estimatedLoss"
+            type="number"
+            id="estimatedLoss"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="Введите потери"
+            [ngClass]="{'input-error': createForm.get('estimatedLoss')?.invalid && createForm.get('estimatedLoss')?.touched}"
+          >
         </div>
       </div>
+      @if(!createForm.valid) {
+        <span class="block mb-2">
+        {{errors}}
+      </span>
+      }
       <ui-button type="submit" [disabled]="!createForm.valid" [color]="submitButtonColor">
         <fa-icon [icon]="submitButtonIcon"/>
         {{ submitButtonText }}
@@ -31,4 +59,3 @@
       </ui-button>
     </form>
   </div>
-  

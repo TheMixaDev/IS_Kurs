@@ -9,7 +9,7 @@ import { AlertService } from '../../../services/alert.service';
 import { IdeaDto } from '../../../models/dto/idea-dto';
 import { Idea } from '../../../models/idea';
 import {IconDefinition} from "@fortawesome/fontawesome-svg-core";
-import {NgIf} from "@angular/common";
+import {NgClass, NgIf} from "@angular/common";
 import {TableCellComponent} from "../../../components/table/table-cell.component";
 import {TableComponent} from "../../../components/table/table.component";
 import {TableRowComponent} from "../../../components/table/table-row.component";
@@ -20,6 +20,7 @@ import {HttpErrorResponse} from "@angular/common/http";
 import {RiskService} from "../../../services/server/risk.service";
 import {AddRiskModalComponent} from "../../tasks/task-view/add-risk/add-risk-modal.component";
 import {ConfirmModalComponent} from "../../../components/modal/confirm-modal.component";
+import {CustomValidators} from "../../../misc/custom-validators";
 
 @Component({
   selector: 'app-create-idea-modal',
@@ -34,7 +35,8 @@ import {ConfirmModalComponent} from "../../../components/modal/confirm-modal.com
     TableComponent,
     TableRowComponent,
     TooltipBinding,
-    NgbTooltip
+    NgbTooltip,
+    NgClass
   ],
   templateUrl: 'create-idea-modal.component.html'
 })
@@ -48,8 +50,16 @@ export class CreateIdeaModalComponent implements OnInit {
   availableRisks: { [key: number]: string } = {};
 
   createForm = new FormGroup({
-    description: new FormControl('', [Validators.required])
+    description: new FormControl('', [Validators.required, Validators.maxLength(2047), CustomValidators.noWhitespace()]),
   });
+
+  get errors() {
+    if(this.createForm.get('description')?.errors?.['required'] || this.createForm.get('description')?.errors?.['pattern'])
+      return 'Не заполнено поле описание.';
+    if(this.createForm.get('description')?.errors?.['maxlength'])
+      return 'Длина поля описание не должна превышать 2047 символов.';
+    return '';
+  }
 
   isEditing: boolean = false;
 

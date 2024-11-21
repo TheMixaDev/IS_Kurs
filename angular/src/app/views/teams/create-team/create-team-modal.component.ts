@@ -10,6 +10,8 @@ import {AlertService} from "../../../services/alert.service";
 import {Team} from "../../../models/team";
 import {UiCheckboxComponent} from "../../../components/ui/ui-checkbox.component";
 import {IconDefinition} from "@fortawesome/fontawesome-svg-core";
+import {CustomValidators} from "../../../misc/custom-validators";
+import {NgClass} from "@angular/common";
 
 
 @Component({
@@ -21,7 +23,8 @@ import {IconDefinition} from "@fortawesome/fontawesome-svg-core";
     ReactiveFormsModule,
     UiDropdownComponent,
     FormsModule,
-    UiCheckboxComponent
+    UiCheckboxComponent,
+    NgClass
   ],
   templateUrl: './create-team-modal.component.html'
 })
@@ -31,11 +34,19 @@ export class CreateTeamModalComponent implements OnInit {
   isEditing: boolean = false;
 
   createForm = new FormGroup({
-    name: new FormControl('', [Validators.required]),
+    name: new FormControl('', [Validators.required, Validators.maxLength(255), CustomValidators.noWhitespace()]),
     color: new FormControl('#ffffff', [Validators.required]),
     description: new FormControl(''),
     isActive: new FormControl(true)
   })
+
+  get errors() {
+    if(this.createForm.get('name')?.errors?.['required'] || this.createForm.get('name')?.errors?.['pattern'])
+      return 'Не заполнено поле название команды';
+    if(this.createForm.get('name')?.errors?.['maxlength'])
+      return 'Длина поля название команды не должна превышать 255 символов';
+    return '';
+  }
 
   constructor(private teamService: TeamService,
               private alertService: AlertService,

@@ -9,6 +9,8 @@ import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { Tag } from '../../../models/tag';
 import { TagService } from '../../../services/server/tag.service';
 import { TagDto } from '../../../models/dto/tag-dto';
+import {CustomValidators} from "../../../misc/custom-validators";
+import {NgClass} from "@angular/common";
 
 
 @Component({
@@ -18,7 +20,8 @@ import { TagDto } from '../../../models/dto/tag-dto';
     FaIconComponent,
     UiButtonComponent,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    NgClass
   ],
   templateUrl: './create-tag-modal.component.html'
 })
@@ -26,9 +29,19 @@ export class CreateTagModalComponent implements OnInit {
   @Input() tag: Tag | null = null;
 
   createForm = new FormGroup({
-    name: new FormControl('', [Validators.required]),
-    description: new FormControl('', [Validators.required]),
+    name: new FormControl('', [Validators.required, Validators.maxLength(255), CustomValidators.noWhitespace()]),
+    description: new FormControl('', [Validators.required, CustomValidators.noWhitespace()]),
   });
+
+  get errors() {
+    if(this.createForm.get('name')?.errors?.['required'] || this.createForm.get('name')?.errors?.['pattern'])
+      return 'Не заполнено поле название.';
+    if(this.createForm.get('name')?.errors?.['maxlength'])
+      return 'Длина поля название не должна превышать 255 символов.';
+    if(this.createForm.get('description')?.errors?.['required'] || this.createForm.get('description')?.errors?.['pattern'])
+      return 'Не заполнено поле описание.';
+    return '';
+  }
 
   isEditing: boolean = false;
 

@@ -249,6 +249,28 @@ export class TaskViewComponent implements OnInit {
     });
   }
 
+  onStoryPointsInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    if(this.task) {
+      if (input.value) {
+        const value = Math.max(0, Math.floor(Number(input.value)));
+        input.value = value.toString();
+        this.task.storyPoints = value;
+      } else {
+        this.task.storyPoints = 0;
+      }
+    }
+  }
+
+  onStoryPointsKeyPress(event: KeyboardEvent): boolean {
+    if (!/^[0-9]$/.test(event.key)) {
+      event.preventDefault();
+      return false;
+    }
+    return true;
+  }
+
   loadUsers(login: string, onlyActive: boolean = true) : Promise<void> | null {
     if(!login || login.length < 1) {
       this.users = {};
@@ -526,6 +548,11 @@ export class TaskViewComponent implements OnInit {
   saveName() {
     this.editingName = false;
     if(this.task && this.originalTask && this.task.name != this.originalTask.name) {
+      if(this.task.name.trim().length == 0) {
+        this.alertService.showAlert('danger', 'Информация о задаче не может быть пустой');
+        this.task.name = this.originalTask.name;
+        return;
+      }
       this.taskService.updateTask(this.task.id, { name: this.task.name } as TaskDto).subscribe(() => {
         this.alertService.showAlert('success', 'Информация обновлена');
         this.updateOriginalTask(this.task as Task);

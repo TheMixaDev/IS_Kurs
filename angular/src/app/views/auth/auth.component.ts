@@ -5,12 +5,13 @@ import { AlertService } from "../../services/alert.service";
 import { Router } from "@angular/router"; // Import Router
 import { JwtRequestDto } from "../../models/dto/jwt-request-dto";
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {NgClass} from "@angular/common";
 
 
 @Component({
   selector: 'app-auth',
   standalone: true,
-  imports: [PrimaryButtonBinding, FormsModule, ReactiveFormsModule],
+  imports: [PrimaryButtonBinding, FormsModule, ReactiveFormsModule, NgClass],
   templateUrl: './auth.component.html',
 })
 export class AuthComponent implements OnInit {

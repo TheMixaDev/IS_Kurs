@@ -98,8 +98,13 @@
                 <input
                   #storyPointsInput
                   class="text-black m-0 py-0 px-0 bg-transparent border-0"
+                  min="0"
+                  step="1"
                   type="number"
-                  [(ngModel)]="task.storyPoints">
+                  [(ngModel)]="task.storyPoints"
+                  (input)="onStoryPointsInput($event)"
+                  (keypress)="onStoryPointsKeyPress($event)"
+                >
               } @else {
                 @if(task.storyPoints) {
                   {{ task.storyPoints }}
@@ -165,6 +170,7 @@
                 #nameInput
                 class="text-black m-0 py-0 px-0 bg-transparent border-0 w-full min-h-[300px]"
                 type="text"
+                maxlength="2047"
                 [(ngModel)]="task.name"></textarea>
             } @else {
               {{ task.name }}

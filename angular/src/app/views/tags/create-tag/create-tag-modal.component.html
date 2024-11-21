@@ -8,16 +8,35 @@
       </button>
     </div>
     <form [formGroup]="createForm" (ngSubmit)="handleSubmit()">
-      <div class="grid gap-4 mb-4 sm:grid-cols-2">
+      <div class="grid gap-4 mb-2 sm:grid-cols-2">
         <div>
           <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Название</label>
-          <input formControlName="name" type="text" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Введите название статуса">
+          <input
+            formControlName="name"
+            type="text"
+            id="name"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="Введите название статуса"
+            [ngClass]="{'input-error': createForm.get('name')?.invalid && createForm.get('name')?.touched}"
+          >
         </div>
         <div>
           <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Описание</label>
-          <input formControlName="description" type="text" id="description" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Введите описание">
+          <input
+            formControlName="description"
+            type="text"
+            id="description"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="Введите описание"
+            [ngClass]="{'input-error': createForm.get('description')?.invalid && createForm.get('description')?.touched}"
+          >
         </div>
       </div>
+        @if(!createForm.valid) {
+          <span class="block mb-2">
+            {{errors}}
+          </span>
+        }
       <ui-button type="submit" [disabled]="!createForm.valid" [color]="submitButtonColor">
         <fa-icon [icon]="submitButtonIcon"/>
         {{ submitButtonText }}

@@ -11,20 +11,45 @@
     <div class="grid gap-4 mb-2 sm:grid-cols-2">
       <div>
         <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Название</label>
-        <input formControlName="name" type="text" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Вторая линия">
+        <input
+          formControlName="name"
+          type="text"
+          id="name"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Вторая линия"
+          [ngClass]="{'input-error': createForm.get('name')?.invalid && createForm.get('name')?.touched}"
+        >
       </div>
       <div>
         <label for="color" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Цвет</label>
-        <input formControlName="color" type="color" id="color" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 h-[42px]" placeholder="Выберите цвет">
+        <input
+          formControlName="color"
+          type="color"
+          id="color"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 h-[42px]"
+          placeholder="Выберите цвет"
+          [ngClass]="{'input-error': createForm.get('color')?.invalid && createForm.get('color')?.touched}"
+        >
       </div>
     </div>
-    <div class="mb-4">
+    <div class="mb-2">
       <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Описание</label>
-      <textarea formControlName="description" type="color" id="description" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="ФИО"></textarea>
+      <textarea
+        formControlName="description"
+        type="color"
+        id="description"
+        class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        placeholder="ФИО"
+      ></textarea>
       <ui-checkbox formControlName="isActive">
         Активна
       </ui-checkbox>
     </div>
+    @if (!createForm.valid) {
+      <span class="block mb-2">
+        {{errors}}
+      </span>
+    }
     <ui-button type="submit" [disabled]="!createForm.valid" [color]="submitButtonColor">
       <fa-icon [icon]="submitButtonIcon"/>
       {{ submitButtonText }}

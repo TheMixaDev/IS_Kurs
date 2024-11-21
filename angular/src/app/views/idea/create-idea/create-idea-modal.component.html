@@ -8,14 +8,21 @@
     </button>
   </div>
   <form [formGroup]="createForm" (ngSubmit)="handleSubmit()">
-    <div class="grid gap-4 mb-4 sm:grid-cols-1">
+    <div class="grid gap-4 mb-2 sm:grid-cols-1">
       <div class="sm:col-span-1">
         @if(viewMode) {
           {{ idea?.description }}
         }
         @else {
           <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Описание</label>
-          <textarea formControlName="description" id="description" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Введите описание"></textarea>
+          <textarea
+            formControlName="description"
+            id="description"
+            rows="4"
+            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="Введите описание"
+            [ngClass]="{'input-error': createForm.get('description')?.invalid && createForm.get('description')?.touched}"
+          ></textarea>
         }
       </div>
     </div>
@@ -58,6 +65,11 @@
         </tr>
       }
     </app-table-component>
+    @if(!createForm.valid && !viewMode) {
+      <span class="block mb-2">
+        {{errors}}
+      </span>
+    }
     <ui-button type="submit" [disabled]="!createForm.valid" [color]="submitButtonColor" *ngIf="!viewMode">
       <fa-icon [icon]="submitButtonIcon"/>
       {{ submitButtonText }}

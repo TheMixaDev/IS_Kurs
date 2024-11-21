@@ -8,21 +8,46 @@
     </button>
   </div>
   <form [formGroup]="createForm" (ngSubmit)="handleSubmit()">
-    <div class="grid gap-4 mb-4 sm:grid-cols-2">
+    <div class="grid gap-4 mb-2 sm:grid-cols-2">
       <div>
         <label for="version" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Версия</label>
-        <input formControlName="version" type="text" id="version" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Введите версию">
+        <input
+          formControlName="version"
+          type="text"
+          id="version"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Введите версию"
+          [ngClass]="{'input-error': createForm.get('version')?.invalid && createForm.get('version')?.touched}"
+        >
       </div>
       <div>
         <label for="releaseDate" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Дата релиза</label>
-        <input formControlName="releaseDate" type="date" id="releaseDate" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Выберите дату">
+        <input
+          formControlName="releaseDate"
+          type="date" id="releaseDate"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Выберите дату"
+          [ngClass]="{'input-error': (createForm.get('releaseDate')?.invalid || invalidDates) && createForm.get('releaseDate')?.touched}"
+        >
       </div>
       <div class="sm:col-span-2">
         <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Описание</label>
-        <textarea formControlName="description" id="description" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Введите описание"></textarea>
+        <textarea
+          formControlName="description"
+          id="description"
+          rows="4"
+          class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Введите описание"
+          [ngClass]="{'input-error': createForm.get('description')?.invalid && createForm.get('description')?.touched}"
+        ></textarea>
       </div>
     </div>
-    <ui-button type="submit" [disabled]="!createForm.valid" [color]="submitButtonColor">
+    @if(!createForm.valid || invalidDatesBoolean) {
+      <span class="block mb-2">
+        {{errors}}
+      </span>
+    }
+    <ui-button type="submit" [disabled]="!createForm.valid || invalidDatesBoolean" [color]="submitButtonColor">
       <fa-icon [icon]="submitButtonIcon"/>
       {{submitButtonText}}
     </ui-button>

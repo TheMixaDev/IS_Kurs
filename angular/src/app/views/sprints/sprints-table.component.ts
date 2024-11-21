@@ -129,6 +129,7 @@ export class SprintsTableComponent implements OnInit {
         });
         modalRef.componentInstance.releases = releases as Release[];
         modalRef.componentInstance.sprintId = sprint.sprintId;
+        modalRef.componentInstance.sprint = sprint;
       },
       error: (error) => {
         this.alertService.showAlert('danger', 'Ошибка при загрузке релизов: ' + error.message);

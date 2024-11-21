@@ -8,10 +8,16 @@
     </button>
   </div>
   <form [formGroup]="createForm" (ngSubmit)="handleSubmit()">
-    <div class="grid gap-4 mb-4 sm:grid-cols-2">
+    <div class="grid gap-4 mb-2 sm:grid-cols-2">
       <div>
         <label for="majorVersion" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Номер версии</label>
-        <input formControlName="majorVersion" type="text" id="majorVersion" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="XXXт">
+        <input
+          formControlName="majorVersion"
+          type="text" id="majorVersion"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="vX.X"
+          [ngClass]="{'input-error': createForm.get('majorVersion')?.invalid && createForm.get('majorVersion')?.touched}"
+        >
       </div>
       <div>
         <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Команда</label>
@@ -21,22 +27,55 @@
       </div>
       <div>
         <label for="startDate" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Дата начала разработки</label>
-        <input formControlName="startDate" type="date" id="startDate" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Выберите дату">
+        <input
+          formControlName="startDate"
+          type="date"
+          id="startDate"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Выберите дату"
+          [ngClass]="{'input-error': createForm.get('startDate')?.invalid && createForm.get('startDate')?.touched}"
+        >
       </div>
       <div>
         <label for="endDate" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Дата окончания разработки</label>
-        <input formControlName="endDate" type="date" id="endDate" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Выберите дату">
+        <input
+          formControlName="endDate"
+          type="date"
+          id="endDate"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Выберите дату"
+          [ngClass]="{'input-error': createForm.get('endDate')?.invalid && createForm.get('endDate')?.touched}"
+        >
       </div>
       <div>
         <label for="regressionStart" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Дата начала регресса</label>
-        <input formControlName="regressionStart" type="date" id="regressionStart" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Выберите дату">
+        <input
+          formControlName="regressionStart"
+          type="date"
+          id="regressionStart"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Выберите дату"
+          [ngClass]="{'input-error': createForm.get('regressionStart')?.invalid && createForm.get('regressionStart')?.touched}"
+        >
       </div>
       <div>
         <label for="regressionEnd" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Дата окончания регресса</label>
-        <input formControlName="regressionEnd" type="date" id="regressionEnd" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Выберите дату">
+        <input
+          formControlName="regressionEnd"
+          type="date"
+          id="regressionEnd"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Выберите дату"
+          [ngClass]="{'input-error': createForm.get('regressionEnd')?.invalid && createForm.get('regressionEnd')?.touched}"
+        >
       </div>
     </div>
-    <ui-button type="submit" [disabled]="!createForm.valid" [color]="submitButtonColor">
+    @if(!createForm.valid || invalidDatesBoolean) {
+      <span class="block mb-2">
+        {{errors}}
+      </span>
+    }
+    <ui-button type="submit" [disabled]="!createForm.valid || invalidDatesBoolean" [color]="submitButtonColor">
       <fa-icon [icon]="submitButtonIcon"/>
       {{ submitButtonText }}
     </ui-button>

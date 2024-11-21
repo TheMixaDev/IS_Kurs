@@ -52,3 +52,7 @@
 .tooltip {
   @apply !mb-1
 }
+
+.input-error {
+  @apply !border-danger-500 !bg-danger-50
+}

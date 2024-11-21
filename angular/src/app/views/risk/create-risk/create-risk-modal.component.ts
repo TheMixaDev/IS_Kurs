@@ -10,27 +10,45 @@ import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { RiskDto } from "../../../models/dto/risk-dto";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { faClose, faPlus, faPen } from '@fortawesome/free-solid-svg-icons';
+import {NgClass} from "@angular/common";
+import {CustomValidators} from "../../../misc/custom-validators";
 
 
 @Component({
     selector: 'app-create-risk-modal',
     standalone: true,
-    imports: [
-      FaIconComponent,
-      UiButtonComponent,
-      ReactiveFormsModule,
-      UiDropdownComponent,
-      FormsModule],
+  imports: [
+    FaIconComponent,
+    UiButtonComponent,
+    ReactiveFormsModule,
+    UiDropdownComponent,
+    FormsModule,
+    NgClass
+  ],
       templateUrl: './create-risk-modal.component.html'
 })
 export class CreateRiskModalComponent implements OnInit{
   @Input() risk: Risk | null = null;
 
   createForm = new FormGroup({
-    description: new FormControl('', [Validators.required]),
-    probability: new FormControl('', [Validators.required]),
-    estimatedLoss: new FormControl('', [Validators.required]),
+    description: new FormControl('', [Validators.required, CustomValidators.noWhitespace()]),
+    probability: new FormControl('', [Validators.required, Validators.min(0), Validators.max(1)]),
+    estimatedLoss: new FormControl('', [Validators.required, Validators.min(0)]),
   });
+
+  get errors() {
+    if(this.createForm.get('description')?.errors?.['required'] || this.createForm.get('description')?.errors?.['pattern'])
+      return 'Не заполнено поле описание.';
+    if(this.createForm.get('probability')?.errors?.['required'])
+      return 'Не заполнено поле вероятность.';
+    if(this.createForm.get('probability')?.errors?.['min'] || this.createForm.get('probability')?.errors?.['max'])
+      return 'Недопустимое значение вероятности.';
+    if(this.createForm.get('estimatedLoss')?.errors?.['required'])
+      return 'Не заполнено поле потерь.';
+    if(this.createForm.get('estimatedLoss')?.errors?.['min'])
+      return 'Недопустимое значение потерь.';
+    return '';
+  }
 
   isEditing: boolean = false;
 

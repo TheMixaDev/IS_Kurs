@@ -12,6 +12,9 @@ import { SprintDto } from '../../../models/dto/sprint-dto';
 import { Team } from '../../../models/team';
 import { Sprint } from '../../../models/sprint';
 import {IconDefinition} from "@fortawesome/fontawesome-svg-core";
+import {CustomValidators} from "../../../misc/custom-validators";
+import moment from "moment";
+import {NgClass} from "@angular/common";
 
 
 @Component({
@@ -22,7 +25,8 @@ import {IconDefinition} from "@fortawesome/fontawesome-svg-core";
     UiButtonComponent,
     ReactiveFormsModule,
     UiDropdownComponent,
-    FormsModule
+    FormsModule,
+    NgClass
   ],
   templateUrl: './create-sprint-modal.component.html'
 })
@@ -31,14 +35,75 @@ export class CreateSprintModalComponent implements OnInit {
 
   teams: any = {};
   createForm = new FormGroup({
-    majorVersion: new FormControl('', [Validators.required]),
+    majorVersion: new FormControl('', [Validators.required, Validators.maxLength(255), CustomValidators.noWhitespace()]),
     startDate: new FormControl('', [Validators.required]),
     endDate: new FormControl('', [Validators.required]),
     regressionStart: new FormControl('', [Validators.required]),
     regressionEnd: new FormControl('', [Validators.required]),
-    teamId: new FormControl(0, [Validators.required])
+    teamId: new FormControl(0, [Validators.required, Validators.min(1)])
   });
 
+  get errors() {
+    if(this.createForm.get('majorVersion')?.errors?.['required'] || this.createForm.get('majorVersion')?.errors?.['pattern'])
+      return 'Не заполнено поле версии.';
+    if(this.createForm.get('majorVersion')?.errors?.['maxlength'])
+      return 'Длина поля версии не должна превышать 255 символов.';
+    if(this.createForm.get('startDate')?.errors?.['required'])
+      return 'Не заполнено поле даты начала разработки.';
+    if(this.createForm.get('endDate')?.errors?.['required'])
+      return 'Не заполнено поле даты окончания разработки.';
+    if(this.createForm.get('regressionStart')?.errors?.['required'])
+      return 'Не заполнено поле даты начала регресса.';
+    if(this.createForm.get('regressionEnd')?.errors?.['required'])
+      return 'Не заполнено поле даты окончания регресса.';
+    if(this.createForm.get('teamId')?.errors?.['required'] || this.createForm.get('teamId')?.errors?.['min'])
+      return 'Не заполнено поле команды.';
+    if(this.invalidDates)
+      return this.invalidDates;
+    return '';
+  }
+
+  get invalidDates() {
+    const startDate = this.createForm.get('startDate')?.value;
+    const endDate = this.createForm.get('endDate')?.value;
+    const regressionStart = this.createForm.get('regressionStart')?.value;
+    const regressionEnd = this.createForm.get('regressionEnd')?.value;
+    if(startDate && endDate && regressionStart && regressionEnd) {
+      if(startDate > endDate)
+        return 'Дата начала должна быть меньше даты окончания.';
+      if(regressionStart > regressionEnd)
+        return 'Дата начала регресса должна быть меньше даты окончания регресса.';
+      let currentYear = moment().toDate().getUTCFullYear();
+      let startYear = moment(startDate).toDate().getUTCFullYear();
+      let endYear = moment(endDate).toDate().getUTCFullYear();
+      let regressionStartYear = moment(regressionStart).toDate().getUTCFullYear();
+      let regressionEndYear = moment(regressionEnd).toDate().getUTCFullYear();
+      if(!startYear || !endYear || !regressionStartYear || !regressionEndYear)
+        return 'Указаны неверные даты.';
+      if(startYear > currentYear + 5)
+        return 'Дата начала не может быть больше текущего года на 5 лет.';
+      if(startYear < currentYear - 5)
+        return 'Дата начала не может быть меньше текущего года на 5 лет.';
+      if(endYear > currentYear + 5)
+        return 'Дата окончания не может быть больше текущего года на 5 лет.';
+      if(endYear < currentYear - 5)
+        return 'Дата окончания не может быть меньше текущего года на 5 лет.';
+      if(regressionStartYear > currentYear + 5)
+        return 'Дата начала регресса не может быть больше текущего года на 5 лет.';
+      if(regressionStartYear < currentYear - 5)
+        return 'Дата начала регресса не может быть меньше текущего года на 5 лет.';
+      if(regressionEndYear > currentYear + 5)
+        return 'Дата окончания регресса не может быть больше текущего года на 5 лет.';
+      if(regressionEndYear < currentYear - 5)
+        return 'Дата окончания регресса не может быть меньше текущего года на 5 лет.';
+      return false;
+    }
+    return 'Введены не все даты.';
+  }
+
+  get invalidDatesBoolean() : boolean {
+    return this.invalidDates !== false;
+  }
   isEditing: boolean = false;
 
   constructor(

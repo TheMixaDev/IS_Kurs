@@ -30,7 +30,8 @@ import { ConfirmModalComponent } from '../../../components/modal/confirm-modal.c
 import { ChangePasswordModalComponent } from './change-password-modal.component';
 import {AuthService} from "../../../services/server/auth.service";
 import {HttpErrorResponse} from "@angular/common/http";
-import {NgIf} from "@angular/common";
+import {NgClass, NgIf} from "@angular/common";
+import {CustomValidators} from "../../../misc/custom-validators";
 
 @Component({
   selector: 'app-create-user-modal',
@@ -42,6 +43,7 @@ import {NgIf} from "@angular/common";
     FormsModule,
     UiDropdownComponent,
     NgIf,
+    NgClass,
   ],
   templateUrl: 'create-user-modal.component.html',
 })
@@ -51,14 +53,41 @@ export class CreateUserModalComponent implements OnInit {
   isEditing: boolean = false;
 
   createForm = new FormGroup({
-    login: new FormControl('', [Validators.required]),
-    email: new FormControl('', [Validators.required, Validators.email]),
-    firstName: new FormControl('', [Validators.required]),
-    lastName: new FormControl('', [Validators.required]),
+    login: new FormControl('', [Validators.required, Validators.maxLength(30), CustomValidators.noWhitespace()]),
+    email: new FormControl('', [Validators.required, Validators.email, Validators.maxLength(255), CustomValidators.noWhitespace()]),
+    firstName: new FormControl('', [Validators.required, Validators.maxLength(255), CustomValidators.noWhitespace()]),
+    lastName: new FormControl('', [Validators.required, Validators.maxLength(255), CustomValidators.noWhitespace()]),
     teamId: new FormControl(0),
     roleId: new FormControl(0),
-    password: new FormControl('') // Hidden password field
+    password: new FormControl('', [Validators.maxLength(255), CustomValidators.noWhitespace()])
   });
+
+  get errors() {
+    if(this.createForm.get('login')?.errors?.['required'] || this.createForm.get('login')?.errors?.['pattern'])
+      return 'Не заполнено поле логин.';
+    if(this.createForm.get('login')?.errors?.['maxlength'])
+      return 'Длина поля логин не должна превышать 30 символов.';
+    if(this.createForm.get('email')?.errors?.['required'])
+      return 'Не заполнено поле email.';
+    if(this.createForm.get('email')?.errors?.['email'])
+      return 'Некорректный email.';
+    if(this.createForm.get('email')?.errors?.['maxlength'])
+      return 'Длина поля email не должна превышать 255 символов.';
+    if(this.createForm.get('firstName')?.errors?.['required'] || this.createForm.get('firstName')?.errors?.['pattern'])
+      return 'Не заполнено поле имя.';
+    if(this.createForm.get('firstName')?.errors?.['maxlength'])
+      return 'Длина поля имя не должна превышать 255 символов.';
+    if(this.createForm.get('lastName')?.errors?.['required'] || this.createForm.get('lastName')?.errors?.['pattern'])
+      return 'Не заполнено поле фамилия.';
+    if(this.createForm.get('lastName')?.errors?.['maxlength'])
+      return 'Длина поля фамилия не должна превышать 255 символов.';
+    if(this.createForm.get('teamId')?.errors?.['required'] || this.createForm.get('teamId')?.errors?.['min'])
+      return 'Не заполнено поле команды.';
+    if(this.createForm.get('roleId')?.errors?.['required'] || this.createForm.get('roleId')?.errors?.['min'])
+      return 'Не заполнено поле роли.';
+    return '';
+  }
+
   teams: { [key: number]: string } = {};
   roles: { [key: number]: string } = {};
   currentUser: User | null = null;

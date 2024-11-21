@@ -8,22 +8,50 @@
     </button>
   </div>
   <form [formGroup]="createForm" (ngSubmit)="handleSubmit()">
-    <div class="grid gap-4 mb-4 sm:grid-cols-2">
+    <div class="grid gap-4 mb-2 sm:grid-cols-2">
       <div>
         <label for="login" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Логин</label>
-        <input formControlName="login" type="text" id="login" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-gray-300" placeholder="Введите логин">
+        <input
+          formControlName="login"
+          type="text"
+          id="login"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-gray-300"
+          placeholder="Введите логин"
+          [ngClass]="{'input-error': createForm.get('login')?.invalid && createForm.get('login')?.touched}"
+        >
       </div>
       <div>
         <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-        <input formControlName="email" type="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Введите email">
+        <input
+          formControlName="email"
+          type="email"
+          id="email"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Введите email"
+          [ngClass]="{'input-error': createForm.get('email')?.invalid && createForm.get('email')?.touched}"
+        >
       </div>
       <div>
         <label for="firstName" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Имя</label>
-        <input formControlName="firstName" type="text" id="firstName" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Введите имя">
+        <input
+          formControlName="firstName"
+          type="text"
+          id="firstName"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Введите имя"
+          [ngClass]="{'input-error': createForm.get('firstName')?.invalid && createForm.get('firstName')?.touched}"
+        >
       </div>
       <div>
         <label for="lastName" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Фамилия</label>
-        <input formControlName="lastName" type="text" id="lastName" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Введите фамилию">
+        <input
+          formControlName="lastName"
+          type="text"
+          id="lastName"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Введите фамилию"
+          [ngClass]="{'input-error': createForm.get('lastName')?.invalid && createForm.get('lastName')?.touched}"
+        >
       </div>
       <div>
         <ui-dropdown [options]="teams" formControlName="teamId" [allowReset]="true" [resetValue]="'0'">Выберите команду</ui-dropdown>
@@ -44,6 +72,11 @@
         </ui-button>
       </div>
     </div>
+    @if(!createForm.valid) {
+      <span class="block mb-2">
+        {{errors}}
+      </span>
+    }
     <ui-button type="submit" [disabled]="!createForm.valid" [color]="submitButtonColor">
       <fa-icon [icon]="submitButtonIcon"/>
       {{ submitButtonText }}

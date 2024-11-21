@@ -8,6 +8,7 @@ import {FormsModule} from "@angular/forms";
 import {UserService} from "../../../services/server/user.service";
 import {AlertService} from "../../../services/alert.service";
 import {UserDto} from "../../../models/dto/user-dto";
+import {CustomValidators} from "../../../misc/custom-validators";
 
 
 @Component({
@@ -25,7 +26,7 @@ import {UserDto} from "../../../models/dto/user-dto";
         </button>
       </div>
       <form [formGroup]="changePasswordForm" (ngSubmit)="handleSubmit()">
-        <div class="grid gap-4 mb-4 sm:grid-cols-2">
+        <div class="grid gap-4 mb-2 sm:grid-cols-2">
           <div>
             <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Новый пароль</label>
             <input formControlName="password" type="password" id="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Введите пароль">
@@ -35,6 +36,11 @@ import {UserDto} from "../../../models/dto/user-dto";
             <input formControlName="confirmPassword" type="password" id="confirmPassword" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Повторите пароль">
           </div>
         </div>
+        @if(!changePasswordForm.valid || !passwordsMatch) {
+          <span class="block mb-2">
+            {{errors}}
+          </span>
+        }
         <ui-button type="submit" [disabled]="!changePasswordForm.valid || !passwordsMatch" color="primary">
           Изменить пароль
         </ui-button>
@@ -49,9 +55,23 @@ export class ChangePasswordModalComponent {
   @Input() login: string = '';
 
   changePasswordForm = new FormGroup({
-    password: new FormControl('', [Validators.required]),
-    confirmPassword: new FormControl('', [Validators.required])
+    password: new FormControl('', [Validators.required, Validators.maxLength(255), CustomValidators.noWhitespace()]),
+    confirmPassword: new FormControl('', [Validators.required, Validators.maxLength(255), CustomValidators.noWhitespace()])
   });
+
+  get errors() {
+    if (this.changePasswordForm.get('password')?.errors?.['required'] || this.changePasswordForm.get('password')?.errors?.['pattern'])
+      return 'Не заполнено поле пароль.';
+    if (this.changePasswordForm.get('password')?.errors?.['maxlength'])
+      return 'Пароль не должен превышать 255 символов.';
+    if (this.changePasswordForm.get('confirmPassword')?.errors?.['required'] || this.changePasswordForm.get('confirmPassword')?.errors?.['pattern'])
+      return 'Не заполнено поле подтверждение пароля.';
+    if (this.changePasswordForm.get('confirmPassword')?.errors?.['maxlength'])
+      return 'Подтверждение пароля не должно превышать 255 символов.';
+    if(!this.passwordsMatch)
+      return 'Пароли не совпадают.'
+    return '';
+  }
 
 
   faClose = faClose;
