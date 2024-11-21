@@ -24,12 +24,14 @@ import {SprintService} from "../../services/server/sprint.service";
 import {Status} from "../../models/status";
 import {Sprint} from "../../models/sprint";
 import {UiDropdownComponent} from "../../components/ui/ui-dropdown.component";
-import {DatePipe, NgIf} from "@angular/common";
+import {DatePipe, NgClass, NgIf} from "@angular/common";
 import {PriorityParserPipe} from "../../pipe/priority-parser.pipe";
 import {ActivatedRoute, Router} from "@angular/router";
 import {PriorityIconPipe} from "../../pipe/priority-icon.pipe";
 import {CreateTaskModalComponent} from "./create-task/create-task-modal.component";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {TagService} from "../../services/server/tag.service";
+import {Tag} from "../../models/tag";
 
 @Component({
   selector: 'app-tasks',
@@ -47,7 +49,8 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
     DatePipe,
     PriorityParserPipe,
     PriorityIconPipe,
-    NgIf
+    NgIf,
+    NgClass
   ],
   templateUrl: 'tasks.component.html'
 })
@@ -57,6 +60,7 @@ export class TasksComponent implements OnInit {
   currentUser: User | null = null;
 
   statuses: { [key: number]: string } = {};
+  tags: { [key: number]: string } = {};
   users: { [key: string]: string } = {};
   usersLoad: boolean = false;
   sprints: { [key: number]: string } = {};
@@ -66,12 +70,21 @@ export class TasksComponent implements OnInit {
   _selectedStatusId: number | null = null;
   _selectedImplementerLogin: string | null = null;
   _selectedSprintId: number | null = null;
+  _selectedTagId: number | null = null;
 
   get selectedStatusId() {
     return this._selectedStatusId;
   }
   set selectedStatusId(value) {
     this._selectedStatusId = value;
+    this.currentPage = 0;
+    this.updateTasks();
+  }
+  get selectedTagId() {
+    return this._selectedTagId;
+  }
+  set selectedTagId(value) {
+    this._selectedTagId = value;
     this.currentPage = 0;
     this.updateTasks();
   }
@@ -97,6 +110,7 @@ export class TasksComponent implements OnInit {
     private taskService: TaskService,
     private userService: UserService,
     private statusService: StatusService,
+    private tagService: TagService,
     private sprintService: SprintService,
     private authService: AuthService,
     private route: ActivatedRoute,
@@ -107,11 +121,12 @@ export class TasksComponent implements OnInit {
   }
 
   ngOnInit() {
-    let subscription = this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe(params => {
       const sprintId = params['sprintId'] || null;
       const sprintVersion = params['sprintVersion'] || null;
       this.loadCurrentUser();
       this.loadStatuses();
+      this.loadTags();
       if(sprintId && sprintVersion) {
         this.goToSprint(null, sprintId, sprintVersion);
       } else if(this.currentUser) {
@@ -119,7 +134,6 @@ export class TasksComponent implements OnInit {
       } else {
         this.updateTasks();
       }
-      subscription.unsubscribe();
     })
   }
 
@@ -131,7 +145,8 @@ export class TasksComponent implements OnInit {
     this.taskService.getAllTasks(this.currentPage,
       this.selectedStatusId || undefined,
       this.selectedImplementerLogin || undefined,
-      this.selectedSprintId || undefined).subscribe({
+      this.selectedSprintId || undefined,
+      this.selectedTagId || undefined).subscribe({
       next: tasks => {
         if (!(tasks instanceof HttpErrorResponse)) {
           this.tasks = tasks;
@@ -151,6 +166,16 @@ export class TasksComponent implements OnInit {
       if(!(statuses instanceof HttpErrorResponse))
         this.statuses = (statuses as Status[]).reduce((acc: any, status) => {
           acc[status.id] = status.name;
+          return acc;
+        }, {})
+    })
+  }
+
+  loadTags() {
+    this.tagService.getAllTags().subscribe(tags => {
+      if(!(tags instanceof HttpErrorResponse))
+        this.tags = (tags as Tag[]).reduce((acc: any, tag) => {
+          acc[tag.id] = tag.name;
           return acc;
         }, {})
     })
@@ -197,7 +222,7 @@ export class TasksComponent implements OnInit {
   }
 
   openCreateModal() {
-    const modalRef = this.modalService.open(CreateTaskModalComponent, {
+    this.modalService.open(CreateTaskModalComponent, {
       size: 'lg'
     });
   }

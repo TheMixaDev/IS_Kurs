@@ -16,7 +16,7 @@
 }
 @media (min-width: 1024px) {
   .task-dropdown {
-    width: calc(100% / 3 - 8px);
+    width: calc(100% / 4 - 8px);
     @apply mr-2 mb-0
   }
 }

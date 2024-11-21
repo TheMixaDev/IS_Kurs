@@ -244,7 +244,6 @@ export class TaskViewComponent implements OnInit {
             }
           });
         }
-        console.log('Task ID:', this.taskId);
       }
     });
   }
@@ -254,7 +253,7 @@ export class TaskViewComponent implements OnInit {
 
     if(this.task) {
       if (input.value) {
-        const value = Math.max(0, Math.floor(Number(input.value)));
+        const value = Math.min(Math.max(0, Math.floor(Number(input.value))), 1000000);
         input.value = value.toString();
         this.task.storyPoints = value;
       } else {

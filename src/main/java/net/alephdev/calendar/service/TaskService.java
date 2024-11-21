@@ -10,9 +10,11 @@ import net.alephdev.calendar.repository.StatusRepository;
 import net.alephdev.calendar.repository.TaskRepository;
 import net.alephdev.calendar.repository.functional.SprintRepository;
 
+import net.alephdev.calendar.repository.specification.TaskSpecification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -31,33 +33,19 @@ public class TaskService {
     private final UserService userService;
     private final RoleService roleService;
 
+    public Page<Task> getFilteredTasks(
+            Integer statusId,
+            Integer sprintId,
+            User implementer,
+            Integer tagId,
+            int page) {
 
-    public Page<Task> getAllTasks(int page) {
-        return taskRepository.findAll(PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "id")));
-    }
+        Specification<Task> spec = Specification.where(TaskSpecification.hasStatus(statusId))
+                .and(TaskSpecification.hasSprint(sprintId))
+                .and(TaskSpecification.hasImplementer(implementer))
+                .and(TaskSpecification.hasTag(tagId));
 
-    public Page<Task> getAllTaskByStatus(Integer statusId, int page) {
-        return taskRepository.findAllByStatusId(statusId, PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "id")));
-    }
-
-    public Page<Task> getAllTasksBySprint(Integer sprintId, int page) {
-        return taskRepository.findAllBySprintId(sprintId, PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "id")));
-    }
-
-    public Page<Task> getAllTasksByImplementer(User implementer, int page) {
-        return taskRepository.findAllByImplementer(implementer, PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "id")));
-    }
-
-    public Page<Task> getAllTasksBySprintAndStatus(Integer sprintId, Integer statusId, int page) {
-        return taskRepository.findAllBySprintIdAndStatusId(sprintId, statusId, PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "id")));
-    }
-
-    public Page<Task> getAllTasksByImplementerAndStatus(User implementer, Integer statusId, int page) {
-        return taskRepository.findAllByImplementerAndStatusId(implementer, statusId, PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "id")));
-    }
-
-    public Page<Task> getAllTasksByImplementerAndSprint(User implementer, Integer sprintId, int page) {
-        return taskRepository.findAllByImplementerAndSprintId(implementer, sprintId, PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "id")));
+        return taskRepository.findAll(spec, PageRequest.of(page, 20));
     }
 
     public Task createTask(TaskDto taskDto, User user) {

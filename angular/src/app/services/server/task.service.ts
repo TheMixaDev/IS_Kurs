@@ -13,11 +13,17 @@ import {Page} from "../../models/misc/page";
 export class TaskService {
   constructor(private http: HttpClient, private apiService: ApiService) {}
 
-  getAllTasks(page: number = 0, statusId?: number, implementerLogin?: string, sprintId?: number): Observable<Page<Task> | HttpErrorResponse> {
-    let params: { page: string, statusId?: string, implementerLogin?: string, sprintId?: string } = { page: page.toString() };
+  getAllTasks(page: number = 0,
+              statusId?: number,
+              implementerLogin?: string,
+              sprintId?: number,
+              tagId?: number
+  ): Observable<Page<Task> | HttpErrorResponse> {
+    let params: { page: string, statusId?: string, implementerLogin?: string, sprintId?: string, tagId?: string } = { page: page.toString() };
     if(statusId) params.statusId = statusId.toString();
     if(implementerLogin) params.implementerLogin = implementerLogin;
     if(sprintId) params.sprintId = sprintId.toString();
+    if(tagId) params.tagId = tagId.toString();
 
     return this.http.get<Page<Task>>(`${this.apiService.apiUrl}/tasks`, { params, headers: this.apiService.getHeaders() }).pipe(catchError(this.apiService.handleError));
   }

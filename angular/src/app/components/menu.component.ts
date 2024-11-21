@@ -46,7 +46,6 @@ export class MenuComponent implements OnInit {
 
   private loadUserData(): void {
     this.currentUser = this.authService.getUser();
-    console.log(this.currentUser);
   }
 
   openSettings() {

@@ -1,7 +1,10 @@
 package net.alephdev.calendar.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Data
 @Entity
@@ -35,6 +38,10 @@ public class Task {
     @ManyToOne
     @JoinColumn(name = "created_by", foreignKey = @ForeignKey(name = "fk_task_created_by"))
     private User createdBy;
+
+    @OneToMany(mappedBy = "task")
+    @JsonIgnore
+    private List<TaskTag> taskTags;
 
     public enum Priority {
         LOW, MEDIUM, CRITICAL

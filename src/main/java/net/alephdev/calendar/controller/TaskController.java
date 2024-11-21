@@ -4,16 +4,9 @@ import net.alephdev.calendar.annotation.AuthorizedRequired;
 import net.alephdev.calendar.annotation.CurrentUser;
 import net.alephdev.calendar.annotation.PrivilegeRequired;
 import net.alephdev.calendar.dto.TaskDto;
-import net.alephdev.calendar.models.Sprint;
-import net.alephdev.calendar.models.Status;
-import net.alephdev.calendar.models.Task;
-import net.alephdev.calendar.models.User;
-import net.alephdev.calendar.service.SprintService;
-import net.alephdev.calendar.service.StatusService;
-import net.alephdev.calendar.service.TaskService;
-import net.alephdev.calendar.service.UserService;
+import net.alephdev.calendar.models.*;
+import net.alephdev.calendar.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,50 +19,24 @@ public class TaskController {
 
     private final TaskService taskService;
     private final UserService userService;
-    private final StatusService statusService;
-    private final SprintService sprintService;
 
     @Autowired
-    public TaskController(TaskService taskService, UserService userService, StatusService statusService, SprintService sprintService) {
+    public TaskController(TaskService taskService, UserService userService) {
         this.taskService = taskService;
         this.userService = userService;
-        this.statusService = statusService;
-        this.sprintService = sprintService;
     }
 
     @GetMapping
     public Page<Task> getAllTasks(
-            @RequestParam @DefaultValue("0") int page,
+            @RequestParam(defaultValue = "0") int page,
             @RequestParam(required = false) Integer statusId,
             @RequestParam(required = false) String implementerLogin,
-            @RequestParam(required = false) Integer sprintId
-    ) {
-        Status status = null;
-        User implementer = null;
-        Sprint sprint = null;
+            @RequestParam(required = false) Integer sprintId,
+            @RequestParam(required = false) Integer tagId) {
 
-        if (statusId != null)
-            status = statusService.getStatus(statusId);
-        if (implementerLogin != null)
-            implementer = userService.getUserByLogin(implementerLogin);
-        if (sprintId != null)
-            sprint = sprintService.getSprint(sprintId);
-        if(implementer != null) {
-            if(sprint != null)
-                return taskService.getAllTasksByImplementerAndSprint(implementer, sprintId, page);
-            if(status != null)
-                return taskService.getAllTasksByImplementerAndStatus(implementer, statusId, page);
-            return taskService.getAllTasksByImplementer(implementer, page);
-        }
-        if(sprint != null) {
-            if(status != null)
-                return taskService.getAllTasksBySprintAndStatus(sprintId, statusId, page);
-            return taskService.getAllTasksBySprint(sprintId, page);
-        }
-        if(status != null)
-            return taskService.getAllTaskByStatus(statusId, page);
+        User implementer = implementerLogin != null ? userService.getUserByLogin(implementerLogin) : null;
 
-        return taskService.getAllTasks(page);
+        return taskService.getFilteredTasks(statusId, sprintId, implementer, tagId, page);
     }
 
     @GetMapping("/{id}")
