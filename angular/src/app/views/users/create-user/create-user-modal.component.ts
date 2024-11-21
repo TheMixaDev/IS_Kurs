@@ -170,12 +170,19 @@ export class CreateUserModalComponent implements OnInit {
   patchTeamAndRole(login: string, teamId: number, roleId: number, message: string) {
     if(this.currentUser?.role?.id === 1) {
       this.userService.updateUserTeam(login, teamId).subscribe(() => {
-        this.userService.updateUserRole(login, roleId).subscribe(() => {
+        if(login != this.currentUser?.login) {
+          this.userService.updateUserRole(login, roleId).subscribe(() => {
+            this.alertService.showAlert('success', message);
+            this.userService.initiateUpdate();
+            this.authService.initiateUpdate();
+            this.closeModal();
+          });
+        } else {
           this.alertService.showAlert('success', message);
           this.userService.initiateUpdate();
           this.authService.initiateUpdate();
           this.closeModal();
-        });
+        }
       })
     } else {
       this.alertService.showAlert('success', message);
