@@ -37,6 +37,7 @@ public class RiskService {
     }
 
     public Risk createRisk(Risk risk) {
+        risk.setDescription(risk.getDescription().trim());
         return riskRepository.save(risk);
     }
 

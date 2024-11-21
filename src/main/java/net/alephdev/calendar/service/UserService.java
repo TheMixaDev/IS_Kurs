@@ -52,11 +52,11 @@ public class UserService {
         }
 
         User user = User.builder()
-                .login(userDto.getLogin())
-                .email(userDto.getEmail())
+                .login(userDto.getLogin().trim())
+                .email(userDto.getEmail().trim())
                 .password(passwordEncoder.encode(userDto.getPassword()))
-                .firstName(userDto.getFirstName())
-                .lastName(userDto.getLastName())
+                .firstName(userDto.getFirstName().trim())
+                .lastName(userDto.getLastName().trim())
                 .build();
 
         return userRepository.save(user);

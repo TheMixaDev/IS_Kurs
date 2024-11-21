@@ -47,7 +47,7 @@ public class SprintService {
         Team team = teamRepository.findById(sprintDto.getTeamId())
                 .orElseThrow(() -> new NoSuchElementException("Команда не найдена"));
 
-        sprint.setMajorVersion(sprintDto.getMajorVersion());
+        sprint.setMajorVersion(sprintDto.getMajorVersion().trim());
         sprint.setStartDate(sprintDto.getStartDate());
         sprint.setEndDate(sprintDto.getEndDate());
         sprint.setRegressionStart(sprintDto.getRegressionStart());

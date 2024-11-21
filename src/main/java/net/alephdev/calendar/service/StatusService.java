@@ -22,6 +22,9 @@ public class StatusService {
     }
 
     public Status createStatus(Status status) {
+        status.setName(status.getName().trim());
+        if(status.getDescription() != null)
+            status.setDescription(status.getDescription().trim());
         return statusRepository.save(status);
     }
 

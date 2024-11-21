@@ -62,7 +62,7 @@ public class TaskService {
 
     public Task createTask(TaskDto taskDto, User user) {
         Task task = new Task();
-        task.setName(taskDto.getName());
+        task.setName(taskDto.getName().trim());
         task.setStoryPoints(taskDto.getStoryPoints());
         task.setPriorityEnum(taskDto.getPriorityEnum());
         task.setCreatedBy(user);

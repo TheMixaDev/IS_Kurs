@@ -34,9 +34,10 @@ public class ReleaseService {
         Sprint sprint = sprintRepository.findById(releaseDto.getSprintId())
                 .orElseThrow(() -> new NoSuchElementException("Спринт не найден"));
 
-        release.setVersion(releaseDto.getVersion());
+        release.setVersion(releaseDto.getVersion().trim());
         release.setReleaseDate(releaseDto.getReleaseDate());
-        release.setDescription(releaseDto.getDescription());
+        if(releaseDto.getDescription() != null)
+            release.setDescription(releaseDto.getDescription().trim());
         release.setSprint(sprint);
         return releaseRepository.save(release);
     }

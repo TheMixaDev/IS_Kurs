@@ -31,7 +31,7 @@ public class IdeaService {
 
     public Idea createIdea(IdeaDto idea, User user) {
         Idea created = new Idea();
-        created.setDescription(idea.getDescription());
+        created.setDescription(idea.getDescription().trim());
         created.setAuthorLogin(user);
         created.setStatusEnumId(Idea.Status.PENDING);
 

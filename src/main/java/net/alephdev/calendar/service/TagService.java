@@ -30,6 +30,9 @@ public class TagService {
     }
 
     public Tag createTag(Tag tag) {
+        tag.setName(tag.getName().trim());
+        if(tag.getDescription() != null)
+            tag.setDescription(tag.getDescription().trim());
         return tagRepository.save(tag);
     }
 

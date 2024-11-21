@@ -29,6 +29,9 @@ public class RoleService {
     }
 
     public Role createRole(Role role) {
+        role.setName(role.getName().trim());
+        if(role.getResponsibilities() != null)
+            role.setResponsibilities(role.getResponsibilities().trim());
         return roleRepository.save(role);
     }
 

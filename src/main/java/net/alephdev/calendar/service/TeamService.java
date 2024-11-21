@@ -29,6 +29,9 @@ public class TeamService {
     }
 
     public Team createTeam(Team team) {
+        team.setName(team.getName().trim());
+        if(team.getDescription() != null)
+            team.setDescription(team.getDescription().trim());
         return teamRepository.save(team);
     }
 
