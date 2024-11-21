@@ -24,3 +24,23 @@
 .delete-button {
   transform: translate(0, -4px);
 }
+
+.table-cell-lines {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+  @apply !m-0
+}
+
+.one-line {
+  -webkit-line-clamp: 1;
+}
+
+.two-lines {
+  -webkit-line-clamp: 2;
+}
+
+.three-lines {
+  -webkit-line-clamp: 3;
+}

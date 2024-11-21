@@ -32,21 +32,29 @@
           {{user.login}}
         </td>
         <td table-cell>
-          {{user.email}}
+          <div class="table-cell-lines two-lines">
+            {{user.email}}
+          </div>
         </td>
         <td table-cell>
-          {{user.firstName}} {{user.lastName}}
+          <div class="table-cell-lines two-lines">
+            {{user.firstName}} {{user.lastName}}
+          </div>
         </td>
         <td table-cell>
-          @if(user.team) {
-            <fa-icon [icon]="faCircle" [style.color]="user.team.color"/>
-            {{user.team.name}}
-          } @else {
-            Без команды
-          }
+          <div class="table-cell-lines two-lines">
+            @if(user.team) {
+              <fa-icon [icon]="faCircle" [style.color]="user.team.color"/>
+              {{user.team.name}}
+            } @else {
+              Без команды
+            }
+          </div>
         </td>
         <td table-cell>
-          {{user.role?.name || 'Без роли'}}
+          <div class="table-cell-lines two-lines">
+            {{user.role?.name || 'Без роли'}}
+          </div>
         </td>
         <td table-cell class="w-0">
           @if (currentUser?.role?.id == 1 || currentUser?.login == user.login) {

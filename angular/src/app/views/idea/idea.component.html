@@ -27,7 +27,9 @@
           {{idea.authorLogin.login}}
         </td>
         <td table-cell>
-          {{idea.description}}
+          <div class="table-cell-lines two-lines">
+            {{idea.description}}
+          </div>
         </td>
         <td table-cell>
           {{idea.statusEnumId | statusParser}}

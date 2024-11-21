@@ -180,10 +180,18 @@
           @if(risks.length > 0) {
             @for(risk of risks; track risk.id) {
               <tr table-row>
-                <td table-cell>{{risk.description}}</td>
+                <td table-cell>
+                  <div class="table-cell-lines two-lines">
+                    {{risk.description}}
+                  </div>
+                </td>
                 <td table-cell>{{risk.probability}}</td>
-                <td table-cell>{{risk.estimatedLoss}}</td>
-                <td table-cell *ngIf="canEditTask">
+                <td table-cell>
+                  <div class="table-cell-lines one-line">
+                    {{risk.estimatedLoss}}
+                  </div>
+                </td>
+                <td table-cell *ngIf="canEditTask" style="width: 0">
                   <ui-button
                     color="danger"
                     classExtension="!py-2 !px-3 ml-1"

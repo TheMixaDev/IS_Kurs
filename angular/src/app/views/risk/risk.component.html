@@ -8,8 +8,16 @@
       <app-table-component [columns]="['Описание', 'Значение риска']" [creationEnabled]="false">
         @for(topTenRisk of topTenRisks; track topTenRisk.riskId) {
           <tr table-row>
-            <td table-cell>{{topTenRisk.description}}</td>
-            <td table-cell>{{topTenRisk.totalEstimatedLoss}}</td>
+            <td table-cell>
+              <div class="table-cell-lines two-lines">
+                {{topTenRisk.description}}
+              </div>
+            </td>
+            <td table-cell>
+              <div class="table-cell-lines one-line">
+                {{topTenRisk.totalEstimatedLoss}}
+              </div>
+            </td>
           </tr>
         }
         @if(!topTenRisks || topTenRisks.length < 1) {
@@ -61,9 +69,17 @@
           (pageChange)="changePage($event)">
           @for(risk of allRisks.content; track risk.id) {
             <tr table-row>
-              <td table-cell>{{risk.description}}</td>
+              <td table-cell>
+                <div class="table-cell-lines two-lines">
+                  {{risk.description}}
+                </div>
+              </td>
               <td table-cell>{{risk.probability}}</td>
-              <td table-cell>{{risk.estimatedLoss}}</td>
+              <td table-cell>
+                <div class="table-cell-lines one-line">
+                  {{risk.estimatedLoss}}
+                </div>
+              </td>
               <td table-cell class="w-[132px]" *ngIf="isAdmin">
                 <div class="flex gap-2">
                   <ui-button (click)="openEditModal(risk)" color="warning" classExtension="!py-2 !px-3" data-tooltip-target="tooltip-edit">

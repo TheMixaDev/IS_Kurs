@@ -16,7 +16,9 @@
         {{status.name}}
       </td>
       <td table-cell>
-        {{status.description}}
+        <div class="table-cell-lines two-lines">
+          {{status.description}}
+        </div>
       </td>
       <td table-cell class="w-[132px]" *ngIf="isAdmin">
         <ui-button color="warning" classExtension="!py-2 !px-3 ml-1" data-tooltip-target="tooltip-edit" (click)="openEditModal(status)">

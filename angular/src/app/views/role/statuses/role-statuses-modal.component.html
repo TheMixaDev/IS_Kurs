@@ -6,7 +6,11 @@
   <app-table-component [columns]="tableColumns" [creationEnabled]="isAdmin" headerText="Статусы" (creationClick)="openAddStatusModal()" creationText="Добавить">
     <tr *ngFor="let status of statuses; trackBy: trackStatus">
       <td table-cell>{{ status.name }}</td>
-      <td table-cell>{{ status.description || 'Нет описания' }}</td>
+      <td table-cell>
+        <div class="table-cell-lines two-lines">
+          {{ status.description || 'Нет описания' }}
+        </div>
+      </td>
       <td table-cell class="w-[0px]" *ngIf="isAdmin">
         <ui-button color="danger" classExtension="!py-2 !px-3 ml-1" (click)="deleteStatus(status)">
           <fa-icon [icon]="faTrash"/>

@@ -16,7 +16,9 @@
         {{role.name}}
       </td>
       <td table-cell>
-        {{role.responsibilities}}
+        <div class="table-cell-lines two-lines">
+          {{role.responsibilities}}
+        </div>
       </td>
       <td table-cell [style.width]="isAdmin ? '174px' : '0px'">
         @if(role.id !== 1) {

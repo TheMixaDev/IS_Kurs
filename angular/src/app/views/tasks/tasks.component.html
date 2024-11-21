@@ -43,7 +43,11 @@
     @for(task of tasks.content; track task.id) {
       <tr table-row (click)="goToTask(task)">
         <td table-cell>{{ task.id }}</td>
-        <td table-cell>{{ task.name }}</td>
+        <td table-cell>
+          <div class="table-cell-lines two-lines">
+            {{ task.name }}
+          </div>
+        </td>
         <td table-cell>{{ task.storyPoints }}</td>
         <td table-cell class="whitespace-nowrap">
           <fa-icon [icon]="(task.priorityEnum | priorityIcon).icon" [style.color]="(task.priorityEnum | priorityIcon).color"/>
@@ -59,17 +63,19 @@
         <td table-cell>
           @if(task.sprint) {
             <span (click)="goToSprint($event, task.sprint.id, task.sprint.majorVersion)" class="text-blue-600 cursor-pointer">
+              <div class="table-cell-lines two-lines">
               @if(task.sprint.team && task.sprint.team.color) {
                 <fa-icon [icon]="faCircle" [style.color]="task.sprint.team.color"/>
               }
               {{ task.sprint.majorVersion }}
+              </div>
             </span>
           }
         </td>
         <td table-cell>
-          <span (click)="goToStatus($event, task.status)" class="text-blue-600 cursor-pointer">
+          <div (click)="goToStatus($event, task.status)" class="text-blue-600 cursor-pointer table-cell-lines three-lines text-xs">
             {{ task.status.name }}
-          </span>
+          </div>
         </td>
       </tr>
     }

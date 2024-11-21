@@ -17,11 +17,15 @@
   @for(sprint of sprints; track sprint.majorVersion) {
     <tr table-row>
       <td table-cell>
-        {{ sprint.majorVersion }}
+        <div class="table-cell-lines one-line">
+          {{ sprint.majorVersion }}
+        </div>
       </td>
       <td table-cell>
-        <fa-icon [icon]="faCircle" [style.color]="sprint.teamColor"/>
-        Команда "{{ sprint.teamName }}"
+        <div class="table-cell-lines two-lines">
+          <fa-icon [icon]="faCircle" [style.color]="sprint.teamColor"/>
+          Команда "{{ sprint.teamName }}"
+        </div>
       </td>
       <td table-cell>
         {{ sprint.startDate | date:'dd.MM.yyyy' }}
