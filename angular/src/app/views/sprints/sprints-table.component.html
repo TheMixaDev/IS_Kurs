@@ -1,13 +1,13 @@
 <app-table-component [creationEnabled]="false">
   <tr table-row class="bg-gray-50">
     <td table-cell class="text-end">
-      <ui-button (click)="changeYear(-1)" classExtension="!px-3 !py-1">
+      <ui-button (click)="changeYear(-1)" classExtension="!px-3 !py-1" [disabled]="year <= 2003">
         <fa-icon [icon]="faArrowLeft"/>
       </ui-button>
       <ui-button color="transparent" classExtension="text-black !p-1" (click)="changeYear(currentYear-year)">
         {{ year }}
       </ui-button>
-      <ui-button (click)="changeYear(1)" classExtension="!px-3 !py-1">
+      <ui-button (click)="changeYear(1)" classExtension="!px-3 !py-1" [disabled]="year >= maxYear">
         <fa-icon [icon]="faArrowRight"/>
       </ui-button>
     </td>

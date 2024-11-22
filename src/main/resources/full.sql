@@ -195,7 +195,7 @@ BEGIN
     JOIN
         Team t ON s.team_id = t.id
     WHERE
-        EXTRACT(YEAR FROM s.start_date) = target_year
+        (EXTRACT(YEAR FROM s.start_date) = target_year OR EXTRACT(YEAR FROM s.end_date) = target_year)
         AND (input_team_name IS NULL OR t.name = input_team_name);
 END;
 $$;

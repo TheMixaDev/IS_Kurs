@@ -73,6 +73,8 @@ export class CreateSprintModalComponent implements OnInit {
         return 'Дата начала должна быть меньше даты окончания.';
       if(regressionStart > regressionEnd)
         return 'Дата начала регресса должна быть меньше даты окончания регресса.';
+      if(regressionStart < startDate)
+        return 'Дата начала регресса должна быть больше даты начала спринта.';
       let currentYear = moment().toDate().getUTCFullYear();
       let startYear = moment(startDate).toDate().getUTCFullYear();
       let endYear = moment(endDate).toDate().getUTCFullYear();
@@ -80,6 +82,10 @@ export class CreateSprintModalComponent implements OnInit {
       let regressionEndYear = moment(regressionEnd).toDate().getUTCFullYear();
       if(!startYear || !endYear || !regressionStartYear || !regressionEndYear)
         return 'Указаны неверные даты.';
+      if(Math.abs(startYear - endYear) > 1)
+        return 'Спринт не может быть растянут более чем на 2 года.';
+      if(Math.abs(regressionStartYear - regressionEndYear) > 1)
+        return 'Регресс не может быть растянут более чем на 2 года.';
       if(startYear > currentYear + 5)
         return 'Дата начала не может быть больше текущего года на 5 лет.';
       if(startYear < currentYear - 5)

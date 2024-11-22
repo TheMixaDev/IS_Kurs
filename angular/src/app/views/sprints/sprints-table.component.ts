@@ -29,6 +29,7 @@ import {AuthService} from "../../services/server/auth.service";
 import {Subscription} from "rxjs";
 import {LoaderService} from "../../services/loader.service";
 import {LoaderComponent} from "../../components/loader.component";
+import moment from "moment";
 
 @Component({
   selector: 'app-sprints-table',
@@ -53,6 +54,7 @@ export class SprintsTableComponent implements OnInit, OnDestroy {
   year = new Date().getFullYear();
   currentUser = this.authService.getUser();
   sprintSubscription : Subscription;
+  maxYear;
   constructor(private sprintService : SprintService,
               private alertService : AlertService,
               private loaderService: LoaderService,
@@ -61,6 +63,7 @@ export class SprintsTableComponent implements OnInit, OnDestroy {
               private router: Router) {
     this.sprintSubscription = this.sprintService.sprint$.subscribe(this.updateSprints.bind(this));
     this.authService.user$.subscribe(this.loadUserData.bind(this));
+    this.maxYear = moment().add(5, 'y').toDate().getFullYear();
   }
 
   _loadingData = false;
