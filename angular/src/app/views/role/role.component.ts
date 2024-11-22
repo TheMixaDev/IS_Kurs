@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnDestroy, OnInit} from "@angular/core";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {PrimaryButtonBinding} from "../../components/bindings/primary-button.binding";
 import {TableCellComponent} from "../../components/table/table-cell.component";
@@ -18,6 +18,8 @@ import {RoleStatusesModalComponent} from "./statuses/role-statuses-modal.compone
 import {AuthService} from "../../services/server/auth.service";
 import {NgIf} from "@angular/common";
 import {LoaderService} from "../../services/loader.service";
+import {WebsocketService} from "../../services/websocket.service";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-role',
@@ -35,17 +37,20 @@ import {LoaderService} from "../../services/loader.service";
   ],
   templateUrl: './role.component.html'
 })
-export class RoleComponent implements OnInit {
+export class RoleComponent implements OnInit, OnDestroy {
 
   roles: Role[] = [];
   currentUser = this.authService.getUser();
 
   initialized = false;
 
+  wss: Subscription;
+
   constructor(private roleService: RoleService,
               private alertService: AlertService,
               private loaderService: LoaderService,
               private authService: AuthService,
+              private websocketService: WebsocketService,
               private modalService: NgbModal
   ) {
     this.roleService.role$.subscribe(() => {
@@ -53,6 +58,15 @@ export class RoleComponent implements OnInit {
     });
     this.authService.user$.subscribe(this.loadUserData.bind(this));
     this.loaderService.loader(true);
+    this.wss = this.websocketService.ws$.subscribe(message => {
+      if(message.model == 'role') {
+        this.updateRoles();
+      }
+    })
+  }
+
+  ngOnDestroy() {
+    this.wss.unsubscribe();
   }
 
   loadUserData() {
@@ -69,7 +83,6 @@ export class RoleComponent implements OnInit {
   }
 
   updateRoles(){
-    this.roles = [];
     this.roleService.getAllRoles().subscribe(roles => {
       if(!this.initialized) {
         this.initialized = true;

@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnDestroy, OnInit} from "@angular/core";
 import {TableComponent} from "../../components/table/table.component";
 import {DatePipe, NgClass, NgForOf, NgIf} from "@angular/common";
 import {UiButtonComponent} from "../../components/ui/ui-button.component";
@@ -21,6 +21,8 @@ import {UiDropdownComponent} from "../../components/ui/ui-dropdown.component";
 import {TeamLoadModalComponent} from "./team-load/team-load-modal.component";
 import {AuthService} from "../../services/server/auth.service";
 import {LoaderService} from "../../services/loader.service";
+import {WebsocketService} from "../../services/websocket.service";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-teams',
@@ -28,21 +30,33 @@ import {LoaderService} from "../../services/loader.service";
   imports: [TableComponent, DatePipe, UiButtonComponent, FaIconComponent, ReactiveFormsModule, FormsModule, NgForOf, NgClass, PrimaryButtonBinding, UiDropdownComponent, NgIf, NgbTooltip],
   templateUrl: './teams.component.html'
 })
-export class TeamsComponent implements OnInit {
+export class TeamsComponent implements OnInit, OnDestroy {
   teams : Team[] = [];
   search = '';
   currentUser = this.authService.getUser();
 
   initialized = false;
 
+  wss: Subscription;
+
   constructor(private teamService : TeamService,
               private authService: AuthService,
               private modalService: NgbModal,
+              private websocketService: WebsocketService,
               private loaderService: LoaderService
   ) {
     this.teamService.team$.subscribe(this.updateTeams.bind(this));
     this.authService.user$.subscribe(this.loadUserData.bind(this));
+    this.wss = this.websocketService.ws$.subscribe(message => {
+      if(message.model == 'team') {
+        this.updateTeams();
+      }
+    })
     this.loaderService.loader(true);
+  }
+
+  ngOnDestroy() {
+    this.wss.unsubscribe();
   }
 
   loadUserData() {

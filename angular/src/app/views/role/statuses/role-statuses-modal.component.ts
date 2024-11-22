@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {NgbActiveModal, NgbModal, NgbTooltip} from '@ng-bootstrap/ng-bootstrap';
 import {faClose, faTrash} from '@fortawesome/free-solid-svg-icons';
 import {FaIconComponent} from '@fortawesome/angular-fontawesome';
@@ -18,6 +18,8 @@ import {ConfirmModalComponent} from "../../../components/modal/confirm-modal.com
 import {HttpErrorResponse} from "@angular/common/http";
 import {AddStatusModalComponent} from "./add-status/add-status-modal.component";
 import {AuthService} from "../../../services/server/auth.service";
+import {WebsocketService} from "../../../services/websocket.service";
+import {Subscription} from "rxjs";
 
 
 @Component({
@@ -38,7 +40,7 @@ import {AuthService} from "../../../services/server/auth.service";
   ],
   templateUrl: 'role-statuses-modal.component.html'
 })
-export class RoleStatusesModalComponent implements OnInit {
+export class RoleStatusesModalComponent implements OnInit, OnDestroy {
   @Input() role: Role | null = null;
   statuses: Status[] = [];
   faClose = faClose;
@@ -46,16 +48,28 @@ export class RoleStatusesModalComponent implements OnInit {
   availableStatuses: { [key: number]: string } = {};
   currentUser = this.authService.getUser();
 
+  wss: Subscription;
+
   constructor(public activeModal: NgbActiveModal,
               private roleService: RoleService,
               private statusService: StatusService,
               private alertService: AlertService,
               private authService: AuthService,
+              private websocketService: WebsocketService,
               private modalService: NgbModal) {
     this.roleService.role$.subscribe(() => {
       setTimeout(this.updateStatuses.bind(this), 0);
     });
     this.authService.user$.subscribe(this.loadUserData.bind(this));
+    this.wss = this.websocketService.ws$.subscribe(message => {
+      if((message.model == 'role' && message.id == this.role?.id.toString()) || message.model == 'status') {
+        this.updateStatuses();
+      }
+    })
+  }
+
+  ngOnDestroy() {
+    this.wss.unsubscribe();
   }
 
   loadUserData() {

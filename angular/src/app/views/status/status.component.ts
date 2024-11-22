@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnDestroy, OnInit} from "@angular/core";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {HeaderItemBinding} from "../../components/bindings/header-item.binding";
 import {PrimaryButtonBinding} from "../../components/bindings/primary-button.binding";
@@ -19,6 +19,8 @@ import { ConfirmModalComponent } from "../../components/modal/confirm-modal.comp
 import { CreateStatusModalComponent } from "./create-status/create-status-modal.component";
 import {AuthService} from "../../services/server/auth.service";
 import {LoaderService} from "../../services/loader.service";
+import {WebsocketService} from "../../services/websocket.service";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-status',
@@ -39,16 +41,19 @@ import {LoaderService} from "../../services/loader.service";
   ],
   templateUrl: './status.component.html'
 })
-export class StatusComponent implements OnInit {
+export class StatusComponent implements OnInit, OnDestroy {
   statuses: Status[] = [];
   currentUser = this.authService.getUser();
 
   initialized = false;
 
+  wss: Subscription;
+
   constructor(private statusService: StatusService,
               private alertService: AlertService,
               private loaderService: LoaderService,
               private authService: AuthService,
+              private websocketService: WebsocketService,
               private modalService: NgbModal
   ) {
     this.statusService.status$.subscribe(() => {
@@ -56,6 +61,15 @@ export class StatusComponent implements OnInit {
     });
     this.authService.user$.subscribe(this.loadUserData.bind(this));
     this.loaderService.loader(true);
+    this.wss = this.websocketService.ws$.subscribe(message => {
+      if(message.model == 'status') {
+        this.updateStatuses();
+      }
+    })
+  }
+
+  ngOnDestroy() {
+    this.wss.unsubscribe();
   }
 
   loadUserData() {
@@ -78,7 +92,6 @@ export class StatusComponent implements OnInit {
   }
 
   updateStatuses(){
-    this.statuses = [];
     this.statusService.getAllStatuses().subscribe(statuses => {
       if(!this.initialized) {
         this.initialized = true;

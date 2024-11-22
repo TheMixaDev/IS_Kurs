@@ -1,5 +1,6 @@
 package net.alephdev.calendar.controller;
 
+import net.alephdev.calendar.WebSocketHandler;
 import net.alephdev.calendar.annotation.AuthorizedRequired;
 import net.alephdev.calendar.annotation.PrivilegeRequired;
 import net.alephdev.calendar.dto.ObjectDto;
@@ -18,10 +19,12 @@ import java.util.List;
 public class TeamController {
 
     private final TeamService teamService;
+    private final WebSocketHandler webSocketHandler;
 
     @Autowired
-    public TeamController(TeamService teamService) {
+    public TeamController(TeamService teamService, WebSocketHandler webSocketHandler) {
         this.teamService = teamService;
+        this.webSocketHandler = webSocketHandler;
     }
 
     @GetMapping
@@ -38,6 +41,7 @@ public class TeamController {
     @PostMapping
     public ResponseEntity<Team> createTeam(@RequestBody Team team) {
         Team createdTeam = teamService.createTeam(team);
+        webSocketHandler.notifyClients("team");
         return new ResponseEntity<>(createdTeam, HttpStatus.CREATED);
     }
 
@@ -45,6 +49,7 @@ public class TeamController {
     @PutMapping("/{id}")
     public ResponseEntity<Team> updateTeam(@PathVariable Integer id, @RequestBody Team updatedTeam) {
         Team team = teamService.updateTeam(id, updatedTeam);
+        webSocketHandler.notifyClients("team", id);
         return new ResponseEntity<>(team, HttpStatus.OK);
     }
 
@@ -59,6 +64,8 @@ public class TeamController {
     @PrivilegeRequired
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTeam(@PathVariable Integer id) {
-        return teamService.deleteTeam(id);
+        ResponseEntity<Void> result = teamService.deleteTeam(id);
+        webSocketHandler.notifyClients("team", id);
+        return result;
     }
 }

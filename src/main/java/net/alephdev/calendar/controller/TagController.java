@@ -1,6 +1,7 @@
 package net.alephdev.calendar.controller;
 
 import lombok.RequiredArgsConstructor;
+import net.alephdev.calendar.WebSocketHandler;
 import net.alephdev.calendar.annotation.AuthorizedRequired;
 import net.alephdev.calendar.annotation.CurrentUser;
 import net.alephdev.calendar.annotation.PrivilegeRequired;
@@ -23,6 +24,7 @@ public class TagController {
 
     private final TagService tagService;
     private final TaskService taskService;
+    private final WebSocketHandler webSocketHandler;
 
     @GetMapping
     public List<Tag> getAllTags() {
@@ -33,6 +35,7 @@ public class TagController {
     @PostMapping
     public ResponseEntity<Tag> createTag(@RequestBody Tag tag) {
         Tag createdTag = tagService.createTag(tag);
+        webSocketHandler.notifyClients("tag");
         return new ResponseEntity<>(createdTag, HttpStatus.CREATED);
     }
 
@@ -40,13 +43,16 @@ public class TagController {
     @PutMapping("/{id}")
     public ResponseEntity<Tag> updateTag(@PathVariable Integer id, @RequestBody Tag updatedTag) {
         Tag tag = tagService.updateTag(id, updatedTag);
+        webSocketHandler.notifyClients("tag", id);
         return new ResponseEntity<>(tag, HttpStatus.OK);
     }
 
     @PrivilegeRequired
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTag(@PathVariable Integer id) {
-        return tagService.deleteTag(id);
+        ResponseEntity<Void> result = tagService.deleteTag(id);
+        webSocketHandler.notifyClients("tag", id);
+        return result;
     }
 
 
@@ -56,6 +62,7 @@ public class TagController {
         Tag tag = tagService.getTag(tagId);
 
         tagService.addTagToTask(task, tag, user);
+        webSocketHandler.notifyClients("task", taskId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -66,6 +73,7 @@ public class TagController {
         Tag tag = tagService.getTag(tagId);
 
         tagService.removeTagFromTask(task, tag, user);
+        webSocketHandler.notifyClients("task", taskId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

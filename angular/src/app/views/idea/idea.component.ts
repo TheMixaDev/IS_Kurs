@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnDestroy, OnInit} from "@angular/core";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {HeaderItemBinding} from "../../components/bindings/header-item.binding";
 import {PrimaryButtonBinding} from "../../components/bindings/primary-button.binding";
@@ -22,6 +22,8 @@ import {CreateIdeaModalComponent} from "./create-idea/create-idea-modal.componen
 import {AlertService} from "../../services/alert.service";
 import {Router} from "@angular/router";
 import {LoaderService} from "../../services/loader.service";
+import {WebsocketService} from "../../services/websocket.service";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-idea',
@@ -42,7 +44,7 @@ import {LoaderService} from "../../services/loader.service";
   ],
   templateUrl: './idea.component.html'
 })
-export class IdeaComponent implements OnInit {
+export class IdeaComponent implements OnInit, OnDestroy {
   ideas: Page<Idea> | null = null;
   currentPage: number = 0;
   user: User | null = null;
@@ -65,18 +67,30 @@ export class IdeaComponent implements OnInit {
     this.updateIdeas();
   }
 
+  wss: Subscription;
+
   constructor(private ideaService: IdeaService,
               private authService: AuthService,
               private alertService: AlertService,
               private loaderService: LoaderService,
               private modalService: NgbModal,
+              private websocketService: WebsocketService,
               private router: Router
   ) {
     this.ideaService.idea$.subscribe(() => {
       this.updateIdeas();
     })
+    this.wss = this.websocketService.ws$.subscribe(message => {
+      if(message.model == 'idea') {
+        this.updateIdeas(false);
+      }
+    })
     this.authService.user$.subscribe(this.loadUserData.bind(this));
     this.loaderService.loader(true);
+  }
+
+  ngOnDestroy() {
+    this.wss.unsubscribe();
   }
 
   _loadingData = false;
@@ -105,10 +119,12 @@ export class IdeaComponent implements OnInit {
     return this.user && this.user.role && this.user.role.id === 1 || false;
   }
 
-  updateIdeas() {
-    this.loadingData = true;
+  updateIdeas(showLoader : boolean = true) {
+    if(showLoader)
+      this.loadingData = true;
     this.ideaService.getAllIdeas(this.currentPage, this.selectedStatus).subscribe(ideas => {
-      this.loadingData = false;
+      if(showLoader)
+        this.loadingData = false;
       if(!this.initialized) {
         this.initialized = true;
         this.loaderService.loader(false);

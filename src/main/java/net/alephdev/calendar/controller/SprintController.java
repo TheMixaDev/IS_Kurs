@@ -1,5 +1,6 @@
 package net.alephdev.calendar.controller;
 
+import net.alephdev.calendar.WebSocketHandler;
 import net.alephdev.calendar.annotation.AuthorizedRequired;
 import net.alephdev.calendar.annotation.PrivilegeRequired;
 import net.alephdev.calendar.dto.SprintDto;
@@ -23,10 +24,12 @@ import java.util.List;
 public class SprintController {
 
     private final SprintService sprintService;
+    private final WebSocketHandler webSocketHandler;
 
     @Autowired
-    public SprintController(SprintService sprintService) {
+    public SprintController(SprintService sprintService, WebSocketHandler webSocketHandler) {
         this.sprintService = sprintService;
+        this.webSocketHandler = webSocketHandler;
     }
 
     @GetMapping
@@ -54,6 +57,7 @@ public class SprintController {
     @PostMapping
     public ResponseEntity<Sprint> createSprint(@RequestBody SprintDto sprint) {
         Sprint createdSprint = sprintService.createSprint(sprint);
+        webSocketHandler.notifyClients("sprints");
         return new ResponseEntity<>(createdSprint, HttpStatus.CREATED);
     }
 
@@ -61,14 +65,16 @@ public class SprintController {
     @PutMapping("/{id}")
     public ResponseEntity<Sprint> updateSprint(@PathVariable Integer id, @RequestBody SprintDto updatedSprint) {
         Sprint sprint = sprintService.updateSprint(id, updatedSprint);
+        webSocketHandler.notifyClients("sprints", id);
         return new ResponseEntity<>(sprint, HttpStatus.OK);
     }
 
     @PrivilegeRequired
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSprint(@PathVariable Integer id) {
-        
-        return sprintService.deleteSprint(id);
+        ResponseEntity<Void> result = sprintService.deleteSprint(id);
+        webSocketHandler.notifyClients("sprints", id);
+        return result;
     }
 
     @GetMapping("/filtered")

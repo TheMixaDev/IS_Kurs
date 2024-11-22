@@ -1,22 +1,26 @@
-import {Injectable} from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import { Observable, throwError, BehaviorSubject } from 'rxjs';
+import {Observable, throwError, BehaviorSubject, Subscription} from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import {JwtRequestDto} from "../../models/dto/jwt-request-dto";
 import {JwtResponseDto} from "../../models/dto/jwt-response-dto";
 import {User} from "../../models/user";
+import {WebsocketService} from "../websocket.service";
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthService implements OnDestroy {
   private apiUrl = 'http://localhost:8080/api';
   private tokenSubject = new BehaviorSubject<string | null>(null);
   private userSubject = new BehaviorSubject<User | null>(null);
   token$: Observable<string | null> = this.tokenSubject.asObservable();
   user$: Observable<User | null> = this.userSubject.asObservable();
 
-  constructor(private http: HttpClient) {
+  wss: Subscription;
+
+  constructor(private http: HttpClient,
+              private websocketService: WebsocketService) {
     const savedToken = localStorage.getItem('token');
     const savedUser = localStorage.getItem('user');
 
@@ -25,6 +29,21 @@ export class AuthService {
       this.validate(savedToken);
     }
     if (savedUser) this.userSubject.next(JSON.parse(savedUser));
+
+    this.wss = this.websocketService.ws$.subscribe(message => {
+      if(
+        (message.model == 'user' && message.id == this.userSubject.value?.login) ||
+        (message.model == 'userWipe' && message.id == this.userSubject.value?.login) ||
+        (message.model == 'team' && message.id == this.userSubject.value?.team?.id.toString()) ||
+        (message.model == 'role' && message.id == this.userSubject.value?.role?.id.toString())
+      ) {
+        this.initiateUpdate();
+      }
+    })
+  }
+
+  ngOnDestroy() {
+    this.wss.unsubscribe();
   }
 
   initiateUpdate() {

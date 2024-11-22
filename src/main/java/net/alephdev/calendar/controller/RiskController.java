@@ -1,6 +1,7 @@
 package net.alephdev.calendar.controller;
 
 import lombok.RequiredArgsConstructor;
+import net.alephdev.calendar.WebSocketHandler;
 import net.alephdev.calendar.annotation.AuthorizedRequired;
 import net.alephdev.calendar.annotation.CurrentUser;
 import net.alephdev.calendar.annotation.PrivilegeRequired;
@@ -29,6 +30,7 @@ public class RiskController {
     private final RiskService riskService;
     private final TaskService taskService;
     private final IdeaService ideaService;
+    private final WebSocketHandler webSocketHandler;
 
     @GetMapping
     public Page<Risk> getAllRisks(@RequestParam @DefaultValue("0") int page, @RequestParam String description) {
@@ -39,6 +41,7 @@ public class RiskController {
     @PostMapping
     public ResponseEntity<Risk> createRisk(@RequestBody Risk risk) {
         Risk createdRisk = riskService.createRisk(risk);
+        webSocketHandler.notifyClients("risk");
         return new ResponseEntity<>(createdRisk, HttpStatus.CREATED);
     }
 
@@ -46,13 +49,16 @@ public class RiskController {
     @PutMapping("/{id}")
     public ResponseEntity<Risk> updateRisk(@PathVariable Integer id, @RequestBody Risk updatedRisk) {
         Risk risk = riskService.updateRisk(id, updatedRisk);
+        webSocketHandler.notifyClients("risk");
         return new ResponseEntity<>(risk, HttpStatus.OK);
     }
 
     @PrivilegeRequired
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRisk(@PathVariable Integer id) {
-        return riskService.deleteRisk(id);
+        ResponseEntity<Void> result = riskService.deleteRisk(id);
+        webSocketHandler.notifyClients("risk");
+        return result;
     }
 
     @PostMapping("/task/{taskId}")
@@ -61,6 +67,8 @@ public class RiskController {
         Risk risk = riskService.getRisk(riskId);
 
         riskService.addRiskToTask(task, risk, user);
+        webSocketHandler.notifyClients("task", taskId);
+        webSocketHandler.notifyClients("risk");
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -70,6 +78,7 @@ public class RiskController {
         Risk risk = riskService.getRisk(riskId);
 
         riskService.removeRiskFromTask(task, risk, user);
+        webSocketHandler.notifyClients("task", taskId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -88,6 +97,7 @@ public class RiskController {
         Risk risk = riskService.getRisk(riskId);
 
         riskService.addRiskToIdea(idea, risk, user);
+        webSocketHandler.notifyClients("idea", ideaId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -97,6 +107,7 @@ public class RiskController {
         Risk risk = riskService.getRisk(riskId);
 
         riskService.removeRiskFromIdea(idea, risk, user);
+        webSocketHandler.notifyClients("idea", ideaId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

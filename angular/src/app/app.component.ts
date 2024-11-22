@@ -11,6 +11,7 @@ import { UserService } from './services/server/user.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import {LoaderComponent} from "./components/loader.component";
 import {LoaderService} from "./services/loader.service";
+import {WebsocketService} from "./services/websocket.service";
 
 @Component({
   selector: 'app-root',
@@ -31,6 +32,7 @@ export class AppComponent {
     private loaderService: LoaderService,
     private authService: AuthService,
     private userService: UserService,
+    private websocketService: WebsocketService,
     private renderer: Renderer2
   ) {
     this.alertService.alert$.subscribe(alert => {
@@ -53,6 +55,10 @@ export class AppComponent {
       }
       this.loader = loader.show;
     })
+
+    this.websocketService.ws$.subscribe(message => {
+      console.log(message);
+    });
 
     this.restoreUserSession();
 

@@ -1,5 +1,6 @@
 package net.alephdev.calendar.controller;
 
+import net.alephdev.calendar.WebSocketHandler;
 import net.alephdev.calendar.annotation.AuthorizedRequired;
 import net.alephdev.calendar.annotation.CurrentUser;
 import net.alephdev.calendar.annotation.PrivilegeRequired;
@@ -20,10 +21,12 @@ import org.springframework.web.bind.annotation.*;
 public class IdeaController {
 
     private final IdeaService ideaService;
+    private final WebSocketHandler webSocketHandler;
 
     @Autowired
-    public IdeaController(IdeaService ideaService) {
+    public IdeaController(IdeaService ideaService, WebSocketHandler webSocketHandler) {
         this.ideaService = ideaService;
+        this.webSocketHandler = webSocketHandler;
     }
 
     @GetMapping
@@ -40,12 +43,14 @@ public class IdeaController {
     @PostMapping
     public ResponseEntity<Idea> createIdea(@RequestBody IdeaDto idea, @CurrentUser User user) {
         Idea createdIdea = ideaService.createIdea(idea, user);
+        webSocketHandler.notifyClients("idea");
         return new ResponseEntity<>(createdIdea, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Idea> updateIdea(@PathVariable Integer id, @RequestBody IdeaDto updatedIdea, @CurrentUser User user) {
         Idea idea = ideaService.updateIdea(id, updatedIdea, user);
+        webSocketHandler.notifyClients("idea", id);
         return new ResponseEntity<>(idea, HttpStatus.OK);
     }
 
@@ -56,6 +61,7 @@ public class IdeaController {
         @RequestParam Idea.Status status
     ) {
         ideaService.processIdea(id, status.toString());
+        webSocketHandler.notifyClients("idea");
         return ResponseEntity.ok().build();
     }
 }

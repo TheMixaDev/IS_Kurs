@@ -1,5 +1,6 @@
 package net.alephdev.calendar.controller;
 
+import net.alephdev.calendar.WebSocketHandler;
 import net.alephdev.calendar.annotation.AuthorizedRequired;
 import net.alephdev.calendar.annotation.CurrentUser;
 import net.alephdev.calendar.annotation.PrivilegeRequired;
@@ -19,11 +20,13 @@ public class TaskController {
 
     private final TaskService taskService;
     private final UserService userService;
+    private final WebSocketHandler webSocketHandler;
 
     @Autowired
-    public TaskController(TaskService taskService, UserService userService) {
+    public TaskController(TaskService taskService, UserService userService, WebSocketHandler webSocketHandler) {
         this.taskService = taskService;
         this.userService = userService;
+        this.webSocketHandler = webSocketHandler;
     }
 
     @GetMapping
@@ -49,6 +52,7 @@ public class TaskController {
     public ResponseEntity<Task> createTask(@RequestBody TaskDto task, @CurrentUser User user) {
         if (taskService.canCreateTask(user)) {
             Task createdTask = taskService.createTask(task, user);
+            webSocketHandler.notifyClients("task");
             return new ResponseEntity<>(createdTask, HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
@@ -61,6 +65,7 @@ public class TaskController {
 
         if (taskService.canEditTask(user, existingTask)) {
             Task task = taskService.updateTask(id, updatedTask);
+            webSocketHandler.notifyClients("task", id);
             return new ResponseEntity<>(task, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
@@ -70,8 +75,10 @@ public class TaskController {
 
     @PrivilegeRequired
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTask(@PathVariable Integer id, @CurrentUser User user) {
-        return taskService.deleteTask(id);
+    public ResponseEntity<Void> deleteTask(@PathVariable Integer id) {
+        ResponseEntity<Void> result = taskService.deleteTask(id);
+        webSocketHandler.notifyClients("task", id);
+        return result;
     }
 
     @PutMapping("/{taskId}/implementer")
@@ -83,6 +90,7 @@ public class TaskController {
                 (existingTask.getImplementer() != null && existingTask.getImplementer().getLogin().equals(user.getLogin())) ||
                 existingTask.getCreatedBy().getLogin().equals(user.getLogin())) {
             Task task = taskService.assignImplementer(taskId, implementerLogin);
+            webSocketHandler.notifyClients("task", taskId);
             return new ResponseEntity<>(task, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
@@ -93,6 +101,7 @@ public class TaskController {
     public ResponseEntity<?> updateStatus(@PathVariable Integer taskId, @RequestParam Integer statusId,
                                              @CurrentUser User user) {
         Task task = taskService.updateStatus(taskId, statusId, user);
+        webSocketHandler.notifyClients("task", taskId);
         return new ResponseEntity<>(task, HttpStatus.OK);
     }
 
@@ -100,6 +109,7 @@ public class TaskController {
     @PutMapping("/{taskId}/sprint")
     public ResponseEntity<Task> assignSprint(@PathVariable Integer taskId, @RequestParam Integer sprintId) {
         Task task = taskService.assignSprint(taskId, sprintId);
+        webSocketHandler.notifyClients("task", taskId);
         return new ResponseEntity<>(task, HttpStatus.OK);
     }
 }

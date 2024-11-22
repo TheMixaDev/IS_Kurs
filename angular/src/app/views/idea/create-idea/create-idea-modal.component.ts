@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {NgbActiveModal, NgbModal, NgbTooltip} from '@ng-bootstrap/ng-bootstrap';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
@@ -21,6 +21,8 @@ import {RiskService} from "../../../services/server/risk.service";
 import {AddRiskModalComponent} from "../../tasks/task-view/add-risk/add-risk-modal.component";
 import {ConfirmModalComponent} from "../../../components/modal/confirm-modal.component";
 import {CustomValidators} from "../../../misc/custom-validators";
+import {WebsocketService} from "../../../services/websocket.service";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-create-idea-modal',
@@ -40,7 +42,7 @@ import {CustomValidators} from "../../../misc/custom-validators";
   ],
   templateUrl: 'create-idea-modal.component.html'
 })
-export class CreateIdeaModalComponent implements OnInit {
+export class CreateIdeaModalComponent implements OnInit, OnDestroy {
   @Input() idea: Idea | null = null;
   @Input() viewMode = false;
 
@@ -62,6 +64,7 @@ export class CreateIdeaModalComponent implements OnInit {
   }
 
   isEditing: boolean = false;
+  wss: Subscription;
 
   constructor(
     private ideaService: IdeaService,
@@ -69,9 +72,22 @@ export class CreateIdeaModalComponent implements OnInit {
     private activeModal: NgbActiveModal,
     private authService: AuthService,
     private riskService: RiskService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private websocketService: WebsocketService
   ) {
     this.authService.user$.subscribe(this.loadUserData.bind(this));
+    this.wss = this.websocketService.ws$.subscribe(message => {
+      if(message.model == 'risk') {
+        this.loadRisks();
+      }
+      if(message.model == 'idea' && message.id == this.idea?.id.toString()) {
+        this.loadRisks();
+      }
+    })
+  }
+
+  ngOnDestroy() {
+    this.wss.unsubscribe();
   }
 
   loadUserData() {

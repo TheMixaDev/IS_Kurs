@@ -1,5 +1,6 @@
 package net.alephdev.calendar.controller;
 
+import net.alephdev.calendar.WebSocketHandler;
 import net.alephdev.calendar.annotation.AuthorizedRequired;
 import net.alephdev.calendar.annotation.CurrentUser;
 import net.alephdev.calendar.annotation.PrivilegeRequired;
@@ -24,11 +25,13 @@ public class UserController {
 
     private final UserService userService;
     private final TaskService taskService;
+    private final WebSocketHandler webSocketHandler;
 
     @Autowired
-    public UserController(UserService userService, TaskService taskService) {
+    public UserController(UserService userService, TaskService taskService, WebSocketHandler webSocketHandler) {
         this.userService = userService;
         this.taskService = taskService;
+        this.webSocketHandler = webSocketHandler;
     }
 
     @GetMapping
@@ -55,25 +58,33 @@ public class UserController {
     @PrivilegeRequired
     @PostMapping("/register")
     public ResponseEntity<User> registerUser(@Valid @RequestBody UserDto userDto) {
-        return new ResponseEntity<>(userService.register(userDto), HttpStatus.CREATED);
+        User user = userService.register(userDto);
+        webSocketHandler.notifyClients("user");
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
     @PrivilegeRequired
     @PutMapping("/{login}/role")
     public ResponseEntity<User> updateUserRole(@PathVariable String login, @RequestParam Integer roleId) {
-        return new ResponseEntity<>(userService.updateRole(login, roleId), HttpStatus.OK);
+        User user = userService.updateRole(login, roleId);
+        webSocketHandler.notifyClients("user", login);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PrivilegeRequired
     @PutMapping("/{login}/team")
     public ResponseEntity<User> updateUserTeam(@PathVariable String login, @RequestParam(required = false) Integer teamId) {
-        return new ResponseEntity<>(userService.updateUserTeam(login, teamId), HttpStatus.OK);
+        User user = userService.updateUserTeam(login, teamId);
+        webSocketHandler.notifyClients("user", login);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PutMapping("/{login}")
     public ResponseEntity<User> updateUser(@PathVariable String login, @Valid @RequestBody UserDto userDto, @CurrentUser User currentUser) {
         if (currentUser.getLogin().equals(login) || userService.isPrivileged(currentUser)) {
-            return new ResponseEntity<>(userService.updateUser(login, userDto), HttpStatus.OK);
+            User user = userService.updateUser(login, userDto);
+            webSocketHandler.notifyClients("user", login);
+            return new ResponseEntity<>(user, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
@@ -83,6 +94,7 @@ public class UserController {
     public ResponseEntity<Void> wipeUser(@PathVariable String login, @CurrentUser User currentUser) {
         if (userService.isPrivileged(currentUser)) {
             userService.wipeUser(login);
+            webSocketHandler.notifyClients("userWipe", login);
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);

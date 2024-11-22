@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild} from "@angular/core";
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Task, TaskPriority} from "../../../models/task";
 import {TaskService} from "../../../services/server/task.service";
@@ -34,6 +34,8 @@ import {ConfirmModalComponent} from "../../../components/modal/confirm-modal.com
 import {Tag} from "../../../models/tag";
 import {TagService} from "../../../services/server/tag.service";
 import {LoaderService} from "../../../services/loader.service";
+import {WebsocketService} from "../../../services/websocket.service";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-task-view',
@@ -54,7 +56,7 @@ import {LoaderService} from "../../../services/loader.service";
   ],
   templateUrl: 'task-view.component.html'
 })
-export class TaskViewComponent implements OnInit {
+export class TaskViewComponent implements OnInit, OnDestroy {
   taskId: number | null = null;
   originalTask: Task | null = null;
   task: Task | null = null;
@@ -204,6 +206,8 @@ export class TaskViewComponent implements OnInit {
     }
   }
 
+  wss: Subscription;
+
   constructor(private route: ActivatedRoute,
               private router: Router,
               private alertService: AlertService,
@@ -216,10 +220,26 @@ export class TaskViewComponent implements OnInit {
               private riskService: RiskService,
               private tagService: TagService,
               private modalService: NgbModal,
-              private loaderService: LoaderService
+              private loaderService: LoaderService,
+              private websocketService: WebsocketService
               ) {
     this.authService.user$.subscribe(user => this.currentUser = user);
     this.loaderService.loader(true);
+    this.wss = this.websocketService.ws$.subscribe(message => {
+      if((message.model == 'task' && message.id == this.taskId?.toString()) ||
+         (message.model == 'user') ||
+         (message.model == 'sprints') ||
+         (message.model == 'status') ||
+         (message.model == 'tag') ||
+         (message.model == 'risk')
+      ) {
+        this.safeUpdateTask();
+      }
+    })
+  }
+
+  ngOnDestroy() {
+    this.wss.unsubscribe();
   }
 
   get isAdmin() : boolean {
@@ -259,6 +279,45 @@ export class TaskViewComponent implements OnInit {
         }
       }
     });
+  }
+
+  safeUpdateTask() {
+    if(this.taskId) {
+      this.taskService.getTask(this.taskId).subscribe(task => {
+        if(!(task instanceof HttpErrorResponse) && this.task && this.originalTask) {
+          if(this.originalTask?.name == this.task?.name) {
+            this.task.name = task.name;
+            this.originalTask.name = task.name;
+          }
+          if(this.originalTask?.storyPoints == this.task?.storyPoints) {
+            this.task.storyPoints = task.storyPoints;
+            this.originalTask.storyPoints = task.storyPoints;
+          }
+          this.loadRisks();
+          this.loadTags();
+          if(this.task.implementer?.login == this.originalTask.implementer?.login) {
+            this.implementerWrapper = task.implementer?.login || null;
+            this.originalTask.implementer = task.implementer;
+          }
+          if(this.task.sprint?.id == this.originalTask.sprint?.id) {
+            this.sprintWrapper = task.sprint?.id || null;
+            this.originalTask.sprint = task.sprint;
+          }
+          if(this.task.priorityEnum == this.originalTask.priorityEnum) {
+            this.priorityWrapper = task.priorityEnum;
+            this.originalTask.priorityEnum = task.priorityEnum;
+          }
+          this.loadStatuses().then(() => {
+            if(this.task && this.originalTask) {
+              if (this.task?.status?.id == this.originalTask?.status?.id) {
+                this.statusWrapper = task.status.id;
+                this.originalTask.status = task.status;
+              }
+            }
+          });
+        }
+      })
+    }
   }
 
   onStoryPointsInput(event: Event): void {

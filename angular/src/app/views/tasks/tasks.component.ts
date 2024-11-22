@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnDestroy, OnInit} from "@angular/core";
 import {
   faEdit,
   faPlus,
@@ -33,6 +33,8 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {TagService} from "../../services/server/tag.service";
 import {Tag} from "../../models/tag";
 import {LoaderService} from "../../services/loader.service";
+import {WebsocketService} from "../../services/websocket.service";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-tasks',
@@ -55,7 +57,7 @@ import {LoaderService} from "../../services/loader.service";
   ],
   templateUrl: 'tasks.component.html'
 })
-export class TasksComponent implements OnInit {
+export class TasksComponent implements OnInit, OnDestroy {
   tasks: Page<Task> | null = null;
   currentPage: number = 0;
   currentUser: User | null = null;
@@ -120,6 +122,7 @@ export class TasksComponent implements OnInit {
     this.updateTasks();
   }
 
+  wss: Subscription;
 
   constructor(
     private taskService: TaskService,
@@ -131,10 +134,32 @@ export class TasksComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private modalService: NgbModal,
-    private loaderService: LoaderService
+    private loaderService: LoaderService,
+    private websocketService: WebsocketService
   ) {
     this.authService.user$.subscribe(user => this.currentUser = user);
     this.loaderService.loader(true);
+    this.wss = this.websocketService.ws$.subscribe(message => {
+      if(message.model == 'user') {
+        this.selectedImplementerLogin = this.selectedImplementerLogin;
+      }
+      if(message.model == 'sprints') {
+        this.selectedSprintId = this.selectedSprintId;
+      }
+      if(message.model == 'status') {
+        this.selectedStatusId = this.selectedStatusId;
+      }
+      if(message.model == 'tag') {
+        this.selectedTagId = this.selectedTagId;
+      }
+      if(message.model == 'task') {
+        this.updateTasks();
+      }
+    })
+  }
+
+  ngOnDestroy() {
+    this.wss.unsubscribe();
   }
 
   _loadingData = false;
@@ -195,26 +220,32 @@ export class TasksComponent implements OnInit {
     this.updateTasks();
   }
 
-  loadStatuses() {
-    this.statusService.getAllStatuses().subscribe(statuses => {
-      if(!(statuses instanceof HttpErrorResponse))
-        this.statuses = (statuses as Status[]).reduce((acc: any, status) => {
-          acc[status.id] = status.name;
-          return acc;
-        }, {})
-      this.initialized++;
-    })
+  loadStatuses() : Promise<void> {
+    return new Promise(resolve => {
+      this.statusService.getAllStatuses().subscribe(statuses => {
+        if(!(statuses instanceof HttpErrorResponse))
+          this.statuses = (statuses as Status[]).reduce((acc: any, status) => {
+            acc[status.id] = status.name;
+            return acc;
+          }, {})
+        this.initialized++;
+        resolve();
+      })
+    });
   }
 
-  loadTags() {
-    this.tagService.getAllTags().subscribe(tags => {
-      if(!(tags instanceof HttpErrorResponse))
-        this.tags = (tags as Tag[]).reduce((acc: any, tag) => {
-          acc[tag.id] = tag.name;
-          return acc;
-        }, {})
-      this.initialized++;
-    })
+  loadTags() : Promise<void> {
+    return new Promise(resolve => {
+      this.tagService.getAllTags().subscribe(tags => {
+        if(!(tags instanceof HttpErrorResponse))
+          this.tags = (tags as Tag[]).reduce((acc: any, tag) => {
+            acc[tag.id] = tag.name;
+            return acc;
+          }, {})
+        this.initialized++;
+        resolve();
+      })
+    });
   }
 
   loadUsers(login: string, onlyActive : boolean = true) : Promise<void> | null {

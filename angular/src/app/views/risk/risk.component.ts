@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnDestroy, OnInit} from "@angular/core";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {PrimaryButtonBinding} from "../../components/bindings/primary-button.binding";
 import {TableCellComponent} from "../../components/table/table-cell.component";
@@ -21,6 +21,8 @@ import { FormsModule } from '@angular/forms';
 import {AuthService} from "../../services/server/auth.service";
 import {NgIf} from "@angular/common";
 import {LoaderService} from "../../services/loader.service";
+import {WebsocketService} from "../../services/websocket.service";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-risk',
@@ -39,7 +41,7 @@ import {LoaderService} from "../../services/loader.service";
   ],
   templateUrl: './risk.component.html'
 })
-export class RiskComponent implements OnInit {
+export class RiskComponent implements OnInit, OnDestroy {
 
   topTenRisks: TopRiskDto[] = [];
   allRisks: Page<Risk> | null = null;
@@ -62,10 +64,13 @@ export class RiskComponent implements OnInit {
 
   search = '';
 
+  wss: Subscription;
+
   constructor(private riskService: RiskService,
               private alertService: AlertService,
               private authService: AuthService,
               private loaderService: LoaderService,
+              private websocketService: WebsocketService,
               private modalService: NgbModal
   ) {
     this.riskService.risk$.subscribe(() => {
@@ -74,6 +79,16 @@ export class RiskComponent implements OnInit {
     });
     this.authService.user$.subscribe(this.loadUserData.bind(this));
     this.loaderService.loader(true);
+    this.wss = this.websocketService.ws$.subscribe(message => {
+      if(message.model == 'risk') {
+        this.loadRisks(false);
+        this.loadTopRisks();
+      }
+    })
+  }
+
+  ngOnDestroy() {
+    this.wss.unsubscribe();
   }
 
   _loadingData = false;
@@ -109,10 +124,12 @@ export class RiskComponent implements OnInit {
     initFlowbite();
   }
 
-  loadRisks() {
-    this.loadingData = true;
+  loadRisks(showLoader : boolean = true) {
+    if(showLoader)
+      this.loadingData = true;
     this.riskService.getAllRisks(this.currentPage, this.search).subscribe(risks => {
-      this.loadingData = false;
+      if(showLoader)
+        this.loadingData = false;
       this.initialized++;
       if(risks instanceof HttpErrorResponse) return;
       this.allRisks = risks;
@@ -124,7 +141,6 @@ export class RiskComponent implements OnInit {
   }
 
   loadTopRisks() {
-    this.topTenRisks = [];
     this.riskService.getTop10Risks().subscribe(risks => {
       this.initialized++;
       if(risks as TopRiskDto[]) {

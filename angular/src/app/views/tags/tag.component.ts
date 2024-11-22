@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnDestroy, OnInit} from "@angular/core";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {HeaderItemBinding} from "../../components/bindings/header-item.binding";
 import {PrimaryButtonBinding} from "../../components/bindings/primary-button.binding";
@@ -21,6 +21,8 @@ import { ConfirmModalComponent } from "../../components/modal/confirm-modal.comp
 import { CreateTagModalComponent } from "./create-tag/create-tag-modal.component";
 import {AuthService} from "../../services/server/auth.service";
 import {LoaderService} from "../../services/loader.service";
+import {WebsocketService} from "../../services/websocket.service";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-tag',
@@ -42,24 +44,36 @@ import {LoaderService} from "../../services/loader.service";
   ],
   templateUrl: './tag.component.html'
 })
-export class TagComponent implements OnInit {
+export class TagComponent implements OnInit, OnDestroy {
   tags: Tag[] = [];
   search = '';
   currentUser = this.authService.getUser();
 
   initialized = false;
 
+  wss: Subscription;
+
   constructor(private tagService: TagService,
               private alertService: AlertService,
               private loaderService: LoaderService,
               private authService: AuthService,
-              private modalService: NgbModal
+              private modalService: NgbModal,
+              private websocketService: WebsocketService
   ) {
     this.tagService.tag$.subscribe(() => {
       this.updateTags();
     });
+    this.wss = this.websocketService.ws$.subscribe(message => {
+      if(message.model == 'tag') {
+        this.updateTags();
+      }
+    });
     this.authService.user$.subscribe(this.loadUserData.bind(this));
     this.loaderService.loader(true);
+  }
+
+  ngOnDestroy() {
+    this.wss.unsubscribe();
   }
 
   loadUserData() {

@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnDestroy, OnInit} from "@angular/core";
 import {faEdit, faPlus, faSearch} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {FormsModule} from "@angular/forms";
@@ -18,6 +18,8 @@ import {CreateUserModalComponent} from "./create-user/create-user-modal.componen
 import {NgIf} from "@angular/common";
 import {AlertService} from "../../services/alert.service";
 import {LoaderService} from "../../services/loader.service";
+import {WebsocketService} from "../../services/websocket.service";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-users',
@@ -36,7 +38,7 @@ import {LoaderService} from "../../services/loader.service";
   ],
   templateUrl: './users.component.html'
 })
-export class UsersComponent implements OnInit {
+export class UsersComponent implements OnInit, OnDestroy {
   users: Page<User> | null = null;
   currentPage: number = 0;
   currentUser: User | null = this.authService.getUser();
@@ -45,15 +47,29 @@ export class UsersComponent implements OnInit {
 
   search = '';
 
+  wss: Subscription;
+
   constructor(private userService : UserService,
               private authService: AuthService,
               private alertService: AlertService,
               private loaderService: LoaderService,
-              private modalService: NgbModal
+              private modalService: NgbModal,
+              private websocketService: WebsocketService
   ) {
-    this.userService.user$.subscribe(this.updateUsers.bind(this));
+    this.userService.user$.subscribe(() => {
+      this.updateUsers();
+    });
     this.authService.user$.subscribe(this.loadUserData.bind(this));
     this.loaderService.loader(true);
+    this.wss = this.websocketService.ws$.subscribe(message => {
+      if(message.model == 'user' || message.model == 'userWipe' || message.model == 'team' || message.model == 'role') {
+        this.updateUsers(false);
+      }
+    })
+  }
+
+  ngOnDestroy() {
+    this.wss.unsubscribe();
   }
 
   _loadingData = false;
@@ -81,10 +97,12 @@ export class UsersComponent implements OnInit {
     this.updateUsers();
   }
 
-  updateUsers() {
-    this.loadingData = true;
+  updateUsers(showLoader ?: boolean) {
+    if(showLoader)
+      this.loadingData = true;
     this.userService.getAllUsers(this.currentPage, this.search, 0, false).subscribe(users => {
-      this.loadingData = false;
+      if(showLoader)
+        this.loadingData = false;
       if(!this.initialized) {
         this.initialized = true;
         this.loaderService.loader(false);

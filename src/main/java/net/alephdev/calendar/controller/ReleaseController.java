@@ -1,6 +1,7 @@
 package net.alephdev.calendar.controller;
 
 import lombok.RequiredArgsConstructor;
+import net.alephdev.calendar.WebSocketHandler;
 import net.alephdev.calendar.annotation.AuthorizedRequired;
 import net.alephdev.calendar.annotation.PrivilegeRequired;
 import net.alephdev.calendar.dto.ReleaseDto;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 public class ReleaseController {
 
     private final ReleaseService releaseService;
+    private final WebSocketHandler webSocketHandler;
 
     @GetMapping
     public Page<Release> getAllReleases(@RequestParam @DefaultValue("0") int page) {
@@ -34,6 +36,7 @@ public class ReleaseController {
     @PostMapping
     public ResponseEntity<?> createRelease(@RequestBody ReleaseDto releaseDto) {
         Release createdRelease = releaseService.createRelease(releaseDto);
+        webSocketHandler.notifyClients("release", createdRelease.getSprint().getId());
         return new ResponseEntity<>(createdRelease, HttpStatus.CREATED);
     }
 
@@ -41,12 +44,15 @@ public class ReleaseController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateRelease(@PathVariable Integer id, @RequestBody ReleaseDto updatedRelease) {
         Release release = releaseService.updateRelease(id, updatedRelease);
+        webSocketHandler.notifyClients("release", release.getSprint().getId());
         return new ResponseEntity<>(release, HttpStatus.OK);
     }
 
     @PrivilegeRequired
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRelease(@PathVariable Integer id) {
-        return releaseService.deleteRelease(id);
+        ResponseEntity<Void> result = releaseService.deleteRelease(id);
+        webSocketHandler.notifyClients("release");
+        return result;
     }
 }

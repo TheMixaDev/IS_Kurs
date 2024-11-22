@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import {Component, Input, OnDestroy} from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
@@ -15,6 +15,8 @@ import {TableComponent} from "../../../components/table/table.component";
 import {UserStoryPointsDto} from "../../../models/dto/user-story-points-dto";
 import {TableRowComponent} from "../../../components/table/table-row.component";
 import {TableCellComponent} from "../../../components/table/table-cell.component";
+import {WebsocketService} from "../../../services/websocket.service";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-team-load-modal',
@@ -31,7 +33,7 @@ import {TableCellComponent} from "../../../components/table/table-cell.component
   ],
   templateUrl: 'team-load-modal.component.html'
 })
-export class TeamLoadModalComponent {
+export class TeamLoadModalComponent implements OnDestroy {
   @Input() team: Team | null = null;
 
   sprints: { [key: number]: string } = {};
@@ -51,12 +53,24 @@ export class TeamLoadModalComponent {
     this.updateLoad();
   }
 
+  wss: Subscription;
 
   constructor(
     private activeModal: NgbActiveModal,
     private sprintService: SprintService,
-    private teamService: TeamService
-  ) {}
+    private teamService: TeamService,
+    private websocketService: WebsocketService
+  ) {
+    this.wss = this.websocketService.ws$.subscribe(message => {
+      if(message.model == 'sprints' || message.model == 'task') {
+        this.updateLoad();
+      }
+    })
+  }
+
+  ngOnDestroy() {
+    this.wss.unsubscribe();
+  }
 
   loadSprints(sprint: string) {
     if(sprint.length < 1) {

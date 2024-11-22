@@ -1,5 +1,6 @@
 package net.alephdev.calendar.controller;
 
+import net.alephdev.calendar.WebSocketHandler;
 import net.alephdev.calendar.annotation.AuthorizedRequired;
 import net.alephdev.calendar.annotation.PrivilegeRequired;
 import net.alephdev.calendar.models.Role;
@@ -20,11 +21,13 @@ public class RoleController {
 
     private final RoleService roleService;
     private final StatusService statusService;
+    private final WebSocketHandler webSocketHandler;
 
     @Autowired
-    public RoleController(RoleService roleService, StatusService statusService) {
+    public RoleController(RoleService roleService, StatusService statusService, WebSocketHandler webSocketHandler) {
         this.roleService = roleService;
         this.statusService = statusService;
+        this.webSocketHandler = webSocketHandler;
     }
 
     @GetMapping
@@ -36,6 +39,7 @@ public class RoleController {
     @PostMapping
     public ResponseEntity<Role> createRole(@RequestBody Role role) {
         Role createdRole = roleService.createRole(role);
+        webSocketHandler.notifyClients("role");
         return new ResponseEntity<>(createdRole, HttpStatus.CREATED);
     }
 
@@ -43,13 +47,16 @@ public class RoleController {
     @PutMapping("/{id}")
     public ResponseEntity<Role> updateRole(@PathVariable Integer id, @RequestBody Role updatedRole) {
         Role role = roleService.updateRole(id, updatedRole);
+        webSocketHandler.notifyClients("role", role.getId());
         return new ResponseEntity<>(role, HttpStatus.OK);
     }
 
     @PrivilegeRequired
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRole(@PathVariable Integer id) {
-        return roleService.deleteRole(id);
+        ResponseEntity<Void> result = roleService.deleteRole(id);
+        webSocketHandler.notifyClients("role", id);
+        return result;
     }
 
     @GetMapping("/{id}/statuses")
@@ -61,6 +68,7 @@ public class RoleController {
     @PostMapping("/{id}/statuses")
     public ResponseEntity<Void> addRoleStatus(@PathVariable Integer id, @RequestParam Integer statusId) {
         roleService.addRoleStatus(roleService.getRole(id), statusService.getStatus(statusId));
+        webSocketHandler.notifyClients("role", id);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -68,6 +76,7 @@ public class RoleController {
     @DeleteMapping("/{id}/statuses")
     public ResponseEntity<Void> deleteRoleStatus(@PathVariable Integer id, @RequestParam Integer statusId) {
         roleService.removeRoleStatus(roleService.getRole(id), statusService.getStatus(statusId));
+        webSocketHandler.notifyClients("role", id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
