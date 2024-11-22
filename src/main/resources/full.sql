@@ -246,7 +246,7 @@ BEGIN
   FROM Task
   WHERE sprint_id = input_sprint_id;
 
-  RETURN (total_story_points / team_capacity) * 100;
+  RETURN (total_story_points / team_capacity);
 END;
 $$;
 
