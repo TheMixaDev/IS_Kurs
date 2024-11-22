@@ -13,6 +13,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -80,6 +81,11 @@ public class GlobalExceptionHandlerFilter {
     public ResponseEntity<MessageDto> handleNullPointerException(NullPointerException ex) {
         ex.printStackTrace();
         return new ResponseEntity<>(new MessageDto("Неверно введены данные"), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public String handleNoResourceFoundException(NoResourceFoundException ex) {
+        return "forward:/";
     }
 
     @ExceptionHandler(Exception.class)

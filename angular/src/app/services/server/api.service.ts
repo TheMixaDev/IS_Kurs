@@ -4,12 +4,13 @@ import {HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import { AuthService } from './auth.service';
 import {Observable, throwError} from "rxjs";
 import {AlertService} from "../alert.service";
+import {environment} from "../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-  apiUrl = 'http://localhost:8080/api';
+  apiUrl = environment.apiUrl;
 
   constructor(private authService: AuthService, private alertService: AlertService) {
     this.handleError = this.handleError.bind(this);

@@ -37,3 +37,4 @@ src/main/resources/db.properties
 
 *.zip
 angular/src/app/services/server/empty.service.ts
+src/main/resources/public

@@ -22,6 +22,9 @@ jwt:
   expiration: 360000
   secret: ${secret}
 
+server:
+  port: 80
+
 service:
   calendar:
     url: https://isdayoff.ru/api/getdata?year=%d&pre=1

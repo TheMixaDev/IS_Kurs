@@ -6,12 +6,13 @@ import {JwtRequestDto} from "../../models/dto/jwt-request-dto";
 import {JwtResponseDto} from "../../models/dto/jwt-response-dto";
 import {User} from "../../models/user";
 import {WebsocketService} from "../websocket.service";
+import {environment} from "../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService implements OnDestroy {
-  private apiUrl = 'http://localhost:8080/api';
+  private apiUrl = environment.apiUrl;
   private tokenSubject = new BehaviorSubject<string | null>(null);
   private userSubject = new BehaviorSubject<User | null>(null);
   token$: Observable<string | null> = this.tokenSubject.asObservable();
