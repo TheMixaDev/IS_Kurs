@@ -5,8 +5,6 @@ import {
   Component,
   Input,
   OnDestroy,
-  OnInit,
-  SimpleChanges,
   ViewChild
 } from "@angular/core";
 import {DatePipe, NgIf} from "@angular/common";

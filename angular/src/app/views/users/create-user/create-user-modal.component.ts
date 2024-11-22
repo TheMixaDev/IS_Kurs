@@ -13,7 +13,7 @@ import {
   faPlus,
   faPen,
   faLock,
-  faTrash, faBan,
+  faBan,
 } from '@fortawesome/free-solid-svg-icons';
 import { UiButtonComponent } from '../../../components/ui/ui-button.component';
 import { UserService } from '../../../services/server/user.service';
@@ -23,7 +23,6 @@ import { User } from '../../../models/user';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { TeamService } from '../../../services/server/team.service';
 import { RoleService } from '../../../services/server/role.service';
-import { Team } from '../../../models/team';
 import { Role } from '../../../models/role';
 import { UiDropdownComponent } from '../../../components/ui/ui-dropdown.component';
 import { ConfirmModalComponent } from '../../../components/modal/confirm-modal.component';

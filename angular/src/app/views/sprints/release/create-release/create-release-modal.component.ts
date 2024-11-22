@@ -9,11 +9,9 @@ import {ReleaseService} from "../../../../services/server/release.service";
 import {AlertService} from "../../../../services/alert.service";
 import {ReleaseDto} from "../../../../models/dto/release-dto";
 import {Release} from "../../../../models/release";
-import {SprintDto} from "../../../../models/dto/sprint-dto";
 import {IconDefinition} from "@fortawesome/fontawesome-svg-core";
 import {CustomValidators} from "../../../../misc/custom-validators";
 import {NgClass} from "@angular/common";
-import {Sprint} from "../../../../models/sprint";
 import {SprintTeamDto} from "../../../../models/dto/sprint-team-dto";
 import moment from "moment";
 

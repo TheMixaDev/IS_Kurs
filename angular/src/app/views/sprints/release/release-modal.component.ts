@@ -17,7 +17,6 @@ import {HttpErrorResponse} from "@angular/common/http";
 import {SprintService} from "../../../services/server/sprint.service";
 import {ConfirmModalComponent} from "../../../components/modal/confirm-modal.component";
 import {AuthService} from "../../../services/server/auth.service";
-import {Sprint} from "../../../models/sprint";
 import {SprintTeamDto} from "../../../models/dto/sprint-team-dto";
 
 

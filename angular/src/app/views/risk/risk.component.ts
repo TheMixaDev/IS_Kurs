@@ -6,7 +6,7 @@ import {TableComponent} from "../../components/table/table.component";
 import {TableRowComponent} from "../../components/table/table-row.component";
 import {TooltipBinding} from "../../components/bindings/tooltip.binding";
 import {UiButtonComponent} from "../../components/ui/ui-button.component";
-import {faChartSimple, faEdit, faPlus, faSearch, faTrash} from "@fortawesome/free-solid-svg-icons";
+import {faEdit, faPlus, faSearch, faTrash} from "@fortawesome/free-solid-svg-icons";
 import { AlertService } from "../../services/alert.service";
 import { initFlowbite } from "flowbite";
 import {NgbModal, NgbTooltip} from "@ng-bootstrap/ng-bootstrap";
@@ -189,6 +189,5 @@ export class RiskComponent implements OnInit {
   protected readonly faPlus = faPlus;
   protected readonly faEdit = faEdit;
   protected readonly faTrash = faTrash;
-  protected readonly faChartSimple = faChartSimple;
   protected readonly faSearch = faSearch;
 }

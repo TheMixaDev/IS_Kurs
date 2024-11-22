@@ -6,7 +6,7 @@ import {TableComponent} from "../../components/table/table.component";
 import {TableRowComponent} from "../../components/table/table-row.component";
 import {TooltipBinding} from "../../components/bindings/tooltip.binding";
 import {UiButtonComponent} from "../../components/ui/ui-button.component";
-import {faChartSimple, faEdit, faPlus, faStar, faTrash} from "@fortawesome/free-solid-svg-icons";
+import {faChartSimple, faEdit, faPlus, faTrash} from "@fortawesome/free-solid-svg-icons";
 import { RoleService } from "../../services/server/role.service";
 import { Role } from "../../models/role";
 import { AlertService } from "../../services/alert.service";

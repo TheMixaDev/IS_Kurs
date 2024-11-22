@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule, } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-import { faClose, faPlus, faPen } from '@fortawesome/free-solid-svg-icons';
+import { faClose, faPlus } from '@fortawesome/free-solid-svg-icons';
 import {UiButtonComponent} from "../../../../components/ui/ui-button.component";
 import {UiDropdownComponent} from "../../../../components/ui/ui-dropdown.component";
 

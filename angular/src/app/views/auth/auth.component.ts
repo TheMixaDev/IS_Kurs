@@ -2,7 +2,6 @@ import { Component, OnInit } from "@angular/core";
 import { PrimaryButtonBinding } from "../../components/bindings/primary-button.binding";
 import { AuthService } from "../../services/server/auth.service";
 import { AlertService } from "../../services/alert.service";
-import { Router } from "@angular/router"; // Import Router
 import { JwtRequestDto } from "../../models/dto/jwt-request-dto";
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgClass} from "@angular/common";
@@ -20,7 +19,7 @@ export class AuthComponent implements OnInit {
   password = new FormControl('');
   sending:boolean = false;
 
-  constructor(private authService: AuthService, private alertService: AlertService, private router: Router) { }
+  constructor(private authService: AuthService, private alertService: AlertService) { }
 
   ngOnInit() { }
 

@@ -1,4 +1,4 @@
-import {AbstractControl, ValidationErrors, Validators} from "@angular/forms";
+import {AbstractControl, ValidationErrors} from "@angular/forms";
 
 export class CustomValidators {
   public static noWhitespace() {

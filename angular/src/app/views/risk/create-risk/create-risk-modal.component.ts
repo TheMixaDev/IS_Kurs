@@ -17,15 +17,15 @@ import {CustomValidators} from "../../../misc/custom-validators";
 @Component({
     selector: 'app-create-risk-modal',
     standalone: true,
-  imports: [
-    FaIconComponent,
-    UiButtonComponent,
-    ReactiveFormsModule,
-    UiDropdownComponent,
-    FormsModule,
-    NgClass
-  ],
-      templateUrl: './create-risk-modal.component.html'
+    imports: [
+      FaIconComponent,
+      UiButtonComponent,
+      ReactiveFormsModule,
+      UiDropdownComponent,
+      FormsModule,
+      NgClass
+    ],
+    templateUrl: './create-risk-modal.component.html'
 })
 export class CreateRiskModalComponent implements OnInit{
   @Input() risk: Risk | null = null;

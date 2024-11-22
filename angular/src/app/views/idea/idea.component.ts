@@ -3,7 +3,7 @@ import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {HeaderItemBinding} from "../../components/bindings/header-item.binding";
 import {PrimaryButtonBinding} from "../../components/bindings/primary-button.binding";
 import {UiDropdownComponent} from "../../components/ui/ui-dropdown.component";
-import {faCheck, faEdit, faEye, faPlus, faRotateLeft, faTimes,} from "@fortawesome/free-solid-svg-icons";
+import {faCheck, faEdit, faEye, faPlus, faRotateLeft, faTimes} from "@fortawesome/free-solid-svg-icons";
 import {DatePipe} from "@angular/common";
 import {TableCellComponent} from "../../components/table/table-cell.component";
 import {TableComponent} from "../../components/table/table.component";
@@ -20,9 +20,6 @@ import {AuthService} from "../../services/server/auth.service";
 import {NgbModal, NgbTooltip} from "@ng-bootstrap/ng-bootstrap";
 import {CreateIdeaModalComponent} from "./create-idea/create-idea-modal.component";
 import {AlertService} from "../../services/alert.service";
-import {UserService} from "../../services/server/user.service";
-import { Status } from "../../models/status";
-import { StatusService } from "../../services/server/status.service";
 import {Router} from "@angular/router";
 import {LoaderService} from "../../services/loader.service";
 

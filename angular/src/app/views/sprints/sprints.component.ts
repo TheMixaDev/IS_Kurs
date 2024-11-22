@@ -12,7 +12,6 @@ import { Team } from "../../models/team";
 import { SprintService } from "../../services/server/sprint.service";
 import { HttpErrorResponse } from "@angular/common/http";
 import { AuthService } from "../../services/server/auth.service";
-import { BehaviorSubject, debounceTime, Subject, takeUntil } from "rxjs";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {CreateSprintModalComponent} from "./create-sprint/create-sprint-modal.component";
 import {NgIf} from "@angular/common";

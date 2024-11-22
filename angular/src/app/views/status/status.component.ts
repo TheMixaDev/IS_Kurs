@@ -3,7 +3,7 @@ import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {HeaderItemBinding} from "../../components/bindings/header-item.binding";
 import {PrimaryButtonBinding} from "../../components/bindings/primary-button.binding";
 import {UiDropdownComponent} from "../../components/ui/ui-dropdown.component";
-import {faEdit, faGear, faListCheck, faPlus, faStar, faTrash} from "@fortawesome/free-solid-svg-icons";
+import {faEdit, faPlus, faTrash} from "@fortawesome/free-solid-svg-icons";
 import {DatePipe, NgIf} from "@angular/common";
 import {TableCellComponent} from "../../components/table/table-cell.component";
 import {TableComponent} from "../../components/table/table.component";
@@ -130,9 +130,6 @@ export class StatusComponent implements OnInit {
   }
 
   protected readonly faPlus = faPlus;
-  protected readonly faListCheck = faListCheck;
   protected readonly faEdit = faEdit;
   protected readonly faTrash = faTrash;
-  protected readonly faGear = faGear;
-  protected readonly faStar = faStar;
 }

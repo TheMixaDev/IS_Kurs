@@ -164,12 +164,7 @@ export class TaskViewComponent implements OnInit {
             this.task.sprint = sprint as Sprint;
             this.updateSprint();
           }
-          this.loadSprints(sprint.majorVersion)?.then(() => {
-            /*if(this.task) {
-              this.task.sprint = this.sprintsNative?.content.filter(s => s.id == value)[0] || null;
-              // TODO ? DEBUG THROTTLING
-            }*/
-          });
+          this.loadSprints(sprint.majorVersion);
         }
       })
     }
