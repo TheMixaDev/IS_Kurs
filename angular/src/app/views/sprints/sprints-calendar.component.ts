@@ -192,10 +192,9 @@ export class SprintsCalendarComponent implements AfterViewInit, OnDestroy {
           if(i == '1' || i == '2') {
             let date = currentDate.toDate();
             let now = new Date();
-            if(date.getUTCDate() == now.getUTCDate() && date.getUTCMonth() == now.getUTCMonth() && date.getUTCFullYear() == now.getUTCFullYear()) {
-                continue;
+            if(!(date.getDate() == now.getDate() && date.getMonth() == now.getMonth() && date.getFullYear() == now.getFullYear())) {
+              result.push(new Day(currentDate.toDate(), i == '1'));
             }
-            result.push(new Day(currentDate.toDate(), i == '1'));
           }
           currentDate = currentDate.add(1, 'day');
         }
