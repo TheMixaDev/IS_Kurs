@@ -69,7 +69,7 @@ CREATE TABLE Releases (
 CREATE TABLE Risk (
     id SERIAL PRIMARY KEY,
     description TEXT NOT NULL,
-    probability NUMERIC(1, 2) NOT NULL,
+    probability NUMERIC(3, 2) NOT NULL,
     estimated_loss DECIMAL NOT NULL
 );
 
